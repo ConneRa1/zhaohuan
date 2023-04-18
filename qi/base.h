@@ -1,0 +1,43 @@
+#pragma once
+
+#include<string>
+#include<vector>
+#include<SFML/Graphics.hpp>
+#include<iostream>
+using namespace std;
+using namespace sf;
+#define windowWidth 1920	//窗口宽度
+#define windowHeight 1080	//窗口高度
+#define hpWidth 0.035
+#define hpHeight 0.0625
+#define hpLeftOffset -0.01
+#define hpUpOffset -0.01
+#define npWidth 0.02 
+#define npHeight 0.032
+#define npLeftOffset 0.078
+#define npUpOffset 0.0187
+#define moveOffset 0.035
+#define diceOffset 0.0386
+#define abilityWidth 0.066
+#define abilityHeight 0.107
+#define abilityOffset 0.0623
+#define abilityX 0.8105 
+#define abilityY 0.885
+#define cardWidth 0.086
+#define cardHeight 0.26
+
+
+
+
+typedef enum CardType {		
+	button,
+	attack,
+	cure,
+	fun
+};
+
+typedef enum BuffType {		
+
+};
+
+
