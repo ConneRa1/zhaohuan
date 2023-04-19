@@ -147,6 +147,7 @@
     <ClCompile Include="Buff.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="ChooseCardState.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FirstDiceState.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Buff.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="ChooseCardState.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FirstDiceState.h" />
     <ClInclude Include="Game.h" />

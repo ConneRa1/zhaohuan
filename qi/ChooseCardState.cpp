@@ -1,7 +1,6 @@
-#include "FirstDiceState.h"
-FirstDiceState::FirstDiceState(Game* game) :State(game){
-}
-void FirstDiceState::Input() {
+#include "ChooseCardState.h"
+ChooseCardState::ChooseCardState(Game* game) :State(game){}
+void ChooseCardState::Input() {
     Event event;
     while (mGame->window.pollEvent(event))
     {
@@ -24,25 +23,27 @@ void FirstDiceState::Input() {
             {
                 mGame->firstConfirm = true;
             }
-
+       
         }
 
 
     }
 }
-void FirstDiceState::Logic() {
+void ChooseCardState::Logic() {
     static int times = 0;
     if (mGame->firstConfirm)
     {
         if (times++ >= 500)
         {
-            cout << "投骰子结束，进入战斗" << endl;
+            cout << "换牌结束，进入投骰子" << endl;
             mGame->firstConfirm = false;
-            mGame->mState = new PlayerTurnState(mGame);
+            mGame->mState = new FirstDiceState(mGame);
         }
     }
+    
 }
-void FirstDiceState::Draw() {
+void ChooseCardState::Draw() {
+
     mGame->window.clear();//清屏
     mGame->view.setSize(sf::Vector2f(mGame->window.getSize()));
     mGame->view.setCenter(sf::Vector2f(mGame->window.getSize()) / 2.f);
@@ -50,12 +51,15 @@ void FirstDiceState::Draw() {
 
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
-    for (auto it = mGame->rollDices.begin(); it != mGame->rollDices.end(); it++) {
-        it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight );
+    for (auto it = mGame->chooseCards.begin(); it != mGame->chooseCards.end(); it++) {
+        it->sprite.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * chooseCardWidth / (float)it->sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * chooseCardHeight / (float)it->sprite.getTexture()->getSize().y);
         it->draw(mGame->window);
     }
     mGame->confirmButton.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
     mGame->confirmButton.draw(mGame->window);
 
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
+}
+void ChooseCardState::LeftButtonDown(Vector2i mPoint){
+
 }

@@ -15,6 +15,7 @@
 class State;
 #include"FirstDiceState.h"
 #include"PlayerTurnState.h"
+#include"ChooseCardState.h"
 
 class Game {
 public:
@@ -24,6 +25,7 @@ public:
 	friend class State;
 	friend class FirstDiceState;
 	friend class PlayerTurnState;
+	friend class ChooseCardState;
 private:
 	RenderWindow window;	//窗口
 	View view;
@@ -38,6 +40,8 @@ private:
 	//display测试用
 	vector<Card> card;
 	vector<Object> sAbility;
+	vector<Object> rollDices;
+	vector<Object> chooseCards;
 	Texture texarr[500];
 	Shader shader;
 	vector<UI> ui;
@@ -46,6 +50,12 @@ private:
 	bool gameOver, gameQuit;	//游戏运行阶段
 	Texture tBackGround;	//纹理
 	Object backGround;	//背景
+	Object confirmButton;
+	
+	//各个state的bool
+	bool firstConfirm=false;
+
+
 	//游戏基本逻辑
 	void Initial();
 	void Input();

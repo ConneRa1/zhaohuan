@@ -50,7 +50,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new FirstDiceState(this);
+    mState = new ChooseCardState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -72,6 +72,7 @@ void Game::Initial() {
     c3 = UI(texarr[91], int(0.0323*windowWidth),int(0.06*windowHeight), 0.945 ,0.042,"costPoint");
     ui.push_back(c3);
 
+    //200号骰子
     Object o1;
     texarr[200].loadFromFile("source/texture/dice/dice0.png");
     o1 = Object(texarr[200], 40,42, 0.963, 0.13);
@@ -91,7 +92,28 @@ void Game::Initial() {
     o1 = Object(texarr[200], 40,42, 0.963, 0.13 + 7*diceOffset);
     dices.push_back(o1);
 
+    texarr[210].loadFromFile("source/texture/rolldice0.png");
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX, rolldiceY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+1*rolldiceOffsetX, rolldiceY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+2*rolldiceOffsetX, rolldiceY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+3*rolldiceOffsetX, rolldiceY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX, rolldiceY+1*rolldiceOffsetY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 1 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 2 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
+    rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 3 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
 
+    //确认按钮
+    texarr[300].loadFromFile("source/texture/confirmButton.png");
+    confirmButton = Object(texarr[300], windowWidth * confirmButtonWidth, windowHeight * confirmButtonHeight, confirmButtonX, confirmButtonY);
+    //初始选卡
+    texarr[301].loadFromFile("source/texture/loadingcard.png");
+    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY));
+    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+1*chooseCardOffset, chooseCardY));
+    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+2*chooseCardOffset, chooseCardY));
+    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+3*chooseCardOffset, chooseCardY));
+    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+4*chooseCardOffset, chooseCardY));
+
+    //100后技能
     texarr[100].loadFromFile("source/texture/kuang.png");
     texarr[101].loadFromFile("source/texture/hp.png");
     texarr[102].loadFromFile("source/texture/np0.png");

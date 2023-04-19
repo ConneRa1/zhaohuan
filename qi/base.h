@@ -25,9 +25,25 @@ using namespace sf;
 #define abilityY 0.885
 #define cardWidth 0.086
 #define cardHeight 0.26
-
-
-
+#define rolldiceWidth 0.127
+#define rolldiceHeight 0.150
+#define rolldiceX 0.228
+#define rolldiceY 0.252
+#define rolldiceOffsetX 0.139
+#define rolldiceOffsetY 0.225
+#define confirmButtonX 0.406
+#define confirmButtonY 0.855
+#define confirmButtonWidth 0.186 
+#define confirmButtonWidth 0.66
+#define confirmButtonX 0.408
+#define confirmButtonY 0.855
+#define confirmButtonWidth 0.182
+#define confirmButtonHeight 0.066
+#define chooseCardX 0.156 
+#define chooseCardY 0.356
+#define chooseCardWidth  0.1054 
+#define chooseCardHeight 0.288
+#define chooseCardOffset 0.145
 
 typedef enum CardType {		
 	button,
