@@ -3,6 +3,8 @@
 Character::Character(Texture& texture, int width, int height, float x, float y,Texture&tbg,Texture& thp,Texture&tnp,string name,int hp = 10, int npNum = 3):Role(texture, width, height, x, y,tbg)
 {
     this->name = name;
+    this->hp = hp;
+    this->npNum = npNum;
     sHp.setTexture(thp);
     sHp.scale((float)windowWidth*hpWidth / (float)thp.getSize().x,
         (float)windowHeight*hpHeight / (float)thp.getSize().y);
@@ -71,10 +73,7 @@ void Character::move()
     }
    
 }
-void Character::Die()
-{
-    isDead = true;
-}
+
 void Character::Selected(bool f)
 {
     if (!isDead)
@@ -82,4 +81,8 @@ void Character::Selected(bool f)
         isSelected = f;
         move();
     }
+}
+bool Character::IsSelected()
+{
+    return isSelected;
 }

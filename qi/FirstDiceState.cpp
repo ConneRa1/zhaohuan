@@ -38,7 +38,11 @@ void FirstDiceState::Logic() {
         {
             cout << "投骰子结束，进入战斗" << endl;
             mGame->firstConfirm = false;
-            mGame->mState = new PlayerTurnState(mGame);
+            mGame->diceNum = 8;     //初始化骰子数，和敌人行动力
+            mGame->enemyAction = 2;
+            mGame->enemyTurnOver = false;
+            mGame->playerTurnOver = false;
+            mGame->ChangeState( new PlayerTurnState(mGame));
         }
     }
 }
@@ -51,7 +55,7 @@ void FirstDiceState::Draw() {
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
     for (auto it = mGame->rollDices.begin(); it != mGame->rollDices.end(); it++) {
-        it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight );
+        it->sprite.setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)(*it).sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)(*it).sprite.getTexture()->getSize().y);
         it->draw(mGame->window);
     }
     mGame->confirmButton.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);

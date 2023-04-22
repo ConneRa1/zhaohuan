@@ -43,9 +43,12 @@ void Game::Run() {
 }
 
 void Game::Initial() {
-
+    bkMusic.openFromFile("source/texture/bg.wav");
+    bkMusic.play();
+    bkMusic.setLoop(true);
     shader.loadFromMemory("uniform sampler2D texture; uniform float brightness; void main() { vec4 color = texture2D(texture, gl_TexCoord[0].xy); color.rgb += brightness; gl_FragColor = color; }", sf::Shader::Fragment);
     shader.setUniform("texture", sf::Shader::CurrentTexture);
+    
 
 	gameOver = false;
 	gameQuit = false;
@@ -107,11 +110,20 @@ void Game::Initial() {
     confirmButton = Object(texarr[300], windowWidth * confirmButtonWidth, windowHeight * confirmButtonHeight, confirmButtonX, confirmButtonY);
     //初始选卡
     texarr[301].loadFromFile("source/texture/loadingcard.png");
-    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY));
-    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+1*chooseCardOffset, chooseCardY));
-    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+2*chooseCardOffset, chooseCardY));
-    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+3*chooseCardOffset, chooseCardY));
-    chooseCards.push_back(Object(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX+4*chooseCardOffset, chooseCardY));
+    texarr[302].loadFromFile("source/texture/eventcard/card1.png");
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
+    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, 2));
+    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, 2));
+    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, 2));
+
+    for (int i = 0; i < 5; i++)
+    {
+        cards.drawCard();//抽卡
+    }
 
     //100后技能
     texarr[100].loadFromFile("source/texture/kuang.png");
@@ -136,21 +148,19 @@ void Game::Initial() {
     texarr[3].loadFromFile("source/texture/character/keqing.png");
     Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3);
     characterVector.push_back(a2);
+    a2.Die();
     texarr[4].loadFromFile("source/texture/character/kaiya.png");
     Character a3 = Character(texarr[4], cardWidth * windowWidth, cardHeight * windowHeight, 0.57, 0.58, texarr[100], texarr[101], texarr[102],"kaiya",10,2);
     characterVector.push_back(a3);
 
     texarr[5].loadFromFile("source/texture/enemy/enemy1.png");
-    Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102]);
+    Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],10,3);
     enemyVector.push_back(e);
 
-    Object s;
-    s = Object(texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset *0,abilityY);
-    sAbility.push_back(s);
-    s = Object(texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset *1,abilityY);
-    sAbility.push_back(s);
-    s = Object(texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset *2,abilityY);
-    sAbility.push_back(s);
+    
+    sAbility.push_back(Card(texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, 3));
+    sAbility.push_back(Card(texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, 3));
+    sAbility.push_back(Card(texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, 3));
 }
 
 void Game::Draw() {
@@ -163,4 +173,11 @@ void Game::Input() {
 
 void Game::Logic() {
     mState->Logic();
+}
+
+
+void  Game::ChangeState(State* state)
+{
+    delete(mState);
+    mState = state;
 }

@@ -1,7 +1,9 @@
 #include "ChooseCardState.h"
+#include"Card.h"
 ChooseCardState::ChooseCardState(Game* game) :State(game){}
 void ChooseCardState::Input() {
     Event event;
+
     while (mGame->window.pollEvent(event))
     {
         if (event.type == Event::Closed)
@@ -23,7 +25,15 @@ void ChooseCardState::Input() {
             {
                 mGame->firstConfirm = true;
             }
-       
+            else if (Card* temp = mGame->cards.cardMouse(event.mouseButton.x, event.mouseButton.y))
+            {
+                /*if (!ischanged)
+                {*/
+                    mGame->cards.changeCard(temp);
+                    ischanged = true;
+                //}
+                
+            }
         }
 
 
@@ -37,7 +47,7 @@ void ChooseCardState::Logic() {
         {
             cout << "换牌结束，进入投骰子" << endl;
             mGame->firstConfirm = false;
-            mGame->mState = new FirstDiceState(mGame);
+            mGame->ChangeState( new FirstDiceState(mGame));
         }
     }
     
@@ -45,21 +55,20 @@ void ChooseCardState::Logic() {
 void ChooseCardState::Draw() {
 
     mGame->window.clear();//清屏
+    mGame->cards.setHeldCardsPosition(chooseCardX, chooseCardY, chooseCardOffset);
     mGame->view.setSize(sf::Vector2f(mGame->window.getSize()));
     mGame->view.setCenter(sf::Vector2f(mGame->window.getSize()) / 2.f);
     mGame->window.setView(mGame->view);
 
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
-    for (auto it = mGame->chooseCards.begin(); it != mGame->chooseCards.end(); it++) {
-        it->sprite.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * chooseCardWidth / (float)it->sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * chooseCardHeight / (float)it->sprite.getTexture()->getSize().y);
-        it->draw(mGame->window);
-    }
+
+    mGame->cards.setHeldCardsPosition(chooseCardX, chooseCardY, chooseCardOffset);
+    mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+    
     mGame->confirmButton.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
     mGame->confirmButton.draw(mGame->window);
 
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }
-void ChooseCardState::LeftButtonDown(Vector2i mPoint){
 
-}

@@ -9,15 +9,14 @@ public:
 	void draw(RenderWindow& window,float x,float y,Shader &shader);
 	void setScale(float x, float y);
 	void move();
-	void Die();
 	void Selected(bool);
+	bool IsSelected();
 	string name;
 protected:
 	Sprite sHp;
 	vector<Sprite> sNp;
 	int npNum;
 	bool isMoved = false;
-	bool isDead = false;
 	bool isSelected=false;
 };
 

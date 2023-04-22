@@ -12,6 +12,15 @@ public:
     void Draw() ;
     void LeftButtonDown(Vector2i mPoint);
     void RightButtonDown(Vector2i mPoint);
+private:
+    bool isActed = false;
+    bool isCardTriggered = false;
+    bool isCardFinished = false;
+    bool isAbilityTriggered = false;
+    bool quickChange = false;
 
+    Role *target;
+    Card* triggeredCard=NULL;
+    Card *triggeredAbility;
 };
 

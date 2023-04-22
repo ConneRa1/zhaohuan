@@ -10,6 +10,8 @@ public:
     void Input();
     void Logic();
     void Draw();
-    void LeftButtonDown(Vector2i mPoint);
+    void ChangeCard();
+private :
+    bool ischanged = false;
 };
 

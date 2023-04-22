@@ -8,7 +8,7 @@ class Object {		//可显示物体的共有父类
 public:
 	Object();
 	Object(Texture& texture, int width = 0, int height = 0, float x = 0, float y = 0);	//会把整个texture全部加载，其中width，height是精灵大小
-	//void setPosition(int x, int y);//设定位置，不设置则默认为0;
+	void setPos(float x, float y);//设定位置，不设置则默认为0;
 	void move(int x, int y);  //移动
 	//Sprite getSprite() const;	//返回sprite，便于显示
 	void setScale(float x, float y);

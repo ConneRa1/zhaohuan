@@ -33,3 +33,8 @@ void Role::setScale(float x,float y)
 	Object::setScale(x,y);
 	bg.setScale(x * float(sprite.getTexture()->getSize().x) / float(bg.getTexture()->getSize().x), y*float(sprite.getTexture()->getSize().y) / float(bg.getTexture()->getSize().y));
 }
+void Role::getHurt(int x)
+{
+	hp -= x;
+	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
+}

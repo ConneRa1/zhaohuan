@@ -1,6 +1,8 @@
 #include "Enemy.h"
 Enemy::Enemy(Texture& texture, int width, int height, float x, float y, Texture& tbg, Texture& thp, Texture& tnp, int hp, int npNum) :Role(texture, width, height, x, y, tbg)
 {
+    this->hp = hp;
+    this->npNum = npNum;
     sHp.setTexture(thp);
     sHp.scale((float)windowWidth * hpWidth / (float)thp.getSize().x,
         (float)windowHeight * hpHeight / (float)thp.getSize().y);
@@ -51,8 +53,4 @@ void Enemy::move()
 {
     y =!isMoved ?y+moveOffset:y-moveOffset;
     isMoved = !isMoved;
-}
-void Enemy::Die()
-{
-    isDead = true;
 }

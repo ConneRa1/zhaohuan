@@ -16,6 +16,7 @@ class State;
 #include"FirstDiceState.h"
 #include"PlayerTurnState.h"
 #include"ChooseCardState.h"
+#include"EnemyTurnState.h"
 
 class Game {
 public:
@@ -26,20 +27,19 @@ public:
 	friend class FirstDiceState;
 	friend class PlayerTurnState;
 	friend class ChooseCardState;
+	friend class EnemyTurnState;
 private:
 	RenderWindow window;	//窗口
 	View view;
+	int diceNum = 8;
 	bool isFullscreen = false;
 	vector<Character> characterVector;	//角色容器，用于存储场上所有的角色
 	vector<Enemy> enemyVector;	//怪物容器，用于存储场上所有的怪物
-	vector<Card> heldCards;	//持有的卡片
-	vector<Card> discardPile;	//弃牌堆中的卡片
-	vector<Card> cardPile;	//牌堆中的卡片
+	CardVector cards;
 	vector<Object> dices;
 
 	//display测试用
-	vector<Card> card;
-	vector<Object> sAbility;
+	vector<Card> sAbility;
 	vector<Object> rollDices;
 	vector<Object> chooseCards;
 	Texture texarr[500];
@@ -54,6 +54,11 @@ private:
 	
 	//各个state的bool
 	bool firstConfirm=false;
+	bool playerTurnOver = false;
+	bool enemyTurnOver = false;
+    int enemyAction = 2;
+
+	Music bkMusic;
 
 
 	//游戏基本逻辑
@@ -64,6 +69,8 @@ private:
 	void toggleFullscreen();
 	void LeftButtonDown(Vector2i mPoint);
 	void RightButtonDown(Vector2i mPoint);
+	void DrawCard();
+	void ChangeState(State* state);
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

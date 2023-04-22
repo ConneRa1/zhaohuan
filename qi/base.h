@@ -4,6 +4,7 @@
 #include<vector>
 #include<SFML/Graphics.hpp>
 #include<iostream>
+#include<stdio.h>
 using namespace std;
 using namespace sf;
 #define windowWidth 1920	//´°¿Ú¿í¶È
@@ -25,10 +26,11 @@ using namespace sf;
 #define abilityY 0.885
 #define cardWidth 0.086
 #define cardHeight 0.26
-#define rolldiceWidth 0.127
-#define rolldiceHeight 0.150
+#define cardY 0.853
+#define rolldiceWidth 0.112
+#define rolldiceHeight 0.160
 #define rolldiceX 0.228
-#define rolldiceY 0.252
+#define rolldiceY 0.292
 #define rolldiceOffsetX 0.139
 #define rolldiceOffsetY 0.225
 #define confirmButtonX 0.406
@@ -44,6 +46,8 @@ using namespace sf;
 #define chooseCardWidth  0.1054 
 #define chooseCardHeight 0.288
 #define chooseCardOffset 0.145
+#define heldCardY 0.853
+
 
 typedef enum CardType {		
 	button,

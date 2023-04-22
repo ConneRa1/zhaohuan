@@ -19,11 +19,10 @@ Object::Object(Texture& texture, int width, int height,float x,float y) {
 		sprite.setTextureRect(IntRect(0, 0, width, height));*/
 }
 
-//void Object::setPosition(int x, int y) {
-//	sprite.setPosition(x, y);
-//	this->x = x;
-//	this->y = y;
-//}
+void Object::setPos(float x, float y) {
+	this->x = x;
+	this->y = y;
+}
 
 void Object::move(int x, int y) {
 	sprite.move(x, y);
