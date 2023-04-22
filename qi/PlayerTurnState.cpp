@@ -150,7 +150,6 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)
                 {
                     if (it->IsSelected())
                     {
-                       
                         target = &(*it);
                         cout << "card" << endl;
                         isCardFinished = true;

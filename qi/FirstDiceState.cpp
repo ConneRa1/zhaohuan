@@ -31,7 +31,6 @@ void FirstDiceState::Input() {
     }
 }
 void FirstDiceState::Logic() {
-    static int times = 0;
     if (mGame->firstConfirm)
     {
         if (times++ >= 500)

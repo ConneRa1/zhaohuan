@@ -56,7 +56,11 @@ void Character::setScale(float x, float y)
 
 void Character::move()
 {
-    if (!isDead)
+    if (isDead)
+    {
+        y = characterY;
+    }
+    else
     {
         if (isSelected)
         {
@@ -76,11 +80,10 @@ void Character::move()
 
 void Character::Selected(bool f)
 {
-    if (!isDead)
-    {
-        isSelected = f;
-        move();
-    }
+    
+    isSelected = f;
+    move();
+    
 }
 bool Character::IsSelected()
 {

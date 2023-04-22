@@ -17,7 +17,7 @@ class State;
 #include"PlayerTurnState.h"
 #include"ChooseCardState.h"
 #include"EnemyTurnState.h"
-
+#include"ChangeRoleState.h"
 class Game {
 public:
 	Game();
@@ -28,6 +28,7 @@ public:
 	friend class PlayerTurnState;
 	friend class ChooseCardState;
 	friend class EnemyTurnState;
+	friend class ChangeRoleState;
 private:
 	RenderWindow window;	//´°¿Ú
 	View view;

@@ -21,39 +21,63 @@ void EnemyTurnState::Input() {
         }
         if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
         {
-             mGame->firstConfirm = true;
+            if (isChangingRole)
+            {
+                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                    if (it->isIn(event.mouseButton.x, event.mouseButton.y))
+                    {
+                        changedCharacter = &(*it);
+                    }
+                }
+            }
+            else {
+                mGame->firstConfirm = true;
+            }
+            
         }
 
 
     }
 }
 void EnemyTurnState::Logic() {
-    if (times == 0)
-    {
-        for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-            if (it->IsSelected())
-            {
-                target = &(*it);
-            }
-        }
-    }
-    else if (times == 250)
-    {
-        target->getHurt(5);
-        if (target->gethp() <= 0)
-        {
-            target->Die();
-        }
-        //进入换人阶段，到时候再加一个State
-
-    }
     if (mGame->enemyAction == 0)
     {
         mGame->enemyTurnOver = true;
     }
-    if (mGame->firstConfirm)
+    if (isChangingRole)
     {
-        if (times++ >= 500)
+        if (changedCharacter != NULL)
+        {
+            changedCharacter->Selected(true);
+            changedCharacter = NULL;
+            isChangingRole = false;
+        }
+
+    }
+    else if (mGame->firstConfirm)
+    {
+        if (times == 0)
+        {
+            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                if (it->IsSelected())
+                {
+                    target = &(*it);
+                }
+            }
+        }
+        else if (times == 250)
+        {
+            target->getHurt(5);
+            if (target->gethp() <= 0)
+            {
+                target->Die();
+                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                    it->Selected(false);
+                }
+                isChangingRole = true;
+            }
+        }
+        else if (times >= 500)
         {
            
             cout << "Enemy回合结束，进入玩家回合" << endl;
@@ -66,6 +90,7 @@ void EnemyTurnState::Logic() {
             else
                 mGame->ChangeState( new PlayerTurnState(mGame));
         }
+        times++;
     }
 
 }

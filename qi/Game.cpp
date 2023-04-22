@@ -53,7 +53,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new ChooseCardState(this);
+    mState = new PlayerTurnState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);

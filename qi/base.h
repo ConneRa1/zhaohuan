@@ -47,7 +47,7 @@ using namespace sf;
 #define chooseCardHeight 0.288
 #define chooseCardOffset 0.145
 #define heldCardY 0.853
-
+#define characterY 0.58
 
 typedef enum CardType {		
 	button,

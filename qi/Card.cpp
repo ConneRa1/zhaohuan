@@ -82,11 +82,7 @@ void CardVector::changeCard(Card* card,float x,float y,float offset) {
 	heldCards.insert(heldCards.begin()+index, *(cardPile.end()-1));
 	cardPile.pop_back();
 	cardPile.insert(cardPile.begin(), card);
-	heldCards[0]->setPos(x + offset * 0, y);
-	heldCards[1]->setPos(x + offset * 1, y);
-	heldCards[2]->setPos(x + offset * 2, y);
-	heldCards[3]->setPos(x + offset * 3, y);
-	heldCards[4]->setPos(x + offset * 4, y);
+
 }
 
 

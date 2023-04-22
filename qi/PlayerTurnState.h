@@ -18,7 +18,7 @@ private:
     bool isCardFinished = false;
     bool isAbilityTriggered = false;
     bool quickChange = false;
-
+    bool isChangingRole = false;
     Role *target;
     Card* triggeredCard=NULL;
     Card *triggeredAbility;
