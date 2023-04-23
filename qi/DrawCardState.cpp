@@ -1,37 +1,20 @@
-#include "ChangeRoleState.h"
-#include"Card.h"
-ChangeRoleState::ChangeRoleState(Game* game) :State(game) {}
-void ChangeRoleState::Input() {
+#include "DrawCardState.h"
+DrawCardState::DrawCardState(Game* game) :State(game) {}
+void DrawCardState::Input() {
     Event event;
 
-    while (mGame->window.pollEvent(event))
+}
+void DrawCardState::Logic() {
+    //if(times)   处于某个时间段，做个动画
+    if (times >= 500)
     {
-        if (event.type == Event::Closed)
-        {
-            mGame->window.close();
-            mGame->gameOver = false;
-            mGame->gameQuit = true;
-        }
-        if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::X)
-        {
-            mGame->window.close();
-        }
-        if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
-            mGame->toggleFullscreen();
-        }
-        if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
-        {
-            mGame->firstConfirm = true;
-        }
-
-
+        cout << "抽排结束，进入玩家回合" << endl;
+        mGame->ChangeState(new PlayerTurnState(mGame));
     }
+    times++;
 }
-void ChangeRoleState::Logic() {
-    
-}
-void ChangeRoleState::Draw() {
 
+void DrawCardState::Draw() {
     mGame->window.clear();//清屏
     mGame->view.setSize(sf::Vector2f(mGame->window.getSize()));
     mGame->view.setCenter(sf::Vector2f(mGame->window.getSize()) / 2.f);
@@ -44,7 +27,7 @@ void ChangeRoleState::Draw() {
         it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         it->draw(mGame->window);
     }
-    
+
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
@@ -64,3 +47,4 @@ void ChangeRoleState::Draw() {
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }
+

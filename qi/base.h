@@ -48,6 +48,14 @@ using namespace sf;
 #define chooseCardOffset 0.145
 #define heldCardY 0.853
 #define characterY 0.58
+#define consumeDiceX 0.878  
+#define consumeDiceY 0.266
+#define consumeDiceOffsetX 0.055         
+#define consumeDiceOffsetY 0.095
+#define diceBgWidth 0.164 
+#define diceBgHeight 0.8
+#define diceBgX 1-0.164 
+#define diceBgY 0.1
 
 typedef enum CardType {		
 	button,

@@ -70,14 +70,14 @@ void Game::Initial() {
     texarr[90].loadFromFile("source/texture/turnMark.png");
     c2= UI(texarr[90], 148, 296, 0.0, 0.3588, "turnMark");
     ui.push_back(c2);
-    UI c3;
     texarr[91].loadFromFile("source/texture/costPoint.png");
-    c3 = UI(texarr[91], int(0.0323*windowWidth),int(0.06*windowHeight), 0.945 ,0.042,"costPoint");
-    ui.push_back(c3);
+    ui.push_back(UI(texarr[91], int(0.0323 * windowWidth), int(0.06 * windowHeight), 0.945, 0.042, "costPoint"));
+    
 
     //200号骰子
     Object o1;
     texarr[200].loadFromFile("source/texture/dice/dice0.png");
+    chooseDice = Object(texarr[200], 80, 92, 0, 0);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13);
     dices.push_back(o1);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13+diceOffset);
@@ -108,6 +108,10 @@ void Game::Initial() {
     //确认按钮
     texarr[300].loadFromFile("source/texture/confirmButton.png");
     confirmButton = Object(texarr[300], windowWidth * confirmButtonWidth, windowHeight * confirmButtonHeight, confirmButtonX, confirmButtonY);
+    texarr[299].loadFromFile("source/texture/chupai.png");
+    chupai = Object(texarr[299], windowWidth * confirmButtonWidth, windowHeight * confirmButtonHeight, confirmButtonX, confirmButtonY);
+    texarr[298].loadFromFile("source/texture/dicebg.png");
+    dicebg = Object(texarr[298], windowWidth * diceBgWidth, windowHeight * diceBgHeight, diceBgX, diceBgY);
     //初始选卡
     texarr[301].loadFromFile("source/texture/loadingcard.png");
     texarr[302].loadFromFile("source/texture/eventcard/card1.png");

@@ -1,9 +1,8 @@
-#include "EnemyTurnState.h"
-#include"Card.h"
-EnemyTurnState::EnemyTurnState(Game* game) :State(game) {}
-void EnemyTurnState::Input() {
+#include "GameEndState.h"
+GameEndState::GameEndState(Game* game) :State(game) {
+}
+void GameEndState::Input() {
     Event event;
-
     while (mGame->window.pollEvent(event))
     {
         if (event.type == Event::Closed)
@@ -21,81 +20,24 @@ void EnemyTurnState::Input() {
         }
         if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
         {
-            if (isChangingRole)
-            {
-                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                    if (it->isIn(event.mouseButton.x, event.mouseButton.y))
-                    {
-                        changedCharacter = &(*it);
-                    }
-                }
-            }
-            else {
-                mGame->firstConfirm = true;
-            }
-            
+            mGame->firstConfirm = true;
         }
-
-
+        
     }
 }
-void EnemyTurnState::Logic() {
-    if (mGame->enemyAction == 0)
+void GameEndState::Logic() {
+    static int times = 0;
+    if (mGame->firstConfirm)
     {
-        mGame->enemyTurnOver = true;
+        if (times++ >= 500)
+        {
+            cout << "游戏结束" << endl;
+            mGame->window.close();
+        }
     }
-    if (isChangingRole)
-    {
-        if (changedCharacter != NULL)
-        {
-            changedCharacter->Selected(true);
-            changedCharacter = NULL;
-            isChangingRole = false;
-        }
-
-    }
-    else if (mGame->firstConfirm)
-    {
-        if (times == 0)
-        {
-            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                if (it->IsSelected())
-                {
-                    target = &(*it);
-                }
-            }
-        }
-        else if (times == 250)
-        {
-            target->getHurt(5);
-            if (target->gethp() <= 0)
-            {
-                target->Die();
-                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                    it->Selected(false);
-                }
-                isChangingRole = true;
-            }
-        }
-        else if (times >= 500)
-        {
-           
-            cout << "Enemy回合结束，进入玩家回合" << endl;
-            mGame->firstConfirm = false;
-            mGame->enemyAction -= 1;
-            if (mGame->enemyTurnOver && mGame->playerTurnOver)
-            {
-                mGame->ChangeState( new FirstDiceState(mGame));
-            }
-            else
-                mGame->ChangeState( new PlayerTurnState(mGame));
-        }
-        times++;
-    }
-
+   
 }
-void EnemyTurnState::Draw() {
-
+void GameEndState::Draw() {
     mGame->window.clear();//清屏
     mGame->view.setSize(sf::Vector2f(mGame->window.getSize()));
     mGame->view.setCenter(sf::Vector2f(mGame->window.getSize()) / 2.f);
@@ -108,14 +50,14 @@ void EnemyTurnState::Draw() {
         it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         it->draw(mGame->window);
     }
-
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
-    for (int i = 0; i < mGame->diceNum; i++)    //按骰子数画
+
+    for (int i = 0; i < mGame->diceNum; i++)
     {
         mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
         mGame->dices[i].draw(mGame->window);
@@ -126,5 +68,6 @@ void EnemyTurnState::Draw() {
         it->Object::draw(mGame->window);
     }
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }

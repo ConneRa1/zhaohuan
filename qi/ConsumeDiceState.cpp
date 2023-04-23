@@ -1,9 +1,24 @@
-#include "ChangeRoleState.h"
-#include"Card.h"
-ChangeRoleState::ChangeRoleState(Game* game) :State(game) {}
-void ChangeRoleState::Input() {
+#include "ConsumeDiceState.h"
+ConsumeDiceState::ConsumeDiceState(Game* game) :State(game){}
+void ConsumeDiceState::Input() {
     Event event;
-
+    if (!dicePlaced)
+    {
+        dicePlaced = true;
+        placedDice.clear(); 
+        //每次进入这个状态，都重置骰子的位子
+        int flag = 0;
+        for (int i = 0; i < mGame->diceNum; i++)
+        {
+            placedDice.push_back(mGame->chooseDice);
+            if (flag % 2 == 0)
+            {
+                flag = 0;
+            }
+            flag++;
+            placedDice[i].setPos(flag*consumeDiceOffsetX+consumeDiceX,consumeDiceY+(i/2)*consumeDiceOffsetY);
+        }
+    }
     while (mGame->window.pollEvent(event))
     {
         if (event.type == Event::Closed)
@@ -21,17 +36,25 @@ void ChangeRoleState::Input() {
         }
         if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
         {
-            mGame->firstConfirm = true;
+             LeftButtonDown(Mouse::getPosition(mGame->window));
         }
 
 
     }
 }
-void ChangeRoleState::Logic() {
-    
-}
-void ChangeRoleState::Draw() {
+void ConsumeDiceState::Logic() {
+    if (mGame->firstConfirm)
+    {
+        if (times++ >= 500)
+        {
+            cout << "选择骰子结束，释放技能/卡牌" << endl;
+            mGame->firstConfirm = false;
+            mGame->ChangeState(new PlayerTurnState(mGame));
+        }
+    }
 
+}
+void ConsumeDiceState::Draw() {
     mGame->window.clear();//清屏
     mGame->view.setSize(sf::Vector2f(mGame->window.getSize()));
     mGame->view.setCenter(sf::Vector2f(mGame->window.getSize()) / 2.f);
@@ -44,17 +67,17 @@ void ChangeRoleState::Draw() {
         it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         it->draw(mGame->window);
     }
-    
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
-    for (int i = 0; i < mGame->diceNum; i++)    //按骰子数画
+
+    for (int i = 0; i < placedDice.size(); i++)
     {
-        mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
-        mGame->dices[i].draw(mGame->window);
+        placedDice[i].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
+        placedDice[i].draw(mGame->window);
     }
     int times = 0;
     for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
@@ -63,4 +86,8 @@ void ChangeRoleState::Draw() {
     }
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
+}
+void ConsumeDiceState::LeftButtonDown(Vector2i mPoint)
+{
+    
 }

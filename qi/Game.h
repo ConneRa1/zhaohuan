@@ -18,6 +18,7 @@ class State;
 #include"ChooseCardState.h"
 #include"EnemyTurnState.h"
 #include"ChangeRoleState.h"
+#include"DrawCardState.h"
 class Game {
 public:
 	Game();
@@ -29,6 +30,7 @@ public:
 	friend class ChooseCardState;
 	friend class EnemyTurnState;
 	friend class ChangeRoleState;
+	friend class DrawCardState;
 private:
 	RenderWindow window;	//窗口
 	View view;
@@ -52,6 +54,10 @@ private:
 	Texture tBackGround;	//纹理
 	Object backGround;	//背景
 	Object confirmButton;
+	Object chooseDice;
+	Object dicebg;
+	Object chupai;
+
 	
 	//各个state的bool
 	bool firstConfirm=false;
