@@ -65,7 +65,7 @@ void EnemyTurnState::Logic() {
                 }
             }
         }
-        else if (times == 250)
+        else if (times == 250&&!mGame->enemyTurnOver)
         {
             target->getHurt(5);
             if (target->gethp() <= 0)

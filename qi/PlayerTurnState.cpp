@@ -99,7 +99,7 @@ void PlayerTurnState::Logic() {
         if (triggeredAbility != NULL && target != NULL)
         {
             cout << "玩家回合结束，进入enemy回合" << endl;
-            target->getHurt(5);
+            target->getHurt(2);
             if (target->gethp() <= 0)
             {
                 target->Die();
