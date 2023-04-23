@@ -73,7 +73,6 @@ void PlayerTurnState::Input() {
     }
 }
 void PlayerTurnState::Logic() {
-    
     static int times = 0;
     if (mGame->firstConfirm)
     {
@@ -100,12 +99,19 @@ void PlayerTurnState::Logic() {
         if (triggeredAbility != NULL && target != NULL)
         {
             cout << "玩家回合结束，进入enemy回合" << endl;
-            target->getHurt(2);
+            target->getHurt(5);
             if (target->gethp() <= 0)
             {
                 target->Die();
+                //如果敌人数不为0，就加个CheckWin()
+                //进入胜利界面
+                mGame->isWin = true;
+                mGame->ChangeState(new GameEndState(mGame));
             }
-            mGame->ChangeState( new EnemyTurnState(mGame));
+            else {
+                mGame->ChangeState( new EnemyTurnState(mGame));
+            }
+           
             isActed = false;
         }
         else if(triggeredAbility != NULL && target != NULL){
@@ -346,6 +352,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                         cout << "card" << endl;
                         isCardFinished = true;
                         isCardTriggered = false;
+                        isConsumingDice = false;
                     }
                 }
             }

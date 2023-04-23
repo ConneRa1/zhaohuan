@@ -14,7 +14,6 @@ public:
 	int cost;
 	bool quickAction = false;
 protected:
-	
 	Role* target=NULL;
 	bool isTriggered = false;
 	

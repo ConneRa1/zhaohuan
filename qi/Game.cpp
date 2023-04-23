@@ -115,11 +115,11 @@ void Game::Initial() {
     //≥ı º—°ø®
     texarr[301].loadFromFile("source/texture/loadingcard.png");
     texarr[302].loadFromFile("source/texture/eventcard/card1.png");
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,0,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,1));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,1));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,1));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,1));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,1));
     cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, 2));
     cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, 2));
     cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, 2));

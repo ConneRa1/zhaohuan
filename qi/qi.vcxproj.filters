@@ -66,6 +66,9 @@
     <ClCompile Include="DrawCardState.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GameEndState.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -117,6 +120,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DrawCardState.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEndState.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

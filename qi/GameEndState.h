@@ -12,4 +12,3 @@ public:
     void Draw();
     void ChangeCard();
 };
-

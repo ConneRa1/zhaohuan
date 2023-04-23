@@ -76,6 +76,21 @@ void EnemyTurnState::Logic() {
                 }
                 isChangingRole = true;
             }
+            int lose = 0;
+            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                if (!it->ifDead())
+                {
+                    lose++;
+                    break;
+                }
+            }
+            if (lose == 0)      //输了
+            {
+                mGame->isWin = false;
+                mGame->ChangeState(new GameEndState(mGame));
+            }
+            //如果敌人数不为0，就加个CheckWin()
+                //进入胜利界面
         }
         else if (times >= 500)
         {

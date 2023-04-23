@@ -10,6 +10,7 @@ public :
     void Input() override;
     void Logic()override;
     void Draw()override;
+
 private :
     int times = 0;
 };

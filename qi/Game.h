@@ -19,6 +19,7 @@ class State;
 #include"EnemyTurnState.h"
 #include"ChangeRoleState.h"
 #include"DrawCardState.h"
+#include"GameEndState.h"
 class Game {
 public:
 	Game();
@@ -31,6 +32,7 @@ public:
 	friend class EnemyTurnState;
 	friend class ChangeRoleState;
 	friend class DrawCardState;
+	friend class GameEndState;
 private:
 	RenderWindow window;	//窗口
 	View view;
@@ -57,6 +59,8 @@ private:
 	Object chooseDice;
 	Object dicebg;
 	Object chupai;
+	Object Win;
+	Object Lose;
 
 	
 	//各个state的bool
@@ -64,6 +68,7 @@ private:
 	bool playerTurnOver = false;
 	bool enemyTurnOver = false;
     int enemyAction = 2;
+	bool isWin = false;
 
 	Music bkMusic;
 

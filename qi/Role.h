@@ -11,6 +11,7 @@ public:
 	void setScale(float x, float y);
 	void getHurt(int );
 	int gethp() { return hp; }
+	bool ifDead() { return isDead; }
 	void Die() { isDead = true; }
 protected:
 	int hp;

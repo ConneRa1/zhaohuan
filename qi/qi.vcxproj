@@ -155,6 +155,7 @@
     <ClCompile Include="EnemyTurnState.cpp" />
     <ClCompile Include="FirstDiceState.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameEndState.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PlayerTurnState.cpp" />
     <ClCompile Include="Role.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="EnemyTurnState.h" />
     <ClInclude Include="FirstDiceState.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameEndState.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PlayerTurnState.h" />
     <ClInclude Include="Role.h" />

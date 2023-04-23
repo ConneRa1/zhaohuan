@@ -31,7 +31,12 @@ void GameEndState::Logic() {
     {
         if (times++ >= 500)
         {
-            cout << "游戏结束" << endl;
+            if (mGame->isWin)
+            {
+                cout << "游戏胜利" << endl;
+            }
+            else
+                cout << "游戏失败" << endl;
             mGame->window.close();
         }
     }
@@ -69,5 +74,12 @@ void GameEndState::Draw() {
     }
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
 
+    if (mGame->isWin)
+    {
+        mGame->Win.draw(mGame->window,mGame->shader);
+    }
+    else {
+        mGame->Lose.draw(mGame->window, mGame->shader);
+    }
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }
