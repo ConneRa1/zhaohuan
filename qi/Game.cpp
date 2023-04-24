@@ -53,7 +53,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new PlayerTurnState(this);
+    mState = new FirstDiceState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -72,7 +72,14 @@ void Game::Initial() {
     ui.push_back(c2);
     texarr[91].loadFromFile("source/texture/costPoint.png");
     ui.push_back(UI(texarr[91], int(0.0323 * windowWidth), int(0.06 * windowHeight), 0.945, 0.042, "costPoint"));
-    
+    texarr[91].loadFromFile("source/texture/enemyturn.png");
+    texarr[92].loadFromFile("source/texture/playerturn.png");
+    texarr[93].loadFromFile("source/texture/Í¶ÖÀ½×¶Î.png");
+    texarr[94].loadFromFile("source/texture/endstate.png");
+    enemybanner = Object(texarr[91], windowWidth, windowHeight, 0, 0);
+    playerbanner = Object(texarr[92], windowWidth, windowHeight, 0, 0);
+    whenDice = Object(texarr[93], windowWidth, windowHeight, 0, 0);
+    whenEnd = Object(texarr[94], windowWidth, windowHeight, 0, 0);
 
     //200ºÅ÷»×Ó
     Object o1;

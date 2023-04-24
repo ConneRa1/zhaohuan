@@ -2,44 +2,48 @@
 #include"Card.h"
 EnemyTurnState::EnemyTurnState(Game* game) :State(game) {}
 void EnemyTurnState::Input() {
-    Event event;
-
-    while (mGame->window.pollEvent(event))
+    if (bannertime >= bannerTime)
     {
-        if (event.type == Event::Closed)
+        Event event;
+        while (mGame->window.pollEvent(event))
         {
-            mGame->window.close();
-            mGame->gameOver = false;
-            mGame->gameQuit = true;
-        }
-        if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::X)
-        {
-            mGame->window.close();
-        }
-        if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
-            mGame->toggleFullscreen();
-        }
-        if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
-        {
-            if (isChangingRole)
+            if (event.type == Event::Closed)
             {
-                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                    if (it->isIn(event.mouseButton.x, event.mouseButton.y))
-                    {
-                        changedCharacter = &(*it);
+                mGame->window.close();
+                mGame->gameOver = false;
+                mGame->gameQuit = true;
+            }
+            if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::X)
+            {
+                mGame->window.close();
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
+                mGame->toggleFullscreen();
+            }
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
+            {
+                if (isChangingRole)
+                {
+                    for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                        if (it->isIn(event.mouseButton.x, event.mouseButton.y))
+                        {
+                            changedCharacter = &(*it);
+                        }
                     }
                 }
-            }
-            else {
-                mGame->firstConfirm = true;
-            }
+                else {
+                    mGame->firstConfirm = true;
+                }
             
+            }
         }
-
-
     }
 }
 void EnemyTurnState::Logic() {
+    if (bannertime < bannerTime)
+    {
+        bannertime++;
+    }
     if (mGame->enemyAction == 0)
     {
         mGame->enemyTurnOver = true;
@@ -49,8 +53,31 @@ void EnemyTurnState::Logic() {
         if (changedCharacter != NULL)
         {
             changedCharacter->Selected(true);
-            changedCharacter = NULL;
+     
             isChangingRole = false;
+            int num = 0;
+            if (changedCharacter->name == "xingqiu")
+            {
+                for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
+                {
+                    i->sprite.setTexture(mGame->texarr[150 + (num++)]);
+                }
+            }
+            else if (changedCharacter->name == "keqing")
+            {
+                for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
+                {
+                    i->sprite.setTexture(mGame->texarr[153 + (num++)]);
+                }
+            }
+            else if (changedCharacter->name == "kaiya")
+            {
+                for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
+                {
+                    i->sprite.setTexture(mGame->texarr[156 + (num++)]);
+                }
+            }
+            changedCharacter = NULL;
         }
 
     }
@@ -135,11 +162,21 @@ void EnemyTurnState::Draw() {
         mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
         mGame->dices[i].draw(mGame->window);
     }
-    int times = 0;
-    for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-        it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-        it->Object::draw(mGame->window);
+    if (bannertime < bannerTime)
+    {
+        mGame->enemybanner.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+         mGame->enemybanner.draw(mGame->window);
     }
+    else {
+        int times = 0;
+        for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
+            it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            it->Object::draw(mGame->window);
+        }
+    
+    }
+    
+    
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }

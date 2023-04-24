@@ -61,6 +61,10 @@ private:
 	Object chupai;
 	Object Win;
 	Object Lose;
+	Object enemybanner;
+	Object playerbanner;
+	Object whenDice;
+	Object whenEnd;
 
 	
 	//¸÷¸östateµÄbool
@@ -69,6 +73,7 @@ private:
 	bool enemyTurnOver = false;
     int enemyAction = 2;
 	bool isWin = false;
+	bool initdice = true;
 
 	Music bkMusic;
 

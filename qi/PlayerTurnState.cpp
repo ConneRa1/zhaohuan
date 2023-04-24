@@ -2,78 +2,84 @@
 PlayerTurnState::PlayerTurnState(Game* game) :State(game){
 }
 void PlayerTurnState::Input() {
-    Event event;
-    if (!flag)
+    if (bannertime >= bannerTime)
     {
-        mGame->cards.setHeldCardsPosition(0.5- mGame->cards.getCardNum()* cardWidth/4, heldCardY, cardWidth*0.52);
-        flag = true;
-        placedDice.clear();
-        //每次进入这个状态，都重置骰子的位子
-        int num = 0;
-        for (int i = 0; i < mGame->diceNum; i++)
+        Event event;
+        if (!flag)
         {
-            placedDice.push_back(mGame->chooseDice);
-            if (num % 2 == 0)
+            mGame->cards.setHeldCardsPosition(0.5- mGame->cards.getCardNum()* cardWidth/4, heldCardY, cardWidth*0.52);
+            flag = true;
+            placedDice.clear();
+            //每次进入这个状态，都重置骰子的位子
+            int num = 0;
+            for (int i = 0; i < mGame->diceNum; i++)
             {
-                num = 0;
+                placedDice.push_back(mGame->chooseDice);
+                if (num % 2 == 0)
+                {
+                    num = 0;
+                }
+                placedDice[i].setPos(num * consumeDiceOffsetX + consumeDiceX, consumeDiceY + (i / 2) * consumeDiceOffsetY);
+                num++;
             }
-            placedDice[i].setPos(num * consumeDiceOffsetX + consumeDiceX, consumeDiceY + (i / 2) * consumeDiceOffsetY);
-            num++;
-            
+            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                if (it->IsSelected())
+                {
+                    currentRole = &(*it);
+                    break;
+                }
+            }
         }
-    }
-    while (mGame->window.pollEvent(event))
-    {
-        if (event.type == Event::Closed)
+        while (mGame->window.pollEvent(event))
         {
-            mGame->window.close();
-            mGame->gameOver = false;
-            mGame->gameQuit = true;
-        }
-        if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::X)
-        {
-            mGame->window.close();
-        }
-        if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
-            mGame->toggleFullscreen();
-        }
-        if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
-        {
-            LeftButtonDown(Mouse::getPosition(mGame->window));
-        }
-        if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Right)
-        {
-            RightButtonDown(Mouse::getPosition(mGame->window));
-        }
-        /* if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Add)
-         {
-             soundVolume += 5;
-             bkMusic.setVolume(soundVolume);
-         }
-         if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Subtract)
-         {
-             soundVolume -= 5;
-             bkMusic.setVolume(soundVolume);
-         }
-         if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Z)
-         {
-             system("pause");
-         }
-         if (event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Multiply || event.key.code == Keyboard::Enter)
-         {
-             if (MusicOn)
+            if (event.type == Event::Closed)
+            {
+                mGame->window.close();
+                mGame->gameOver = false;
+                mGame->gameQuit = true;
+            }
+            if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::X)
+            {
+                mGame->window.close();
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
+                mGame->toggleFullscreen();
+            }
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
+            {
+                LeftButtonDown(Mouse::getPosition(mGame->window));
+            }
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Right)
+            {
+                RightButtonDown(Mouse::getPosition(mGame->window));
+            }
+            /* if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Add)
              {
-                 bkMusic.stop();
+                 soundVolume += 5;
+                 bkMusic.setVolume(soundVolume);
              }
-             else {
-                 bkMusic.play();
+             if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Subtract)
+             {
+                 soundVolume -= 5;
+                 bkMusic.setVolume(soundVolume);
              }
-             MusicOn = !MusicOn;
-         }*/
+             if (event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Multiply || event.key.code == Keyboard::Enter)
+             {
+                 if (MusicOn)
+                 {
+                     bkMusic.stop();
+                 }
+                 else {
+                     bkMusic.play();
+                 }
+                 MusicOn = !MusicOn;
+             }*/
+        }
     }
+    
 }
 void PlayerTurnState::Logic() {
-    static int times = 0;
+    if (bannertime < bannerTime)bannertime++;
     if (mGame->firstConfirm)
     {
         if (times++ >= 500)
@@ -142,6 +148,7 @@ void PlayerTurnState::Logic() {
     {
         isChanged = false;
         Character* c = (Character*) target;
+        currentRole= (Character*)target;
         c->Selected(true);
         int times = 0;
         if (c->name == "xingqiu")
@@ -218,10 +225,18 @@ void PlayerTurnState::Draw() {
             mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
             mGame->dices[i].draw(mGame->window);
         }
-        int times = 0;
-        for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-            it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            it->Object::draw(mGame->window);
+        if (bannertime < bannerTime)
+        {
+            mGame->cards.setHeldCardsPosition(0.5 - mGame->cards.getCardNum() * cardWidth / 4, heldCardY, cardWidth * 0.52);
+            mGame->playerbanner.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->playerbanner.draw(mGame->window);
+        }
+        else {
+            for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
+                it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                it->Object::draw(mGame->window);
+            }
+
         }
         mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     }
@@ -386,7 +401,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         }
     }
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-        if (it->isIn(mPoint.x, mPoint.y))
+        if (it->isIn(mPoint.x, mPoint.y)&&currentRole!=&(*it))
         {
             isChangingRole = true;
             target = &(*it);

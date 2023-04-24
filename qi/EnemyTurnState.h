@@ -16,5 +16,6 @@ private:
     int times = 0;
     Role* target;
     Character* changedCharacter;
+
 };
 

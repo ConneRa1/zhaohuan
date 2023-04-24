@@ -8,9 +8,10 @@ public :
 	virtual void Input()=0;
 	virtual void Logic()=0;
 	virtual void Draw()=0;
-	
-	Game* mGame;
 
+protected:
+	Game* mGame;
+	int bannertime=0;
 	
 };
 

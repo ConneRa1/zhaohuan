@@ -56,6 +56,7 @@ using namespace sf;
 #define diceBgHeight 0.8
 #define diceBgX 1-0.164 
 #define diceBgY 0.1
+#define bannerTime 800
 
 typedef enum CardType {		
 	button,
