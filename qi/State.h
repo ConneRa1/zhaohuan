@@ -12,6 +12,7 @@ public :
 protected:
 	Game* mGame;
 	int bannertime=0;
-	
+	int hurtTimer = 0;
+	bool showHurt = false;
 };
 

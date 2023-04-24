@@ -55,7 +55,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new FirstDiceState(this);
+    mState = new ChooseCardState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -82,6 +82,14 @@ void Game::Initial() {
     playerbanner = Object(texarr[92], windowWidth, windowHeight, 0, 0);
     whenDice = Object(texarr[93], windowWidth, windowHeight, 0, 0);
     whenEnd = Object(texarr[94], windowWidth, windowHeight, 0, 0);
+    texarr[95].loadFromFile("source/texture/change.png");
+    texarr[96].loadFromFile("source/texture/changeconfirm.png");
+    texarr[97].loadFromFile("source/texture/target.png");
+    texarr[98].loadFromFile("source/texture/hurt.png");
+    changeConfirm = Object(texarr[96], 106, 130, changeConfirmX, changeConfirmY);
+    changeTarget= Object(texarr[95], 163,261, 0, 0);    //放角色卡左上角
+    target = Object(texarr[97], 163, 261, 0, 0);
+    hurt= Object(texarr[98], 189, 255, 0, 0);
 
     //200号骰子
     Object o1;
@@ -171,17 +179,17 @@ void Game::Initial() {
     Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],10,3);
     enemyVector.push_back(e);
     //加载所有技能
-    abilityVector.push_back(new Ability(ElementType::shui,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
-    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
-    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::shui,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai,3))));
+    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
-    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
-    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
-    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
-    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
-    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
-    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
     for(int i=0;i<3;i++)
         sAbility.push_back(abilityVector[i]);

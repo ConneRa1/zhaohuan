@@ -97,10 +97,24 @@ void PlayerTurnState::Logic() {
             else
             {
                 cout << "，进入下一回合" << endl;
+                mGame->diceNum = Cost(1, pair<ElementType, int>(ElementType::cai, 8));
                 mGame->ChangeState(new FirstDiceState(mGame));
             }
                 
         }
+    }
+    else if (hurtOver)
+    {
+        if (hurtTimer >= hurtTime)
+        {
+            if(mGame->isWin){
+                mGame->ChangeState(new GameEndState(mGame));
+            }
+            else {
+                mGame->ChangeState(new EnemyTurnState(mGame));
+            }
+        }
+        
     }
     else if (isActed)
     {
@@ -114,12 +128,8 @@ void PlayerTurnState::Logic() {
                 //如果敌人数不为0，就加个CheckWin()
                 //进入胜利界面
                 mGame->isWin = true;
-                mGame->ChangeState(new GameEndState(mGame));
             }
-            else {
-                mGame->ChangeState( new EnemyTurnState(mGame));
-            }
-           
+            hurtOver = true;
             isActed = false;
         }
         else if(triggeredAbility != NULL && target != NULL){
@@ -128,7 +138,7 @@ void PlayerTurnState::Logic() {
             isActed = false;
             cout << "骰子数不足" << endl;
         }
-        target = NULL;
+        showHurt = true;
         triggeredAbility = NULL;
     }
     else if (isCardFinished)
@@ -148,42 +158,66 @@ void PlayerTurnState::Logic() {
     }
     else if (isChanged)
     {
-        isChanged = false;
-        Character* c = (Character*) target;
-        currentRole= (Character*)target;
-        c->Selected(true);
-        if (c->name == "xingqiu")
+        if (times == 0)
         {
-            for (auto i = 0; i<3; i++)
+            isChangingRole = false;
+            Character* c = (Character*) target;
+            currentRole= (Character*)target;
+            c->Selected(true);
+            if (c->name == "xingqiu")
             {
-               
-                mGame->sAbility[i] = mGame->abilityVector[i];
+                for (auto i = 0; i<3; i++)
+                {
+                    mGame->sAbility[i] = mGame->abilityVector[i];
+                }
             }
-        }
-        else if (c->name == "keqing")
-        {
-            for (auto i = 0; i < 3; i++)
+            else if (c->name == "keqing")
             {
+                for (auto i = 0; i < 3; i++)
+                {
 
-                mGame->sAbility[i] = mGame->abilityVector[i+3];
+                    mGame->sAbility[i] = mGame->abilityVector[i+3];
+                }
             }
-        }
-        else if (c->name == "kaiya")
-        {
-            for (auto i = 0; i < 3; i++)
+            else if (c->name == "kaiya")
             {
+                for (auto i = 0; i < 3; i++)
+                {
 
-                mGame->sAbility[i] = mGame->abilityVector[i+6];
+                    mGame->sAbility[i] = mGame->abilityVector[i+6];
+                }
             }
-        }
-        for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
-        {
-            if (&(*i) != target)
+            for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
             {
-                i->Selected(false);
+                if (&(*i) != target)
+                {
+                    i->Selected(false);
+                }
+            }
+            target = NULL;
+        }
+        
+        if (quickChange)
+        {
+            isChanged = false;
+        }
+        else {
+            if (times++ >= 500)
+            {
+                cout << "换人消耗回合";
+                if (!mGame->enemyTurnOver)
+                {
+                    cout << "，进入enemy回合" << endl;
+                    mGame->ChangeState(new EnemyTurnState(mGame));
+                }
+                else
+                {
+                    cout << "，进入下一回合" << endl;
+                    mGame->ChangeState(new PlayerTurnState(mGame));
+                }
+
             }
         }
-        target = NULL;
     }
     
 }
@@ -195,14 +229,13 @@ void PlayerTurnState::Draw() {
 
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
-
+   
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
-
     if (isConsumingDice)
     {
         mGame->dicebg.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * diceBgWidth / (float)mGame->dicebg.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * diceBgHeight / (float)mGame->dicebg.sprite.getTexture()->getSize().y);
@@ -214,7 +247,12 @@ void PlayerTurnState::Draw() {
         }
         mGame->chupai.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
         mGame->chupai.draw(mGame->window);
-        
+        if (isAbilityTriggered)
+        {
+            mGame->target.setPos((*target).getX(), (*target).getY());
+            mGame->target.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->target.draw(mGame->window);
+        }
     }
     else {
         for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
@@ -233,19 +271,74 @@ void PlayerTurnState::Draw() {
             mGame->playerbanner.draw(mGame->window);
         }
         else {
-            for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-               (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                (*it)->Object::draw(mGame->window);
+            if (isChangingRole)
+            {
+                mGame->changeConfirm.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                mGame->changeConfirm.draw(mGame->window);
+                mGame->changeTarget.setPos((*target).getX(), (*target).getY());
+                mGame->changeTarget.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                mGame->changeTarget.draw(mGame->window);
             }
+            else {
+                for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
+                   (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                    (*it)->Object::draw(mGame->window);
+                }
+            }
+            
 
         }
         mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     }
+    if (showHurt)
+    {
+        if (hurtTimer == 0)
+        {
+            mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
+            target = NULL;
+        }
+        if (hurtTimer++ < hurtTime)
+        {
+            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->hurt.draw(mGame->window);
+        }
+        else {
+            hurtTimer = 0;
+            showHurt = false;
+        }
+    }
     
-    mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
+    mGame->window.display();
 }
 void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！isCardTriggered 点击卡片，点击角色，！isAbilityTriggered 点击技能
 {
+    if (isChangingRole) //换人不用显示选骰子状态，按confirm直接减1
+    {
+        if (mGame->diceNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))  //换人的费用，可能不为1
+        {
+            //if confirm
+            if (mGame->changeConfirm.isIn(mPoint.x, mPoint.y))
+            {
+                mGame->diceNum = mGame->diceNum - Cost(1, pair<ElementType, int>(ElementType::cai, 1));
+                diceTriggeredNum = Cost(1, pair<ElementType, int>(ElementType::cai, 0));
+                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                {
+                    diceTriggered[i] = false;
+                }
+                for (int i = mGame->diceNum.getSize(); i < 8; i++)
+                {
+                    diceTriggered[i] = true;
+                }
+                isChanged = true;
+               
+            }
+            
+        }
+        else {
+            cout << "骰子数少于1，不准换人" << endl;
+            isChangingRole = false;
+        }
+    }
     if (isConsumingDice)
     {
         if (!mGame->dicebg.isIn(mPoint.x, mPoint.y))
@@ -253,7 +346,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             isConsumingDice = false;
             isAbilityTriggered = false;
             isCardTriggered = false;
-            isChangingRole = false;
+
             target = NULL;
             for (int i = 0; i < mGame->diceNum.getSize(); i++)
             {
@@ -265,9 +358,9 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             if (diceTriggeredNum >= triggeredAbility->cost)
             {
                 //if confirm
-                mGame->diceNum = mGame->diceNum-triggeredAbility->cost;
+                mGame->diceNum = mGame->diceNum - triggeredAbility->cost;
                 isActed = true;
-                 diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
+                diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
                 isConsumingDice = false;
                 for (int i = 0; i < mGame->diceNum.getSize(); i++)
                 {
@@ -275,7 +368,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                 }
                 for (int i = mGame->diceNum.getSize(); i < 8; i++)
                 {
-                    diceTriggered[i] = true;[]
+                    diceTriggered[i] = true;
                 }
             }
             else {
@@ -323,36 +416,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
 
             //}
         }
-        else if (isChangingRole)
-        {
-            if (diceTriggeredNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))  //换人的费用，可能不为1
-            {
-                //if confirm
-                mGame->diceNum = mGame->diceNum - Cost(1,pair<ElementType, int>(ElementType::cai, 1));
-                 diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
-                for (int i = 0; i < mGame->diceNum.getSize(); i++)
-                {
-                    diceTriggered[i] = false;
-                }
-                for (int i = mGame->diceNum.getSize(); i < 8; i++)
-                {
-                    diceTriggered[i] = true;
-                }
-                isChanged = true;
-                isConsumingDice = false;
-            }
-            else {
-                for (int i = 0; i < mGame->diceNum.getSize(); i++)
-                {
-                    if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
-                    {
-                        diceTriggered[i] = true;
-                        diceTriggeredNum = diceTriggeredNum + Cost(1,pair<ElementType, int>(ElementType::cai, 1));
-                    }
-                }
-
-            }
-        }
+        
     }
     if (Card* temp = mGame->cards.cardMouse(mPoint.x, mPoint.y))
     {
@@ -410,7 +474,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         {
             isChangingRole = true;
             target = &(*it);
-            isConsumingDice = true;
+
             
         }
        
@@ -428,7 +492,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
     }
     for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
     {
-        if (!isConsumingDice && (*i)->isIn(mPoint.x, mPoint.y))
+        if (!isConsumingDice && !isChangingRole && (*i)->isIn(mPoint.x, mPoint.y))
         {
             isConsumingDice = true;
             //isActed = true;

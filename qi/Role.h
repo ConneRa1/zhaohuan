@@ -13,6 +13,8 @@ public:
 	int gethp() { return hp; }
 	bool ifDead() { return isDead; }
 	void Die() { isDead = true; }
+	float getX() { return x; }
+	float getY() { return y; }
 protected:
 	int hp;
 	int atk;
