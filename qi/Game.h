@@ -19,7 +19,6 @@ class State;
 #include"PlayerTurnState.h"
 #include"ChooseCardState.h"
 #include"EnemyTurnState.h"
-#include"ChangeRoleState.h"
 #include"DrawCardState.h"
 #include"GameEndState.h"
 class Game {

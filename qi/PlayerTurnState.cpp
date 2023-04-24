@@ -14,7 +14,7 @@ void PlayerTurnState::Input() {
             placedDice.clear();
             //每次进入这个状态，都重置骰子的位子
             int num = 0;
-            for (int i = 0; i < mGame->diceNum; i++)
+            /*for (int i = 0; i < mGame->diceNum; i++)
             {
                 placedDice.push_back(mGame->chooseDice);
                 if (num % 2 == 0)
@@ -23,7 +23,7 @@ void PlayerTurnState::Input() {
                 }
                 placedDice[i].setPos(num * consumeDiceOffsetX + consumeDiceX, consumeDiceY + (i / 2) * consumeDiceOffsetY);
                 num++;
-            }
+            }*/
             for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
                 if (it->IsSelected())
                 {
@@ -152,29 +152,28 @@ void PlayerTurnState::Logic() {
         Character* c = (Character*) target;
         currentRole= (Character*)target;
         c->Selected(true);
-        int times = 0;
         if (c->name == "xingqiu")
         {
-            for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
+            for (auto i = 0; i<3; i++)
             {
-                i->sprite.setTexture(mGame->texarr[150 + (times++)]);
-
+               
+                mGame->sAbility[i] = mGame->abilityVector[i];
             }
         }
         else if (c->name == "keqing")
         {
-            for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
+            for (auto i = 0; i < 3; i++)
             {
-                i->sprite.setTexture(mGame->texarr[153 + (times++)]);
 
+                mGame->sAbility[i] = mGame->abilityVector[i+3];
             }
         }
         else if (c->name == "kaiya")
         {
-            for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
+            for (auto i = 0; i < 3; i++)
             {
-                i->sprite.setTexture(mGame->texarr[156 + (times++)]);
 
+                mGame->sAbility[i] = mGame->abilityVector[i+6];
             }
         }
         for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
@@ -208,11 +207,11 @@ void PlayerTurnState::Draw() {
     {
         mGame->dicebg.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * diceBgWidth / (float)mGame->dicebg.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * diceBgHeight / (float)mGame->dicebg.sprite.getTexture()->getSize().y);
         mGame->dicebg.draw(mGame->window);
-        for (int i = 0; i < mGame->diceNum ; i++)
+        /*for (int i = 0; i < mGame->diceNum ; i++)
         {
             placedDice[i].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
             placedDice[i].draw(mGame->window);
-        }
+        }*/
         mGame->chupai.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
         mGame->chupai.draw(mGame->window);
         
@@ -222,11 +221,11 @@ void PlayerTurnState::Draw() {
             it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             it->draw(mGame->window);
         }
-        for (int i = 0; i < mGame->diceNum; i++)
+       /* for (int i = 0; i < mGame->diceNum; i++)
         {
             mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
             mGame->dices[i].draw(mGame->window);
-        }
+        }*/
         if (bannertime < bannerTime)
         {
             mGame->cards.setHeldCardsPosition(0.5 - mGame->cards.getCardNum() * cardWidth / 4, heldCardY, cardWidth * 0.52);
@@ -235,8 +234,8 @@ void PlayerTurnState::Draw() {
         }
         else {
             for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-                it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                it->Object::draw(mGame->window);
+               (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                (*it)->Object::draw(mGame->window);
             }
 
         }
@@ -259,94 +258,94 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         }
         if (isAbilityTriggered)
         {
-            if (diceTriggeredNum >= triggeredAbility->cost)
-            {
-                //if confirm
-                mGame->diceNum -= triggeredAbility->cost;
-                isActed = true;
-                diceTriggeredNum = 0;
-                isConsumingDice = false;
-                for (int i = 0; i < mGame->diceNum; i++)
-                {
-                    diceTriggered[i] = false;
-                }
-                for (int i = mGame->diceNum; i < 8; i++)
-                {
-                    diceTriggered[i] = true;
-                }
-            }
-            else {
-                for (int i = 0; i < mGame->diceNum; i++)
-                {
-                    if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
-                    {
-                        diceTriggered[i] = true;
-                        diceTriggeredNum += 1;
-                        cout << "使用技能 ： i" << "  已点击数：" << diceTriggeredNum << endl;
-                    }
-                }
+            //if (diceTriggeredNum >= triggeredAbility->cost)
+            //{
+            //    //if confirm
+            //    mGame->diceNum -= triggeredAbility->cost;
+            //    isActed = true;
+            //    diceTriggeredNum = 0;
+            //    isConsumingDice = false;
+            //    for (int i = 0; i < mGame->diceNum; i++)
+            //    {
+            //        diceTriggered[i] = false;
+            //    }
+            //    for (int i = mGame->diceNum; i < 8; i++)
+            //    {
+            //        diceTriggered[i] = true;
+            //    }
+            //}
+            //else {
+            //    for (int i = 0; i < mGame->diceNum; i++)
+            //    {
+            //        if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
+            //        {
+            //            diceTriggered[i] = true;
+            //            diceTriggeredNum += 1;
+            //            cout << "使用技能 ： i" << "  已点击数：" << diceTriggeredNum << endl;
+            //        }
+            //    }
 
-            }
+            //}
 
         }
         else if (isCardTriggered)
         {
-            if (diceTriggeredNum >= triggeredCard->cost)
-            {
-                //if confirm
-                mGame->diceNum -= triggeredCard->cost;
-                isCardFinished = true;
-                diceTriggeredNum = 0;
-                isConsumingDice = false;
-                for (int i = 0; i < mGame->diceNum; i++)
-                {
-                    diceTriggered[i] = false;
-                }
-                for (int i = mGame->diceNum; i < 8; i++)
-                {
-                    diceTriggered[i] = true;
-                }
-            }
-            else {
-                for (int i = 0; i < mGame->diceNum; i++)
-                {
-                    if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
-                    {
-                        diceTriggered[i] = true;
-                        diceTriggeredNum += 1;
-                        cout << "使用卡牌 ： i" << "  已点击数：" << diceTriggeredNum << endl;
-                    }
-                }
+            //if (diceTriggeredNum >= triggeredCard->cost)
+            //{
+            //    //if confirm
+            //    mGame->diceNum -= triggeredCard->cost;
+            //    isCardFinished = true;
+            //    diceTriggeredNum = 0;
+            //    isConsumingDice = false;
+            //    for (int i = 0; i < mGame->diceNum; i++)
+            //    {
+            //        diceTriggered[i] = false;
+            //    }
+            //    for (int i = mGame->diceNum; i < 8; i++)
+            //    {
+            //        diceTriggered[i] = true;
+            //    }
+            //}
+            //else {
+            //    for (int i = 0; i < mGame->diceNum; i++)
+            //    {
+            //        if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
+            //        {
+            //            diceTriggered[i] = true;
+            //            diceTriggeredNum += 1;
+            //            cout << "使用卡牌 ： i" << "  已点击数：" << diceTriggeredNum << endl;
+            //        }
+            //    }
 
-            }
+            //}
         }
         else if (isChangingRole)
         {
             if (diceTriggeredNum >= 1)  //换人的费用，可能不为1
             {
                 //if confirm
-                mGame->diceNum -= 1;
+                //mGame->diceNum -= 1;
                 diceTriggeredNum = 0;
-                for (int i = 0; i < mGame->diceNum; i++)
+                /*for (int i = 0; i < mGame->diceNum; i++)
                 {
                     diceTriggered[i] = false;
                 }
                 for (int i = mGame->diceNum; i < 8; i++)
                 {
                     diceTriggered[i] = true;
-                }
+                }*/
                 isChanged = true;
                 isConsumingDice = false;
             }
             else {
-                for (int i = 0; i < mGame->diceNum; i++)
+                /*for (int i = 0; i < mGame->diceNum; i++)
                 {
                     if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
                     {
                         diceTriggered[i] = true;
                         diceTriggeredNum += 1;
                     }
-                }
+                }*/
 
             }
         }
@@ -410,63 +409,27 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             isConsumingDice = true;
             
         }
-        if (it->isIn(mPoint.x, mPoint.y))
-        {
-            int i;
-            it->Selected(true);
-            int times = 0;
-            if (it->name == "xingqiu")
-            {
-                for (i = 0; i < 3; i++) {
-                    mGame->sAbility[i] = mGame->abilityVector[i];
-                }
-            }
-            else if (it->name == "keqing")
-            {
-                for (i = 0; i < 3; i++) {
-                    mGame->sAbility[i] = mGame->abilityVector[i+3];
-                }
-            }
-            else if (it->name == "kaiya")
-            {
-                for (i = 0; i < 3; i++) {
-                    mGame->sAbility[i] = mGame->abilityVector[i+6];
-                }
-            }
-            for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
-            {
-                if (i != it)
-                {
-                    i->Selected(false);
-                }
-            }
-        }
-                {
-                    i->Selected(false);
-                }
-            }
-        }
-
+       
     }
-    for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
+    for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) 
+    {
         if (!isConsumingDice && it->isIn(mPoint.x, mPoint.y))
         {
             if (it->name == "turnMark")
             {
                 mGame->firstConfirm = true;
             }
-        if (!isConsumingDice&&i->isIn(mPoint.x, mPoint.y))
-
-    }
-            isConsumingDice = true;
-            //isActed = true;
-            triggeredAbility = &(*i);
-            target = & mGame->enemyVector[0];   //获取敌人，敌人多了修改这里。 
-                isActed = true;
-                target = &(*it);
-                isAbilityTriggered = false;
-                cout << "点击到了！" << endl;
-            }
+            //if (!isConsumingDice&& i->isIn(mPoint.x, mPoint.y))
+            //{
+            //    isConsumingDice = true;
+            //    //isActed = true;
+            //    triggeredAbility = &(*i);
+            //    target = & mGame->enemyVector[0];   //获取敌人，敌人多了修改这里。 
+            //        isActed = true;
+            //        target = &(*it);
+            //        isAbilityTriggered = false;
+            //        cout << "点击到了！" << endl;
+            //}
         }
     }
     
