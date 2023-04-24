@@ -41,6 +41,20 @@ void Character::draw(RenderWindow& window,float x,float y, Shader& shader)
     sHp.setPosition(window.getSize().x * (this->x + hpLeftOffset), window.getSize().y * (this->y +hpUpOffset));
     window.draw(sHp);
 
+    Text text;
+    text.setFont(font);
+    text.setString(to_string(hp));
+
+    if (hp < 10) {
+        text.setPosition(window.getSize().x * (this->x + 0.15 * hpLeftOffset), window.getSize().y * (this->y + 0.15 * hpUpOffset));
+    }
+    else {
+        text.setPosition(window.getSize().x * (this->x + 0.5 * hpLeftOffset), window.getSize().y * (this->y));
+    }
+    text.setCharacterSize(float(window.getSize().y) / float(windowHeight) * fontSize);
+    text.setFillColor(Color::White);
+    window.draw(text);
+
 }
 void Character::setScale(float x, float y)
 {

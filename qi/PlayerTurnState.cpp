@@ -1,6 +1,8 @@
 #include "PlayerTurnState.h"
 PlayerTurnState::PlayerTurnState(Game* game) :State(game){
+
 }
+
 void PlayerTurnState::Input() {
     Event event;
     static bool flag = false;
@@ -87,7 +89,7 @@ void PlayerTurnState::Logic() {
         if (triggeredAbility != NULL && target != NULL&& mGame->diceNum >= triggeredAbility->cost)
         {
             cout << "玩家回合结束，进入enemy回合" << endl;;
-            mGame->diceNum -= triggeredAbility->cost;
+           /* mGame->diceNum -= triggeredAbility->cost;*/
             target->getHurt(2);
             if (target->gethp() <= 0)
             {
@@ -123,15 +125,15 @@ void PlayerTurnState::Draw() {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
 
-    for (int i = 0; i < mGame->diceNum; i++)
+    /*for (int i = 0; i < mGame->diceNum; i++)
     {
         mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
         mGame->dices[i].draw(mGame->window);
-    }
+    }*/
     int times = 0;
     for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-        it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-        it->Object::draw(mGame->window);
+        (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+        (*it)->Object::draw(mGame->window);
     }
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
@@ -186,30 +188,25 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         if (it->isIn(mPoint.x, mPoint.y))
         {
+            int i;
             it->Selected(true);
             int times = 0;
             if (it->name == "xingqiu")
             {
-                for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
-                {
-                    i->sprite.setTexture(mGame->texarr[150 + (times++)]);
-
+                for (i = 0; i < 3; i++) {
+                    mGame->sAbility[i] = mGame->abilityVector[i];
                 }
             }
             else if (it->name == "keqing")
             {
-                for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
-                {
-                    i->sprite.setTexture(mGame->texarr[153 + (times++)]);
-
+                for (i = 0; i < 3; i++) {
+                    mGame->sAbility[i] = mGame->abilityVector[i+3];
                 }
             }
             else if (it->name == "kaiya")
             {
-                for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
-                {
-                    i->sprite.setTexture(mGame->texarr[156 + (times++)]);
-
+                for (i = 0; i < 3; i++) {
+                    mGame->sAbility[i] = mGame->abilityVector[i+6];
                 }
             }
             for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
@@ -234,10 +231,10 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)
     }
     for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
     {
-        if (i->isIn(mPoint.x, mPoint.y))
+        if ((*i)->isIn(mPoint.x, mPoint.y))
         {
             isAbilityTriggered = true;      //激活技能
-            triggeredAbility = &(*i);
+            triggeredAbility = *i;
         }
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)

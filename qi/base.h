@@ -5,6 +5,8 @@
 #include<SFML/Graphics.hpp>
 #include<iostream>
 #include<stdio.h>
+#include<map>
+
 using namespace std;
 using namespace sf;
 #define windowWidth 1920	//窗口宽度
@@ -48,16 +50,25 @@ using namespace sf;
 #define chooseCardOffset 0.145
 #define heldCardY 0.853
 #define characterY 0.58
+#define fontSize 24
+extern Font font;		//游戏字体，主要是用来画血量的
 
-typedef enum CardType {		
-	button,
-	attack,
-	cure,
-	fun
+typedef enum CardType {
+	ability,	//技能
+	null       //默认
+	/*equipment,
+	fun*/
 };
 
 typedef enum BuffType {		
 
+};
+
+typedef enum ElementType {	//元素种类
+	shui,
+	bing,
+	lei,
+	cai,
 };
 
 

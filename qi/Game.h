@@ -12,6 +12,8 @@
 #include "Enemy.h"
 #include "Object.h"
 #include"UI.h"
+#include "Ability.h"
+#include "Cost.h"
 class State;
 #include"FirstDiceState.h"
 #include"PlayerTurnState.h"
@@ -32,7 +34,7 @@ public:
 private:
 	RenderWindow window;	//窗口
 	View view;
-	int diceNum = 8;
+	Cost diceNum;
 	bool isFullscreen = false;
 	vector<Character> characterVector;	//角色容器，用于存储场上所有的角色
 	vector<Enemy> enemyVector;	//怪物容器，用于存储场上所有的怪物
@@ -40,7 +42,10 @@ private:
 	vector<Object> dices;
 
 	//display测试用
-	vector<Card> sAbility;
+	vector<Ability*> abilityVector;   //用来存放所有的技能
+	vector<Ability*> sAbility;		//用来存放显示、生效的技能
+
+
 	vector<Object> rollDices;
 	vector<Object> chooseCards;
 	Texture texarr[500];

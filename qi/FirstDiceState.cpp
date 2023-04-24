@@ -37,7 +37,7 @@ void FirstDiceState::Logic() {
         {
             cout << "投骰子结束，进入战斗" << endl;
             mGame->firstConfirm = false;
-            mGame->diceNum = 8;     //初始化骰子数，和敌人行动力
+            //mGame->diceNum = 8;     //初始化骰子数，和敌人行动力
             mGame->enemyAction = 2;
             mGame->enemyTurnOver = false;
             mGame->playerTurnOver = false;

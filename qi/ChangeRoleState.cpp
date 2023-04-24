@@ -50,15 +50,15 @@ void ChangeRoleState::Draw() {
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
-    for (int i = 0; i < mGame->diceNum; i++)    //按骰子数画
-    {
-        mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
-        mGame->dices[i].draw(mGame->window);
-    }
+    //for (int i = 0; i < mGame->diceNum; i++)    //按骰子数画
+    //{
+    //    mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+    //    mGame->dices[i].draw(mGame->window);
+    //}
     int times = 0;
     for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-        it->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-        it->Object::draw(mGame->window);
+        (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+        (*it)->Object::draw(mGame->window);
     }
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
