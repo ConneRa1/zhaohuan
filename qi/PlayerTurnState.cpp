@@ -1,6 +1,8 @@
 #include "PlayerTurnState.h"
 PlayerTurnState::PlayerTurnState(Game* game) :State(game){
+
 }
+
 void PlayerTurnState::Input() {
     if (bannertime >= bannerTime)
     {
@@ -408,6 +410,42 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             isConsumingDice = true;
             
         }
+        if (it->isIn(mPoint.x, mPoint.y))
+        {
+            int i;
+            it->Selected(true);
+            int times = 0;
+            if (it->name == "xingqiu")
+            {
+                for (i = 0; i < 3; i++) {
+                    mGame->sAbility[i] = mGame->abilityVector[i];
+                }
+            }
+            else if (it->name == "keqing")
+            {
+                for (i = 0; i < 3; i++) {
+                    mGame->sAbility[i] = mGame->abilityVector[i+3];
+                }
+            }
+            else if (it->name == "kaiya")
+            {
+                for (i = 0; i < 3; i++) {
+                    mGame->sAbility[i] = mGame->abilityVector[i+6];
+                }
+            }
+            for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
+            {
+                if (i != it)
+                {
+                    i->Selected(false);
+                }
+            }
+        }
+                {
+                    i->Selected(false);
+                }
+            }
+        }
 
     }
     for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
@@ -417,18 +455,18 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             {
                 mGame->firstConfirm = true;
             }
-        }
+        if (!isConsumingDice&&i->isIn(mPoint.x, mPoint.y))
 
     }
-    for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
-    {
-        if (!isConsumingDice&&i->isIn(mPoint.x, mPoint.y))
-        {
-            isAbilityTriggered = true;      //激活技能
             isConsumingDice = true;
             //isActed = true;
             triggeredAbility = &(*i);
             target = & mGame->enemyVector[0];   //获取敌人，敌人多了修改这里。 
+                isActed = true;
+                target = &(*it);
+                isAbilityTriggered = false;
+                cout << "点击到了！" << endl;
+            }
         }
     }
     

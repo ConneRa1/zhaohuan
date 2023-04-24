@@ -2,17 +2,19 @@
 #include "Base.h"
 #include "Object.h"
 #include "Character.h"
-
+#include"Cost.h"
 
 
 class Card :public Object {
 public:
-	Card(Texture& texture, int width, int height, float x, float y,int cost,bool=false);
+	Card(Texture& texture, int width, int height, float x, float y,Cost cost ,CardType cardtype,bool=false);
 	~Card();
 	void draw(RenderWindow& window, float x, float y);
 	void setScale(float x, float y);
-	int cost;
-	bool quickAction = false;
+	CardType cardtype;
+	Cost cost;		//花费的费用
+	//int cost;
+	bool quickAction = false;		//看这个牌是不是不需要目标
 protected:
 	Role* target=NULL;
 	bool isTriggered = false;
@@ -41,11 +43,15 @@ private:
 	vector<Card*> cardPile;	//牌堆中的卡片
 };
 
-class CardFactory {		//卡片工厂
-public:
-	static Card* getCard(CardType num, Texture& texture, int width, int height, int x, int y)
-	{
-		
 
-	}
-};
+
+
+//class CardFactory {		//卡片工厂
+//public:
+//	static Card* getCard(CardType num, Texture& texture, int width, int height, int x, int y)
+//	{
+//		
+//
+//	}
+//};
+

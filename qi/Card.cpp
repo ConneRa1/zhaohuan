@@ -2,14 +2,18 @@
 Card::~Card()
 {
 }
-Card::Card(Texture& texture, int width, int height, float x, float y, int cost, bool quick) : Object(texture, width, height, x, y) {
-	this->cost = cost;
+Card::Card(Texture& texture, int width, int height, float x, float y,Cost c, CardType cardtype, bool quick) : Object(texture, width, height, x, y) {
 	quickAction = quick;
+	cost = c;
+	this->cost = cost;
+	this->cardtype = cardtype;
 }
+
 void Card::draw(RenderWindow& window, float x, float y) {
 	setScale(x, y);
 	Object::draw(window);
 }
+
 void Card::setScale(float x, float y)
 {
 	sprite.setScale(x * (float)windowWidth * cardWidth / (float)sprite.getTexture()->getSize().x,
@@ -38,8 +42,8 @@ void  CardVector::draw(RenderWindow& window,float x,float y) {
 }
 
 void  CardVector::push_back(Card* newCard) {
-	cardPile.push_back(newCard);
 
+	cardPile.push_back(newCard);
 }
 
 
@@ -51,6 +55,7 @@ void CardVector::drawCard() {
 	heldCards.push_back(*(cardPile.begin()));
 	cardPile.erase((cardPile.begin()));
 }
+
 void CardVector::changeCard(Card* card) {
 	int index = 0;
 	for (auto it = heldCards.begin(); it != heldCards.end(); it++) {
