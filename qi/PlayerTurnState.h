@@ -2,6 +2,7 @@
 #include "State.h"
 #include"base.h"
 #include"Game.h"
+#include "Cost.h"
 class PlayerTurnState :
     public State
 {
@@ -25,12 +26,12 @@ private:
     bool flag = false;
     bool DiceConsumed = false;
     bool diceTriggered[8] = {0};
-    int diceTriggeredNum = 0;
+    Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     vector<Object>placedDice;
     Role *target;
     Character* currentRole;
     Enemy* currentEnemy;
     Card* triggeredCard=NULL;
-    Card *triggeredAbility;
+    Ability*triggeredAbility;
 };
 

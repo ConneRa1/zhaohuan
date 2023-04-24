@@ -8,6 +8,8 @@ public:
 	Cost(map<ElementType, int> map);
 	Cost(const Cost& c);
 	Cost operator-(Cost c);
+	Cost operator+(Cost c);
 	bool operator>=(Cost c);
 	map<ElementType, int> m;
+	int getSize();
 };

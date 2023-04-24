@@ -42,6 +42,24 @@ Cost Cost:: operator-(Cost c) {
 	return r;
 }
 
+Cost Cost:: operator+(Cost c) {
+	map<ElementType, int>temp = this->m;
+	for (auto it = temp.begin(); it != temp.end(); it++) 
+	{
+		for (auto i = c.m.begin(); i != c.m.end(); i++)
+		{
+			if ( (*it).first ==(*i).first)
+			{
+				(*it).second += (*i).second;
+				(*i).second = 0;
+			}
+		}
+	}
+	Cost r(temp);
+	return r;
+}
+
+
 bool Cost:: operator>=(Cost c) {
 	map<ElementType, int>temp = this->m;
 	for (auto it = c.m.begin(); it != c.m.end(); it++) {
@@ -54,7 +72,6 @@ bool Cost:: operator>=(Cost c) {
 			}
 			else
 				return false;
-
 		}
 	}
 	int n = c.m[ElementType::cai];
@@ -66,3 +83,13 @@ bool Cost:: operator>=(Cost c) {
 	return false;
 }
 
+int Cost::getSize()
+{
+	map<ElementType, int>temp = this->m;
+	int count = 0;
+	for (auto it = temp.begin(); it != temp.end(); it++)
+	{
+		count += (*it).second;
+	}
+	return count;
+}
