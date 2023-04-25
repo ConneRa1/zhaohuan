@@ -329,69 +329,38 @@ void PlayerTurnState::Draw() {
     {
         mGame->dicebg.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * diceBgWidth / (float)mGame->dicebg.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * diceBgHeight / (float)mGame->dicebg.sprite.getTexture()->getSize().y);
         mGame->dicebg.draw(mGame->window);
-        //画骰子
-        int n = 0;
-        vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-        sort(vec.begin(), vec.end(), Cost::cmp);
-        for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
-            placedDice[n].sprite.setTexture(mGame->texarr[200]);
-            placedDice[n].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
-            placedDice[n].draw(mGame->window);
-            n++;
-        }
-        for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-        {
-            if (it->first != ElementType::cai) {
-                for (int i = 0; i < it->second; i++) {
-                    placedDice[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
-                    placedDice[n].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
-                    placedDice[n].draw(mGame->window);
-                    n++;
-                }
-            }
-        }
-        //cout << n << endl;
-        /*for (int i = 0; i < mGame->diceNum.getSize() ; i++)
+        for (int i = 0; i < mGame->diceNum.getSize(); i++)
         {
             placedDice[i].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
             placedDice[i].draw(mGame->window);
-        }*/
+        }
         mGame->chupai.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
         mGame->chupai.draw(mGame->window);
-        
+        if (isAbilityTriggered)
+        {
+            mGame->target.setPos((*target).getX(), (*target).getY());
+            mGame->target.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->target.draw(mGame->window);
+        }
+        if (isChangingRole)
+        {
+            mGame->changeConfirm.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->changeConfirm.draw(mGame->window);
+            mGame->changeTarget.setPos((*target).getX(), (*target).getY());
+            mGame->changeTarget.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->changeTarget.draw(mGame->window);
+        }
     }
     else {
         for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
             it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             it->draw(mGame->window);
         }
-
-        //画骰子
-        int n = 0;
-        vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-        sort(vec.begin(), vec.end(), Cost::cmp);
-        for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
-            mGame->dices[n].sprite.setTexture(mGame->texarr[200]);
-            mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
-            mGame->dices[n].draw(mGame->window);
-            n++;
-        }
-        for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-        {
-            if (it->first != ElementType::cai) {
-                for (int i = 0; i < it->second; i++) {
-                    mGame->dices[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
-                    mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
-                    mGame->dices[n].draw(mGame->window);
-                    n++;
-                }
-            }
-        }
-       /* for (int i = 0; i < mGame->diceNum.getSize(); i++)
+        for (int i = 0; i < mGame->diceNum.getSize(); i++)
         {
             mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
             mGame->dices[i].draw(mGame->window);
-        }*/
+        }
         if (bannertime < bannerTime)
         {
             mGame->cards.setHeldCardsPosition(0.5 - mGame->cards.getCardNum() * cardWidth / 4, heldCardY, cardWidth * 0.52);
@@ -399,14 +368,14 @@ void PlayerTurnState::Draw() {
             mGame->playerbanner.draw(mGame->window);
         }
         else {
-            for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-               (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                (*it)->Object::draw(mGame->window);
-            }
-
+            
+                for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
+                    (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                    (*it)->Object::draw(mGame->window);
+                }
         }
-        mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     }
+    mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     if (showHurt)
     {
         if (hurtTimer == 0)
@@ -581,82 +550,82 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         }
         else if (isChangingRole)
         {
-        if (diceTriggeredNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))  //换人的费用，可能不为1
-        {
-            //if confirm
-           //mGame->diceNum = mGame->diceNum - Cost(1,pair<ElementType, int>(ElementType::cai, 1));
-            mGame->diceNum = mGame->diceNum - diceTriggeredNum;
-            diceTriggeredNum = Cost();
-            for (int i = 0; i < mGame->diceNum.getSize(); i++)
+            if (diceTriggeredNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))  //换人的费用，可能不为1
             {
-                diceTriggered[i] = false;
-            }
-            for (int i = mGame->diceNum.getSize(); i < 8; i++)
-            {
-                diceTriggered[i] = true;
-            }
-            isChanged = true;
-            isConsumingDice = false;
-        }
-        else {
-            for (int i = 0; i < mGame->diceNum.getSize(); i++)
-            {
-                if (placedDice[i].isIn(mPoint.x, mPoint.y)) {
-                    if (diceTriggered[i]) {
-                        diceTriggered[i] = 0;
-                        int n = -1;
-                        n += mGame->diceNum.m[ElementType::cai];
-                        if (n >= i) {
-                            diceTriggeredNum.m[ElementType::cai]--;
-                        }
-                        else {
-                            vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-                            sort(vec.begin(), vec.end(), Cost::cmp);
-                            for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-                            {
-                                if (it->first != ElementType::cai) {
-                                    n += it->second;
-                                    if (n >= i) {
-                                        diceTriggeredNum.m[it->first]--;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        //选中骰子
-                        int n = -1;
-                        n += mGame->diceNum.m[ElementType::cai];
-                        if (n >= i) {
-                            if (!(diceTriggeredNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))) {
-                                diceTriggered[i] = true;
-                                diceTriggeredNum.m[ElementType::cai]++;
-                            }
-                        }
-                        else {
-                            vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-                            sort(vec.begin(), vec.end(), Cost::cmp);
-                            for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-                            {
-                                if (it->first != ElementType::cai) {
-                                    n += it->second;
-                                    if (n >= i) {
-                                        if (diceTriggeredNum.m[it->first] < triggeredAbility->cost.m[it->first] + triggeredAbility->cost.m[ElementType::cai]) {
-                                            diceTriggered[i] = true;
-                                            diceTriggeredNum.m[it->first]++;
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-
-                    }
-
+                //if confirm
+               //mGame->diceNum = mGame->diceNum - Cost(1,pair<ElementType, int>(ElementType::cai, 1));
+                mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                diceTriggeredNum = Cost();
+                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                {
+                    diceTriggered[i] = false;
                 }
+                for (int i = mGame->diceNum.getSize(); i < 8; i++)
+                {
+                    diceTriggered[i] = true;
+                }
+                isChanged = true;
+                isConsumingDice = false;
             }
+            else {
+                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                {
+                    if (placedDice[i].isIn(mPoint.x, mPoint.y)) {
+                        if (diceTriggered[i]) {
+                            diceTriggered[i] = 0;
+                            int n = -1;
+                            n += mGame->diceNum.m[ElementType::cai];
+                            if (n >= i) {
+                                diceTriggeredNum.m[ElementType::cai]--;
+                            }
+                            else {
+                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                                sort(vec.begin(), vec.end(), Cost::cmp);
+                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                                {
+                                    if (it->first != ElementType::cai) {
+                                        n += it->second;
+                                        if (n >= i) {
+                                            diceTriggeredNum.m[it->first]--;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            //选中骰子
+                            int n = -1;
+                            n += mGame->diceNum.m[ElementType::cai];
+                            if (n >= i) {
+                                if (!(diceTriggeredNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))) {
+                                    diceTriggered[i] = true;
+                                    diceTriggeredNum.m[ElementType::cai]++;
+                                }
+                            }
+                            else {
+                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                                sort(vec.begin(), vec.end(), Cost::cmp);
+                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                                {
+                                    if (it->first != ElementType::cai) {
+                                        n += it->second;
+                                        if (n >= i) {
+                                            if (diceTriggeredNum.m[it->first] < triggeredAbility->cost.m[it->first] + triggeredAbility->cost.m[ElementType::cai]) {
+                                                diceTriggered[i] = true;
+                                                diceTriggeredNum.m[it->first]++;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                    }
+                }
 
         }
         }
