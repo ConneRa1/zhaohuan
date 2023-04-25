@@ -37,7 +37,7 @@ void FirstDiceState::Logic() {
         Cost temp;
         for (int i = 0; i < 8; i++) {
             random_device rd;
-            temp.m[ElementType(rd() % ElementType::count)]++;
+            temp.m[ElementType(rd() % (int)ElementType::count)]++;
 
         }
         mGame->diceNum = temp;
@@ -85,7 +85,7 @@ void FirstDiceState::Draw() {
         {
             if (it->first != ElementType::cai) {
                 for (int i = 0; i < it->second; i++) {
-                    mGame->rollDices[n].sprite.setTexture(mGame->texarr[210+it->first]);
+                    mGame->rollDices[n].sprite.setTexture(mGame->texarr[210+(int)it->first]);
                     mGame->rollDices[n].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[n].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[n].sprite.getTexture()->getSize().y);
                     mGame->rollDices[n].draw(mGame->window);
                     n++;
@@ -142,7 +142,7 @@ void FirstDiceState::Draw() {
             {
                 if (it->first != ElementType::cai) {
                     for (int i = 0; i < it->second; i++) {
-                        mGame->rollDices[n].sprite.setTexture(mGame->texarr[210 + it->first]);
+                        mGame->rollDices[n].sprite.setTexture(mGame->texarr[210 + (int)it->first]);
                         mGame->rollDices[n].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[n].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[n].sprite.getTexture()->getSize().y);
                         mGame->rollDices[n].draw(mGame->window);
                         n++;

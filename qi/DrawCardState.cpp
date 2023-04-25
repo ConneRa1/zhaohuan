@@ -49,7 +49,7 @@ void DrawCardState::Draw() {
     {
         if (it->first != ElementType::cai) {
             for (int i = 0; i < it->second; i++) {
-                mGame->dices[n].sprite.setTexture(mGame->texarr[200 + it->first]);
+                mGame->dices[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
                 mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
                 mGame->dices[n].draw(mGame->window);
                 n++;

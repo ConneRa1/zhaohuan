@@ -349,7 +349,7 @@ void PlayerTurnState::Draw() {
         {
             if (it->first != ElementType::cai) {
                 for (int i = 0; i < it->second; i++) {
-                    placedDice[n].sprite.setTexture(mGame->texarr[200 + it->first]);
+                    placedDice[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
                     placedDice[n].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
                     placedDice[n].draw(mGame->window);
                     n++;
@@ -386,7 +386,7 @@ void PlayerTurnState::Draw() {
         {
             if (it->first != ElementType::cai) {
                 for (int i = 0; i < it->second; i++) {
-                    mGame->dices[n].sprite.setTexture(mGame->texarr[200 + it->first]);
+                    mGame->dices[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
                     mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
                     mGame->dices[n].draw(mGame->window);
                     n++;
@@ -547,7 +547,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                         cout << "使用技能 ：" << i << endl;
                         cout << "已经选择的骰子2" << endl;
                         for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
-                            cout << (*i).first << " " << (*i).second << endl;
+                            cout << (int)(*i).first << " " << (*i).second << endl;
                         }
                     }
                 }
@@ -663,7 +663,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                         cout << "使用技能 ：" << i << endl;
                         cout << "已经选择的骰子2" << endl;
                         for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
-                            cout << (*i).first << " " << (*i).second << endl;
+                            //cout << (*i).first << " " << (*i).second << endl;
                         }
                     }
                 }
