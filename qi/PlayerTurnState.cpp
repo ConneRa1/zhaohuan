@@ -162,7 +162,6 @@ void PlayerTurnState::Logic() {
     }
     else if (hurtOver)
     {
-        cout <<"hurtTimer: " << hurtTimer << endl;
         if (hurtTimer >= hurtTime*0.75)
         {
             //hurtTimer = 0;
@@ -172,6 +171,7 @@ void PlayerTurnState::Logic() {
                 reactHurtOver = true;
                 showReact = true;
                 doReact(target->doReact((*triggeredAbility).getElement()), true);
+
             }
             else {
                 if(mGame->isWin){
