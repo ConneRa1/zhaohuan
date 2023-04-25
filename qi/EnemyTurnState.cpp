@@ -102,7 +102,6 @@ void EnemyTurnState::Logic() {
                 if(it->)
             }*/
             target->getHurt(5);
-            showHurt = true;
             if (target->gethp() <= 0)
             {
                 target->Die();
@@ -127,7 +126,7 @@ void EnemyTurnState::Logic() {
             //如果敌人数不为0，就加个CheckWin()
                 //进入胜利界面
         }
-        else if (times >= 700)
+        else if (times >= 500)
         {
            
             cout << "Enemy回合结束，进入玩家回合" << endl;
@@ -135,14 +134,10 @@ void EnemyTurnState::Logic() {
             mGame->enemyAction -= 1;
             if (mGame->enemyTurnOver && mGame->playerTurnOver)
             {
-                mGame->diceNum = Cost(1, pair<ElementType, int>(ElementType::cai, 8));
-                mGame->ChangeState(new TurnEndState(mGame));
+                mGame->ChangeState( new FirstDiceState(mGame));
             }
-            else if(!mGame->playerTurnOver)
+            else
                 mGame->ChangeState( new PlayerTurnState(mGame));
-            else {
-                mGame->ChangeState(new EnemyTurnState(mGame));
-            }
         }
         times++;
     }
@@ -171,11 +166,29 @@ void EnemyTurnState::Draw() {
         mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
-    for (int i = 0; i < mGame->diceNum.getSize(); i++)    //按骰子数画
-    {
-        mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
-        mGame->dices[i].draw(mGame->window);
+
+    //画骰子
+    int n = 0;
+    vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+    sort(vec.begin(), vec.end(), Cost::cmp);
+    for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+        mGame->dices[n].sprite.setTexture(mGame->texarr[200]);
+        mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+        mGame->dices[n].draw(mGame->window);
+        n++;
     }
+    for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+    {
+        if (it->first != ElementType::cai) {
+            for (int i = 0; i < it->second; i++) {
+                mGame->dices[n].sprite.setTexture(mGame->texarr[200 + it->first]);
+                mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+                mGame->dices[n].draw(mGame->window);
+                n++;
+            }
+        }
+    }
+
     if (bannertime < bannerTime)
     {
         mGame->enemybanner.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
@@ -204,24 +217,7 @@ void EnemyTurnState::Draw() {
         }
        
     }
-    if (showHurt)
-    {
-        if (hurtTimer == 0)
-        {
-            mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
-            target = NULL;
-        }
-        if (hurtTimer++ < hurtTime)
-        {
-           
-            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->hurt.draw(mGame->window);
-        }
-        else {
-            hurtTimer = 0;
-            showHurt = false;
-        }
-    }
+    
     
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上

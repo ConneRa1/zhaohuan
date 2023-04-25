@@ -81,18 +81,14 @@ void Game::Initial() {
     playerbanner = Object(texarr[92], windowWidth, windowHeight, 0, 0);
     whenDice = Object(texarr[93], windowWidth, windowHeight, 0, 0);
     whenEnd = Object(texarr[94], windowWidth, windowHeight, 0, 0);
-    texarr[95].loadFromFile("source/texture/change.png");
-    texarr[96].loadFromFile("source/texture/changeconfirm.png");
-    texarr[97].loadFromFile("source/texture/target.png");
-    texarr[98].loadFromFile("source/texture/hurt.png");
-    changeConfirm = Object(texarr[96], 106, 130, changeConfirmX, changeConfirmY);
-    changeTarget= Object(texarr[95], 163,261, 0, 0);    //放角色卡左上角
-    target = Object(texarr[97], 163, 261, 0, 0);
-    hurt= Object(texarr[98], 189, 255, 0, 0);
 
     //200号骰子
     Object o1;
     texarr[200].loadFromFile("source/texture/dice/dice0.png");
+    texarr[201].loadFromFile("source/texture/dice/dice1.png");
+    texarr[202].loadFromFile("source/texture/dice/dice2.png");
+    texarr[203].loadFromFile("source/texture/dice/dice3.png");
+
     chooseDice = Object(texarr[200], 80, 92, 0, 0);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13);
     dices.push_back(o1);
@@ -112,6 +108,7 @@ void Game::Initial() {
     dices.push_back(o1);
     //210以后绑骰子
     texarr[210].loadFromFile("source/texture/rolldice0.png");
+
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX, rolldiceY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+1*rolldiceOffsetX, rolldiceY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+2*rolldiceOffsetX, rolldiceY));
@@ -209,8 +206,8 @@ void Game::Initial() {
     for(int i=0;i<3;i++)
         sAbility.push_back(abilityVector[i]);
 
-    diceNum = Cost(4, pair<ElementType, int>(ElementType::bing, 0), pair<ElementType, int>(ElementType::lei, 0),
-        pair<ElementType, int>(ElementType::shui, 0), pair<ElementType, int>(ElementType::cai, 8));
+    /*diceNum = Cost(4, pair<ElementType, int>(ElementType::bing, 0), pair<ElementType, int>(ElementType::lei, 0),
+        pair<ElementType, int>(ElementType::shui, 0), pair<ElementType, int>(ElementType::cai, 8));*/
 }
 
 void Game::Draw() {

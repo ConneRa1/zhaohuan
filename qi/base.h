@@ -6,6 +6,7 @@
 #include<iostream>
 #include<stdio.h>
 #include<map>
+#include <random>
 
 using namespace std;
 using namespace sf;
@@ -88,6 +89,7 @@ typedef enum class ElementType {	//元素种类
 	yan,
 	
 	feng,
+	count,		//用来计数
 };
 
 typedef enum class ReactType {	//反应种类

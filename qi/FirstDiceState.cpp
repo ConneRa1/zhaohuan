@@ -31,15 +31,28 @@ void FirstDiceState::Input() {
     }
 }
 void FirstDiceState::Logic() {
-    if (bannertime < bannerTime)bannertime++;
+    if (bannertime < 1.5*bannerTime)bannertime++;
+    if (mGame->firstInitDice) {
+        mGame->firstInitDice = false;
+        Cost temp;
+        for (int i = 0; i < 8; i++) {
+            random_device rd;
+            temp.m[ElementType(rd() % ElementType::count)]++;
+
+        }
+        mGame->diceNum = temp;
+        //cout << mGame->diceNum.m[ElementType::cai] << endl;
+        //mGame->diceNum = 8;     //初始化骰子数，和敌人行动力
+    }
     if (mGame->firstConfirm)
     {
         if (times++ >= 500)
         {
+            mGame->firstInitDice = true;
             mGame->initdice = false;
             cout << "投骰子结束，进入战斗" << endl;
             mGame->firstConfirm = false;
-            //mGame->diceNum = 8;     //初始化骰子数，和敌人行动力
+
             mGame->enemyAction = 2;
             mGame->enemyTurnOver = false;
             mGame->playerTurnOver = false;
@@ -57,10 +70,34 @@ void FirstDiceState::Draw() {
     {   
         mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         mGame->backGround.draw(mGame->window);
-        for (auto it = mGame->rollDices.begin(); it != mGame->rollDices.end(); it++) {
+
+        //画骰子
+        int n = 0;
+        vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+        sort(vec.begin(), vec.end(), Cost::cmp);
+        for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+            mGame->rollDices[n].sprite.setTexture(mGame->texarr[210]);
+            mGame->rollDices[n].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[n].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[n].sprite.getTexture()->getSize().y);
+            mGame->rollDices[n].draw(mGame->window);
+            n++;
+        }
+        for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+        {
+            if (it->first != ElementType::cai) {
+                for (int i = 0; i < it->second; i++) {
+                    mGame->rollDices[n].sprite.setTexture(mGame->texarr[210+it->first]);
+                    mGame->rollDices[n].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[n].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[n].sprite.getTexture()->getSize().y);
+                    mGame->rollDices[n].draw(mGame->window);
+                    n++;
+                }
+            }
+        }
+
+        /*for (auto it = mGame->rollDices.begin(); it != mGame->rollDices.end(); it++) {
             it->sprite.setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)(*it).sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)(*it).sprite.getTexture()->getSize().y);
             it->draw(mGame->window);
-        }
+        }*/
+
         mGame->confirmButton.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
         mGame->confirmButton.draw(mGame->window);
         
@@ -90,10 +127,29 @@ void FirstDiceState::Draw() {
         else {
             mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->backGround.draw(mGame->window);
-            for (auto it = mGame->rollDices.begin(); it != mGame->rollDices.end(); it++) {
-                it->sprite.setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)(*it).sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)(*it).sprite.getTexture()->getSize().y);
-                it->draw(mGame->window);
+
+            //画骰子
+            int n = 0;
+            vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+            sort(vec.begin(), vec.end(), Cost::cmp);
+            for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+                mGame->rollDices[n].sprite.setTexture(mGame->texarr[210]);
+                mGame->rollDices[n].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[n].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[n].sprite.getTexture()->getSize().y);
+                mGame->rollDices[n].draw(mGame->window);
+                n++;
             }
+            for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+            {
+                if (it->first != ElementType::cai) {
+                    for (int i = 0; i < it->second; i++) {
+                        mGame->rollDices[n].sprite.setTexture(mGame->texarr[210 + it->first]);
+                        mGame->rollDices[n].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[n].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[n].sprite.getTexture()->getSize().y);
+                        mGame->rollDices[n].draw(mGame->window);
+                        n++;
+                    }
+                }
+            }
+
             mGame->confirmButton.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
             mGame->confirmButton.draw(mGame->window);
         

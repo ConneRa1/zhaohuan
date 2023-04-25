@@ -44,14 +44,14 @@ private:
 	vector<Character> characterVector;	//角色容器，用于存储场上所有的角色
 	vector<Enemy> enemyVector;	//怪物容器，用于存储场上所有的怪物
 	CardVector cards;
-	vector<Object> dices;
+	vector<Object> dices;		//小骰子
 
 	//display测试用
 	vector<Ability*> abilityVector;   //用来存放所有的技能
 	vector<Ability*> sAbility;		//用来存放显示、生效的技能
 
 
-	vector<Object> rollDices;
+	vector<Object> rollDices;		//投骰子
 	vector<Object> chooseCards;
 	Texture texarr[500];
 	Shader shader;
@@ -62,7 +62,7 @@ private:
 	Texture tBackGround;	//纹理
 	Object backGround;	//背景
 	Object confirmButton;
-	Object chooseDice;
+	Object chooseDice;	//消耗骰子
 	Object dicebg;
 	Object chupai;
 	Object Win;
@@ -84,6 +84,7 @@ private:
 	Object cao;
 	
 	//各个state的bool
+	bool firstInitDice = true;
 	bool firstConfirm=false;
 	bool playerTurnOver = false;
 	bool enemyTurnOver = false;
