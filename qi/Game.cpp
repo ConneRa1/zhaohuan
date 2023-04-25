@@ -82,6 +82,14 @@ void Game::Initial() {
     playerbanner = Object(texarr[92], windowWidth, windowHeight, 0, 0);
     whenDice = Object(texarr[93], windowWidth, windowHeight, 0, 0);
     whenEnd = Object(texarr[94], windowWidth, windowHeight, 0, 0);
+    texarr[95].loadFromFile("source/texture/change.png");
+    texarr[96].loadFromFile("source/texture/changeconfirm.png");
+    texarr[97].loadFromFile("source/texture/target.png");
+    texarr[98].loadFromFile("source/texture/hurt.png");
+    changeConfirm = Object(texarr[96], 106, 130, changeConfirmX, changeConfirmY);
+    changeTarget = Object(texarr[95], 163, 261, 0, 0);    //放角色卡左上角
+    target = Object(texarr[97], 163, 261, 0, 0);
+    hurt = Object(texarr[98], 189, 255, 0, 0);
 
     //200号骰子
     Object o1;

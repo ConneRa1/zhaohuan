@@ -624,41 +624,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                                 }
                             }
                         }
-                        else {
-                            //选中骰子
-                            int n = -1;
-                            n += mGame->diceNum.m[ElementType::cai];
-                            if (n >= i) {
-                                if (!(diceTriggeredNum >= triggeredAbility->cost)) {
-                                    diceTriggered[i] = true;
-                                    diceTriggeredNum.m[ElementType::cai]++;
-                                }
-                            }
-                            else {
-                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-                                sort(vec.begin(), vec.end(), Cost::cmp);
-                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-                                {
-                                    if (it->first != ElementType::cai) {
-                                        n += it->second;
-                                        if (n >= i) {
-                                            if (diceTriggeredNum.m[it->first] < triggeredAbility->cost.m[it->first] + triggeredAbility->cost.m[ElementType::cai]) {
-                                                diceTriggered[i] = true;
-                                                diceTriggeredNum.m[it->first]++;
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-
-
-                        }
-                        cout << "使用技能 ：" << i << endl;
-                        cout << "已经选择的骰子2" << endl;
-                        for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
-                            //cout << (*i).first << " " << (*i).second << endl;
-                        }
+                        
                     }
                 }
 
