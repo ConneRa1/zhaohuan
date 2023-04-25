@@ -6,6 +6,7 @@
 #include<iostream>
 #include<stdio.h>
 #include<map>
+#include <random>
 
 using namespace std;
 using namespace sf;
@@ -74,10 +75,12 @@ typedef enum BuffType {
 };
 
 typedef enum ElementType {	//元素种类
-	shui,
-	bing,
-	lei,
 	cai,
+	bing,
+	huo,
+	shui,
+	lei,
+	count,		//用来计数
 };
 
 

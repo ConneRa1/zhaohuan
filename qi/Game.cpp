@@ -86,6 +86,10 @@ void Game::Initial() {
     //200ºÅ÷»×Ó
     Object o1;
     texarr[200].loadFromFile("source/texture/dice/dice0.png");
+    texarr[201].loadFromFile("source/texture/dice/dice1.png");
+    texarr[202].loadFromFile("source/texture/dice/dice2.png");
+    texarr[203].loadFromFile("source/texture/dice/dice3.png");
+
     chooseDice = Object(texarr[200], 80, 92, 0, 0);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13);
     dices.push_back(o1);
@@ -105,6 +109,7 @@ void Game::Initial() {
     dices.push_back(o1);
 
     texarr[210].loadFromFile("source/texture/rolldice0.png");
+
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX, rolldiceY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+1*rolldiceOffsetX, rolldiceY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+2*rolldiceOffsetX, rolldiceY));
@@ -186,8 +191,8 @@ void Game::Initial() {
     for(int i=0;i<3;i++)
         sAbility.push_back(abilityVector[i]);
 
-    diceNum = Cost(4, pair<ElementType, int>(ElementType::bing, 0), pair<ElementType, int>(ElementType::lei, 0),
-        pair<ElementType, int>(ElementType::shui, 0), pair<ElementType, int>(ElementType::cai, 8));
+    /*diceNum = Cost(4, pair<ElementType, int>(ElementType::bing, 0), pair<ElementType, int>(ElementType::lei, 0),
+        pair<ElementType, int>(ElementType::shui, 0), pair<ElementType, int>(ElementType::cai, 8));*/
 }
 
 void Game::Draw() {

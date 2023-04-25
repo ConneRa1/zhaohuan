@@ -159,11 +159,29 @@ void EnemyTurnState::Draw() {
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
-    for (int i = 0; i < mGame->diceNum.getSize(); i++)    //按骰子数画
-    {
-        mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
-        mGame->dices[i].draw(mGame->window);
+
+    //画骰子
+    int n = 0;
+    vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+    sort(vec.begin(), vec.end(), Cost::cmp);
+    for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+        mGame->dices[n].sprite.setTexture(mGame->texarr[200]);
+        mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+        mGame->dices[n].draw(mGame->window);
+        n++;
     }
+    for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+    {
+        if (it->first != ElementType::cai) {
+            for (int i = 0; i < it->second; i++) {
+                mGame->dices[n].sprite.setTexture(mGame->texarr[200 + it->first]);
+                mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+                mGame->dices[n].draw(mGame->window);
+                n++;
+            }
+        }
+    }
+
     if (bannertime < bannerTime)
     {
         mGame->enemybanner.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
