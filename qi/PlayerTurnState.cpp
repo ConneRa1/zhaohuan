@@ -2,7 +2,54 @@
 PlayerTurnState::PlayerTurnState(Game* game) :State(game){
 
 }
+void PlayerTurnState::doReact(ReactType r, bool toEnemy)
+{
+    switch (r)
+    {
+    case ReactType::蒸发:
+        target->getHurt(2);
+        break;
+    case ReactType::感电:
+        if (toEnemy)
+        {
+            for (auto it : mGame->enemyVector)
+            {
+                it.getHurt(1);	//后面改一下，只扣后台的
+            }
+        }
+        else {
+            for (auto it : mGame->characterVector)
+            {
+                it.getHurt(1);	//后面改一下，只扣后台的
+            }
+        }
+        break;
+    case ReactType::冻结:
+        target->setfrozen(true);
+        cout << "冻结!" << endl;
+        break;
+    case ReactType::超导:
+        cout << "超导" << endl;
+        if (toEnemy)
+        {
+            for (auto it : mGame->enemyVector)
+            {
+                it.getHurt(1);	//后面改一下，只扣后台的
+            }
+        }
+        else {
+            for (auto it : mGame->characterVector)
+            {
+                it.getHurt(1);	//后面改一下，只扣后台的
+            }
+        }
+        break;
+    default:
+        break;
+    }
 
+
+}
 void PlayerTurnState::Input() {
     if (bannertime >= bannerTime)
     {
@@ -98,7 +145,7 @@ void PlayerTurnState::Logic() {
             {
                 cout << "，进入下一回合" << endl;
                 mGame->diceNum = Cost(1, pair<ElementType, int>(ElementType::cai, 8));
-                mGame->ChangeState(new FirstDiceState(mGame));
+                mGame->ChangeState(new TurnEndState(mGame));
             }
                 
         }
@@ -121,7 +168,30 @@ void PlayerTurnState::Logic() {
         if (triggeredAbility != NULL && target != NULL)
         {
             cout << "玩家回合结束，进入enemy回合" << endl;
-            target->getHurt(2);
+            //融入元素反应
+            //先判断能否反应，不能：直接减、挂元素，能：元素反应，给出reacthurt,先正常伤害，再接上反应伤害
+            if (target->checkReact((*triggeredAbility).getElement()))
+            {
+               /* switch (target->doReact((*triggeredAbility).getElement()))
+                {
+                case ReactType::冻结:
+                    cout << "冻结了" << endl;
+                    break;
+                case ReactType::感电:
+                    cout << "感电" << endl;
+                    break;
+                case ReactType::蒸发:
+                    cout << "蒸发" << endl;
+                    break;
+                case ReactType::超导:
+                    cout << "超导" << endl;
+                    break;
+                default:
+                    break;
+                }*/
+                doReact(target->doReact((*triggeredAbility).getElement()),true);
+            }
+            target->getHurt((*triggeredAbility).getDamage());
             if (target->gethp() <= 0)
             {
                 target->Die();
@@ -231,9 +301,11 @@ void PlayerTurnState::Draw() {
     mGame->backGround.draw(mGame->window);
    
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+        mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
+        mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     if (isConsumingDice)
@@ -387,34 +459,33 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         }
         else if (isCardTriggered)
         {
-            //if (diceTriggeredNum >= triggeredCard->cost)
-            //{
-            //    //if confirm
-            //    mGame->diceNum -= triggeredCard->cost;
-            //    isCardFinished = true;
-            //    diceTriggeredNum = 0;
-            //    isConsumingDice = false;
-            //    for (int i = 0; i < mGame->diceNum; i++)
-            //    {
-            //        diceTriggered[i] = false;
-            //    }
-            //    for (int i = mGame->diceNum; i < 8; i++)
-            //    {
-            //        diceTriggered[i] = true;
-            //    }
-            //}
-            //else {
-            //    for (int i = 0; i < mGame->diceNum; i++)
-            //    {
-            //        if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
-            //        {
-            //            diceTriggered[i] = true;
-            //            diceTriggeredNum += 1;
-            //            cout << "使用卡牌 ： i" << "  已点击数：" << diceTriggeredNum << endl;
-            //        }
-            //    }
-
-            //}
+            if (diceTriggeredNum >= triggeredCard->cost)
+            {
+                //if confirm
+                mGame->diceNum = mGame->diceNum-triggeredCard->cost;
+                isCardFinished = true;
+                diceTriggeredNum = Cost(1, pair<ElementType, int>(ElementType::cai, 0));
+                isConsumingDice = false;
+                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                {
+                    diceTriggered[i] = false;
+                }
+                for (int i = mGame->diceNum.getSize(); i < 8; i++)
+                {
+                    diceTriggered[i] = true;
+                }
+            }
+            else {
+                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                {
+                    if (!diceTriggered[i] && placedDice[i].isIn(mPoint.x, mPoint.y))
+                    {
+                        diceTriggered[i] = true;
+                        diceTriggeredNum = diceTriggeredNum + Cost(1, pair<ElementType, int>(ElementType::cai, 1));
+                        cout << "使用卡牌 ：" << i << endl;
+                    }
+                }
+            }
         }
         
     }

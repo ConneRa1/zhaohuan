@@ -21,6 +21,7 @@ class State;
 #include"EnemyTurnState.h"
 #include"DrawCardState.h"
 #include"GameEndState.h"
+#include"TurnEndState.h"
 class Game {
 public:
 	Game();
@@ -34,6 +35,7 @@ public:
 	friend class ChangeRoleState;
 	friend class DrawCardState;
 	friend class GameEndState;
+	friend class TurnEndState;
 private:
 	RenderWindow window;	//窗口
 	View view;
@@ -73,6 +75,13 @@ private:
 	Object changeConfirm;
 	Object target;
 	Object hurt;
+	Object shui;
+	Object lei;
+	Object bing;
+	Object huo;
+	Object yan;
+	Object feng;
+	Object cao;
 	
 	//各个state的bool
 	bool firstConfirm=false;
@@ -84,7 +93,6 @@ private:
 
 	Music bkMusic;
 
-
 	//游戏基本逻辑
 	void Initial();
 	void Input();
@@ -95,6 +103,7 @@ private:
 	void RightButtonDown(Vector2i mPoint);
 	void DrawCard();
 	void ChangeState(State* state);
+	void showElement(Role it);
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

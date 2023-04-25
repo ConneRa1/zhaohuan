@@ -161,6 +161,7 @@
     <ClCompile Include="PlayerTurnState.cpp" />
     <ClCompile Include="Role.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="TurnEndState.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="zhaohuan .cpp" />
   </ItemGroup>
@@ -182,6 +183,7 @@
     <ClInclude Include="PlayerTurnState.h" />
     <ClInclude Include="Role.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="TurnEndState.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

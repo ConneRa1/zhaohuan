@@ -14,7 +14,7 @@ public:
 private:
     bool isChangingRole = false;
     int times = 0;
-    Role* target;
+    bool isChanged = false;
     Character* changedCharacter;
 
 };

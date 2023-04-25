@@ -32,7 +32,6 @@ Game::~Game() {
 void Game::Run() {
 	do
 	{
-
 		Initial();
 		while (window.isOpen() && gameOver == false)
 		{
@@ -55,7 +54,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new ChooseCardState(this);
+    mState = new FirstDiceState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -111,7 +110,7 @@ void Game::Initial() {
     dices.push_back(o1);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13 + 7*diceOffset);
     dices.push_back(o1);
-
+    //210以后绑骰子
     texarr[210].loadFromFile("source/texture/rolldice0.png");
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX, rolldiceY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+1*rolldiceOffsetX, rolldiceY));
@@ -121,6 +120,22 @@ void Game::Initial() {
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 1 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 2 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 3 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
+    //220以后绑元素
+    texarr[220].loadFromFile("source/texture/element/huo.png");
+    texarr[221].loadFromFile("source/texture/element/shui.png");
+    texarr[222].loadFromFile("source/texture/element/bing.png");
+    texarr[223].loadFromFile("source/texture/element/cao.png");
+    texarr[224].loadFromFile("source/texture/element/yan.png");
+    texarr[225].loadFromFile("source/texture/element/lei.png");
+    texarr[226].loadFromFile("source/texture/element/feng.png");
+    shui= Object(texarr[221], 40, 40, 0,0);
+    lei = Object(texarr[225], 40, 40, 0, 0);
+    bing = Object(texarr[222], 40, 40, 0, 0);
+    huo = Object(texarr[220], 40, 40, 0, 0);
+    yan = Object(texarr[224], 40, 40, 0, 0);
+    feng = Object(texarr[226], 40, 40, 0, 0);
+    cao = Object(texarr[223], 40, 40, 0, 0);
+
 
     //确认按钮
     texarr[300].loadFromFile("source/texture/confirmButton.png");
@@ -179,17 +194,17 @@ void Game::Initial() {
     Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],10,3);
     enemyVector.push_back(e);
     //加载所有技能
-    abilityVector.push_back(new Ability(ElementType::shui,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai,3))));
-    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::cai,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai,3))));
+    abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
-    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
-    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
     for(int i=0;i<3;i++)
         sAbility.push_back(abilityVector[i]);
@@ -215,4 +230,48 @@ void  Game::ChangeState(State* state)
 {
     delete(mState);
     mState = state;
+}
+
+void Game::showElement(Role it)
+{
+    switch (it.getElement())
+    {
+    case ElementType::shui:
+        shui.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        shui.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        shui.draw(window);
+        break;
+    case ElementType::bing:
+        bing.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        bing.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        bing.draw(window);
+        break;
+    case ElementType::lei:
+        lei.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        lei.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        lei.draw(window);
+        break;
+    case ElementType::cao:
+        cao.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        cao.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        cao.draw(window);
+        break;
+    case ElementType::yan:
+        yan.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        yan.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        yan.draw(window);
+        break;
+    case ElementType::huo:
+        huo.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        huo.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        huo.draw(window);
+        break;
+    case ElementType::feng:
+        feng.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
+        feng.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        feng.draw(window);
+        break;
+    default:
+        break;
+    }
 }

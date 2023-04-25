@@ -31,7 +31,7 @@ void FirstDiceState::Input() {
     }
 }
 void FirstDiceState::Logic() {
-    if (bannertime < 1.5*bannerTime)bannertime++;
+    if (bannertime < bannerTime)bannertime++;
     if (mGame->firstConfirm)
     {
         if (times++ >= 500)
@@ -66,35 +66,16 @@ void FirstDiceState::Draw() {
         
     }
     else {
-        if (bannertime < 0.75 * bannerTime) //ÏÈÏÔÊ¾½áÊø½×¶Î
-        {
+        if (bannertime <  bannerTime) {
             mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->backGround.draw(mGame->window);
 
             for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                mGame->showElement(*it);
                 it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
             }
             for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
-                it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
-            }
-            for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
-                it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                it->draw(mGame->window);
-            }
-
-            mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->whenEnd.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->whenEnd.draw(mGame->window);
-
-        }
-        else if (bannertime < 1.5 * bannerTime) {
-            mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->backGround.draw(mGame->window);
-
-            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
-            }
-            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
+                mGame->showElement(*it);
                 it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
             }
             for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {

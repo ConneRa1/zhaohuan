@@ -64,6 +64,7 @@ using namespace sf;
 #define changeConfirmY 0.858
 #define hurtTime 450
 
+
 extern Font font;		//游戏字体，主要是用来画血量的
 
 typedef enum CardType {
@@ -77,7 +78,7 @@ typedef enum BuffType {
 
 };
 
-typedef enum ElementType {	//元素种类
+typedef enum class ElementType {	//元素种类
 	cai,
 	shui,
 	bing,
@@ -86,6 +87,14 @@ typedef enum ElementType {	//元素种类
 	yan,
 	huo,
 	feng,
+};
+
+typedef enum class ReactType {	//反应种类
+	蒸发,
+	感电,
+	冻结,
+	超导,
+
 };
 
 

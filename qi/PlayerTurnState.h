@@ -13,6 +13,7 @@ public:
     void Draw() ;
     void LeftButtonDown(Vector2i mPoint);
     void RightButtonDown(Vector2i mPoint);
+    void doReact(ReactType r, bool toEnemy);
 private:
     int times = 0;
     bool isActed = false;
@@ -29,7 +30,7 @@ private:
     bool hurtOver = false;
     Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     vector<Object>placedDice;
-    Role *target;
+  
     Character* currentRole;
     Enemy* currentEnemy;
     Card* triggeredCard=NULL;

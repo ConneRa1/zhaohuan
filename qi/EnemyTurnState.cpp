@@ -30,9 +30,11 @@ void EnemyTurnState::Input() {
                             changedCharacter = &(*it);
                         }
                     }
-                }
-                else {
-                    mGame->firstConfirm = true;
+                    if (mGame->changeConfirm.isIn(event.mouseButton.x, event.mouseButton.y))
+                    {
+                        isChanged = true;
+                        isChangingRole = false;
+                    }
                 }
             
             }
@@ -44,17 +46,19 @@ void EnemyTurnState::Logic() {
     {
         bannertime++;
     }
+    else {
+        mGame->firstConfirm = true;
+    }
     if (mGame->enemyAction <= 0)
     {
         mGame->enemyTurnOver = true;
     }
-    if (isChangingRole)
+
+    if (isChanged)
     {
         if (changedCharacter != NULL)
         {
             changedCharacter->Selected(true);
-     
-            isChangingRole = false;
             int num = 0;
             if (changedCharacter->name == "xingqiu")
             {
@@ -67,7 +71,6 @@ void EnemyTurnState::Logic() {
             {
                 for (auto i = 0; i < 3; i++)
                 {
-
                     mGame->sAbility[i] = mGame->abilityVector[i + 3];
                 }
             }
@@ -75,15 +78,14 @@ void EnemyTurnState::Logic() {
             {
                 for (auto i = 0; i < 3; i++)
                 {
-
                     mGame->sAbility[i] = mGame->abilityVector[i + 6];
                 }
             }
             changedCharacter = NULL;
+            isChanged = false;
         }
-
     }
-    else if (mGame->firstConfirm)
+    else if (mGame->firstConfirm && !isChanged&&!isChangingRole)
     {
         if (times == 0)
         {
@@ -131,7 +133,7 @@ void EnemyTurnState::Logic() {
             if (mGame->enemyTurnOver && mGame->playerTurnOver)
             {
                 mGame->diceNum = Cost(1, pair<ElementType, int>(ElementType::cai, 8));
-                mGame->ChangeState( new FirstDiceState(mGame));
+                mGame->ChangeState(new TurnEndState(mGame));
             }
             else if(!mGame->playerTurnOver)
                 mGame->ChangeState( new PlayerTurnState(mGame));
@@ -159,9 +161,11 @@ void EnemyTurnState::Draw() {
     }
 
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+        mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
+        mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (int i = 0; i < mGame->diceNum.getSize(); i++)    //°´÷»×ÓÊý»­
@@ -176,11 +180,26 @@ void EnemyTurnState::Draw() {
     }
     else {
         int times = 0;
-        for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-            (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            (*it)->Object::draw(mGame->window);
+        if (!isChangingRole)
+        {
+            for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
+                (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                (*it)->Object::draw(mGame->window);
+            }
         }
+        
     
+    }
+    if (isChangingRole)
+    {
+        mGame->changeConfirm.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+        mGame->changeConfirm.draw(mGame->window);
+        if (changedCharacter != NULL) {
+            mGame->changeTarget.setPos((*changedCharacter).getX(), (*changedCharacter).getY());
+            mGame->changeTarget.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->changeTarget.draw(mGame->window);
+        }
+       
     }
     if (showHurt)
     {
