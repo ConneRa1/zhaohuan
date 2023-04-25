@@ -96,8 +96,11 @@ void EnemyTurnState::Logic() {
                 }
             }
         }
-        else if (times == 250&&!mGame->enemyTurnOver)
+        else if (times == 250&&!mGame->enemyTurnOver&& mGame->enemyVector[0].IsFrozen())    //敌人冰冻不许动
         {
+            /*for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {    //后续有多个敌人再加
+                if(it->)
+            }*/
             target->getHurt(5);
             showHurt = true;
             if (target->gethp() <= 0)

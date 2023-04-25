@@ -16,6 +16,9 @@ protected:
 	Role* target;
 	int bannertime=0;
 	int hurtTimer = 0;
+	int reactHurtTimer = 0;
 	bool showHurt = false;
+	bool showReact = false;
+	int delayTimer = 0;
 };
 

@@ -28,6 +28,14 @@ void TurnEndState::Logic() {
     {
         if (times++ >= 500)
         {
+            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+            {
+                it->setfrozen(false);
+            }
+            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
+            {
+                it->setfrozen(false);
+            }
             cout << "结束阶段结束，进入下一大回合" << endl;
             mGame->firstConfirm = false;
             mGame->ChangeState(new FirstDiceState(mGame));

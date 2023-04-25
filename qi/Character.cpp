@@ -30,7 +30,13 @@ void Character::draw(RenderWindow& window,float x,float y, Shader& shader)
         shader.setUniform("brightness", 0.0f);
     }    
     setScale(x, y);
-
+    if (isFrozen)
+    {
+        shader.setUniform("blue", 0.6f);
+    }
+    else {
+        shader.setUniform("blue", 0.0f);
+    }
 
 	Role::draw(window,shader);
     int times = 0;

@@ -19,6 +19,7 @@ public:
 	float getX() { return x; }
 	float getY() { return y; }
 	void setfrozen(bool f) { isFrozen = f; }
+	bool IsFrozen() { return isFrozen; }
 protected:
 	int hp;
 	int atk;

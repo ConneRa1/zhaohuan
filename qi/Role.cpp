@@ -45,6 +45,10 @@ bool Role::checkReact(ElementType e)
 		attachedElement = e;
 		return false;
 	}
+	else if (e == ElementType::cai)
+	{
+		return false;
+	}
 	else {
 		return true;
 	}

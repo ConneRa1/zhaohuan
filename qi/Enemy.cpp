@@ -26,6 +26,13 @@ void Enemy::draw(RenderWindow& window, float x, float y, Shader& shader)
     else {
         shader.setUniform("brightness", 0.0f);
     }
+    if (isFrozen)
+    {
+        shader.setUniform("blue", 0.6f);
+    }
+    else {
+        shader.setUniform("blue", 0.0f);
+    }
     setScale(x, y);
     Role::draw(window,shader);
     int times = 0;

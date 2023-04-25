@@ -80,12 +80,13 @@ typedef enum BuffType {
 
 typedef enum class ElementType {	//ÔªËØÖÖÀà
 	cai,
-	shui,
 	bing,
+	huo,
+	shui,
 	lei,
 	cao,
 	yan,
-	huo,
+	
 	feng,
 };
 

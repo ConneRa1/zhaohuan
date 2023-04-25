@@ -47,7 +47,7 @@ void Game::Initial() {
     bkMusic.openFromFile("source/texture/bg.wav");
     bkMusic.play();
     bkMusic.setLoop(true);
-    shader.loadFromMemory("uniform sampler2D texture; uniform float brightness; void main() { vec4 color = texture2D(texture, gl_TexCoord[0].xy); color.rgb += brightness; gl_FragColor = color; }", sf::Shader::Fragment);
+    shader.loadFromMemory("uniform sampler2D texture; uniform float brightness; uniform float blue; void main() { vec4 color = texture2D(texture, gl_TexCoord[0].xy); color.rgb += brightness;color.b+=blue; gl_FragColor = color; }", sf::Shader::Fragment);
     shader.setUniform("texture", sf::Shader::CurrentTexture);
     
 

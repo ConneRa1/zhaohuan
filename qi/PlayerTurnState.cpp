@@ -12,35 +12,43 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
     case ReactType::感电:
         if (toEnemy)
         {
-            for (auto it : mGame->enemyVector)
+            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
             {
-                it.getHurt(1);	//后面改一下，只扣后台的
+                it->getHurt(1);	//后面改一下，只扣后台的
             }
         }
         else {
-            for (auto it : mGame->characterVector)
+            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
             {
-                it.getHurt(1);	//后面改一下，只扣后台的
+                it->getHurt(1);	//后面改一下，只扣后台的
             }
         }
         break;
     case ReactType::冻结:
         target->setfrozen(true);
+        reactHurtOver = false;
+        showReact = false;
+        if (mGame->isWin) {
+            mGame->ChangeState(new GameEndState(mGame));
+        }
+        else {
+            mGame->ChangeState(new EnemyTurnState(mGame));
+        }
         cout << "冻结!" << endl;
         break;
     case ReactType::超导:
         cout << "超导" << endl;
         if (toEnemy)
         {
-            for (auto it : mGame->enemyVector)
+            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
             {
-                it.getHurt(1);	//后面改一下，只扣后台的
+                it->getHurt(1);	//后面改一下，只扣后台的
             }
         }
         else {
-            for (auto it : mGame->characterVector)
+            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
             {
-                it.getHurt(1);	//后面改一下，只扣后台的
+                it->getHurt(1);	//后面改一下，只扣后台的
             }
         }
         break;
@@ -152,14 +160,43 @@ void PlayerTurnState::Logic() {
     }
     else if (hurtOver)
     {
-        if (hurtTimer >= hurtTime)
+        //cout <<"hurtTimer: " << hurtTimer << endl;
+        if (hurtTimer >= hurtTime*0.75)
         {
-            if(mGame->isWin){
-                mGame->ChangeState(new GameEndState(mGame));
+            //hurtTimer = 0;
+            if (target->checkReact((*triggeredAbility).getElement()))     //有反应进反应
+            {
+                cout << "有元素反应" << endl;
+                reactHurtOver = true;
+                showReact = true;
+                doReact(target->doReact((*triggeredAbility).getElement()), true);
             }
             else {
-                mGame->ChangeState(new EnemyTurnState(mGame));
+                if(mGame->isWin){
+                    mGame->ChangeState(new GameEndState(mGame));
+                }
+                else {
+                    mGame->ChangeState(new EnemyTurnState(mGame));
+                }
             }
+            hurtOver = false;
+        }
+    }
+    else if (reactHurtOver)
+    {
+        if (delayTimer > hurtTime / 2)//延时进行反应
+        {
+            if (reactHurtTimer >= hurtTime)
+            {
+                reactHurtTimer = 0;
+                if (mGame->isWin) {
+                    mGame->ChangeState(new GameEndState(mGame));
+                }
+                else {
+                    mGame->ChangeState(new EnemyTurnState(mGame));
+                }
+            }
+
         }
         
     }
@@ -170,27 +207,6 @@ void PlayerTurnState::Logic() {
             cout << "玩家回合结束，进入enemy回合" << endl;
             //融入元素反应
             //先判断能否反应，不能：直接减、挂元素，能：元素反应，给出reacthurt,先正常伤害，再接上反应伤害
-            if (target->checkReact((*triggeredAbility).getElement()))
-            {
-               /* switch (target->doReact((*triggeredAbility).getElement()))
-                {
-                case ReactType::冻结:
-                    cout << "冻结了" << endl;
-                    break;
-                case ReactType::感电:
-                    cout << "感电" << endl;
-                    break;
-                case ReactType::蒸发:
-                    cout << "蒸发" << endl;
-                    break;
-                case ReactType::超导:
-                    cout << "超导" << endl;
-                    break;
-                default:
-                    break;
-                }*/
-                doReact(target->doReact((*triggeredAbility).getElement()),true);
-            }
             target->getHurt((*triggeredAbility).getDamage());
             if (target->gethp() <= 0)
             {
@@ -202,14 +218,14 @@ void PlayerTurnState::Logic() {
             hurtOver = true;
             isActed = false;
         }
-        else if(triggeredAbility != NULL && target != NULL){
+        /*else if(triggeredAbility != NULL && target != NULL){
             triggeredAbility = NULL;    
             target = NULL;
             isActed = false;
             cout << "骰子数不足" << endl;
-        }
+        }*/
         showHurt = true;
-        triggeredAbility = NULL;
+        //triggeredAbility = NULL;
     }
     else if (isCardFinished)
     {
@@ -367,19 +383,38 @@ void PlayerTurnState::Draw() {
         if (hurtTimer == 0)
         {
             mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
-            target = NULL;
         }
-        if (hurtTimer++ < hurtTime)
+        if (hurtTimer++ < hurtTime * 0.75)
         {
             mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->hurt.draw(mGame->window);
         }
         else {
-            hurtTimer = 0;
+            //hurtTimer = 0;
             showHurt = false;
+            //showReact = true;
         }
     }
-    
+    else if (showReact)
+    {
+        if (delayTimer++ > hurtTime / 2)
+        {
+            if (reactHurtTimer == 0)
+            {
+                mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
+                target = NULL;
+            }
+            if (reactHurtTimer++ < hurtTime)
+            {
+                mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                mGame->hurt.draw(mGame->window);
+            }
+            else {
+                //reactHurtTimer = 0;
+                showReact = false;
+            }
+        }
+    }
     mGame->window.display();
 }
 void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！isCardTriggered 点击卡片，点击角色，！isAbilityTriggered 点击技能
