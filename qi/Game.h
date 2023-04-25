@@ -69,10 +69,7 @@ private:
 	Object playerbanner;
 	Object whenDice;
 	Object whenEnd;
-	Object changeTarget;
-	Object changeConfirm;
-	Object target;
-	Object hurt;
+
 	
 	//¸÷¸östateµÄbool
 	bool firstConfirm=false;

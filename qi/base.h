@@ -60,10 +60,6 @@ using namespace sf;
 #define diceBgY 0.1
 #define bannerTime 800
 #define fontSize 24
-#define changeConfirmX 0.923 
-#define changeConfirmY 0.858
-#define hurtTime 450
-
 extern Font font;		//游戏字体，主要是用来画血量的
 
 typedef enum CardType {
@@ -78,14 +74,10 @@ typedef enum BuffType {
 };
 
 typedef enum ElementType {	//元素种类
-	cai,
 	shui,
 	bing,
 	lei,
-	cao,
-	yan,
-	huo,
-	feng,
+	cai,
 };
 
 

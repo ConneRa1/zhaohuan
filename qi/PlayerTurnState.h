@@ -26,7 +26,6 @@ private:
     bool flag = false;
     bool DiceConsumed = false;
     bool diceTriggered[8] = {0};
-    bool hurtOver = false;
     Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     vector<Object>placedDice;
     Role *target;

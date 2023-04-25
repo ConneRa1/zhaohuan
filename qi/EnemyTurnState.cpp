@@ -44,7 +44,7 @@ void EnemyTurnState::Logic() {
     {
         bannertime++;
     }
-    if (mGame->enemyAction <= 0)
+    if (mGame->enemyAction == 0)
     {
         mGame->enemyTurnOver = true;
     }
@@ -97,7 +97,6 @@ void EnemyTurnState::Logic() {
         else if (times == 250&&!mGame->enemyTurnOver)
         {
             target->getHurt(5);
-            showHurt = true;
             if (target->gethp() <= 0)
             {
                 target->Die();
@@ -122,7 +121,7 @@ void EnemyTurnState::Logic() {
             //如果敌人数不为0，就加个CheckWin()
                 //进入胜利界面
         }
-        else if (times >= 700)
+        else if (times >= 500)
         {
            
             cout << "Enemy回合结束，进入玩家回合" << endl;
@@ -130,14 +129,10 @@ void EnemyTurnState::Logic() {
             mGame->enemyAction -= 1;
             if (mGame->enemyTurnOver && mGame->playerTurnOver)
             {
-                mGame->diceNum = Cost(1, pair<ElementType, int>(ElementType::cai, 8));
                 mGame->ChangeState( new FirstDiceState(mGame));
             }
-            else if(!mGame->playerTurnOver)
+            else
                 mGame->ChangeState( new PlayerTurnState(mGame));
-            else {
-                mGame->ChangeState(new EnemyTurnState(mGame));
-            }
         }
         times++;
     }
@@ -182,24 +177,7 @@ void EnemyTurnState::Draw() {
         }
     
     }
-    if (showHurt)
-    {
-        if (hurtTimer == 0)
-        {
-            mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
-            target = NULL;
-        }
-        if (hurtTimer++ < hurtTime)
-        {
-           
-            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->hurt.draw(mGame->window);
-        }
-        else {
-            hurtTimer = 0;
-            showHurt = false;
-        }
-    }
+    
     
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
