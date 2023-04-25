@@ -601,15 +601,18 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             else {
                 for (int i = 0; i < mGame->diceNum.getSize(); i++)
                 {
-                    if (placedDice[i].isIn(mPoint.x, mPoint.y)) {
-                        if (diceTriggered[i]) {
+                    if (placedDice[i].isIn(mPoint.x, mPoint.y)) 
+                    {
+                        if (diceTriggered[i]) 
+                        {
                             diceTriggered[i] = 0;
                             int n = -1;
                             n += mGame->diceNum.m[ElementType::cai];
                             if (n >= i) {
                                 diceTriggeredNum.m[ElementType::cai]--;
                             }
-                            else {
+                            else 
+                            {
                                 vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
                                 sort(vec.begin(), vec.end(), Cost::cmp);
                                 for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
