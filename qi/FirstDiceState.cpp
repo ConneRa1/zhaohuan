@@ -37,8 +37,8 @@ void FirstDiceState::Logic() {
         Cost temp;
         for (int i = 0; i < 8; i++) {
             random_device rd;
-            temp.m[ElementType(rd() % (int)ElementType::count)]++;
-
+            //temp.m[ElementType(rd() % (int)ElementType::count)]++;
+            temp.m[ElementType(0)]++;
         }
         mGame->diceNum = temp;
         //cout << mGame->diceNum.m[ElementType::cai] << endl;

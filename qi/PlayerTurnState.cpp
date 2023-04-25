@@ -162,7 +162,7 @@ void PlayerTurnState::Logic() {
     }
     else if (hurtOver)
     {
-        //cout <<"hurtTimer: " << hurtTimer << endl;
+        cout <<"hurtTimer: " << hurtTimer << endl;
         if (hurtTimer >= hurtTime*0.75)
         {
             //hurtTimer = 0;
@@ -218,20 +218,14 @@ void PlayerTurnState::Logic() {
                 mGame->isWin = true;
                 mGame->ChangeState(new GameEndState(mGame));
             }
-            else {
+            /*else {
                 mGame->ChangeState( new EnemyTurnState(mGame));
-            }
+            }*/
            
             isActed = false;
         }
-        /*else if(triggeredAbility != NULL && target != NULL){
-            triggeredAbility = NULL;    
-            target = NULL;
-            isActed = false;
-            cout << "÷»×ÓÊý²»×ã" << endl;
-        }*/
+        hurtOver = true;
         showHurt = true;
-        //triggeredAbility = NULL;
     }
     else if (isCardFinished)
     {

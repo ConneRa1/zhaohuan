@@ -77,6 +77,7 @@ void Game::Initial() {
     texarr[92].loadFromFile("source/texture/playerturn.png");
     texarr[93].loadFromFile("source/texture/Í¶ÖÀ½×¶Î.png");
     texarr[94].loadFromFile("source/texture/endstate.png");
+    texarr[94].loadFromFile("source/texture/endstate.png");
     enemybanner = Object(texarr[91], windowWidth, windowHeight, 0, 0);
     playerbanner = Object(texarr[92], windowWidth, windowHeight, 0, 0);
     whenDice = Object(texarr[93], windowWidth, windowHeight, 0, 0);
