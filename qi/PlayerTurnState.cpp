@@ -246,7 +246,6 @@ void PlayerTurnState::Logic() {
     {
         if (times == 0)
         {
-            isChangingRole = false;
             Character* c = (Character*) target;
             currentRole= (Character*)target;
             c->Selected(true);
@@ -554,18 +553,21 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             {
                 //if confirm
                //mGame->diceNum = mGame->diceNum - Cost(1,pair<ElementType, int>(ElementType::cai, 1));
-                mGame->diceNum = mGame->diceNum - diceTriggeredNum;
-                diceTriggeredNum = Cost();
-                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                if (mGame->changeConfirm.isIn(mPoint.x, mPoint.y))
                 {
-                    diceTriggered[i] = false;
+                    isChanged = true;
+                    isConsumingDice = false;
+                    mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                    diceTriggeredNum = Cost();
+                    for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                    {
+                        diceTriggered[i] = false;
+                    }
+                    for (int i = mGame->diceNum.getSize(); i < 8; i++)
+                    {
+                        diceTriggered[i] = true;
+                    }
                 }
-                for (int i = mGame->diceNum.getSize(); i < 8; i++)
-                {
-                    diceTriggered[i] = true;
-                }
-                isChanged = true;
-                isConsumingDice = false;
             }
             else {
                 for (int i = 0; i < mGame->diceNum.getSize(); i++)
@@ -687,7 +689,6 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             isChangingRole = true;
             target = &(*it);
             isConsumingDice = true;
-            
         }
        
     }
@@ -699,7 +700,6 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             {
                 mGame->firstConfirm = true;
             }
-           
         }
     }
     for (auto i = mGame->sAbility.begin(); i != mGame->sAbility.end(); i++)
