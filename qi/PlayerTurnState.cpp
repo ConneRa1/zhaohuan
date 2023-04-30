@@ -335,7 +335,7 @@ void PlayerTurnState::Draw() {
         }
         mGame->chupai.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
         mGame->chupai.draw(mGame->window);
-        if (isAbilityTriggered)
+        if (isAbilityTriggered&&!isChangingRole)
         {
             cout << "11" << endl;
             mGame->target.setPos((*target).getX(), (*target).getY());
@@ -352,6 +352,7 @@ void PlayerTurnState::Draw() {
         }
     }
     else {
+        mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
             it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             it->draw(mGame->window);
@@ -375,7 +376,7 @@ void PlayerTurnState::Draw() {
                 }
         }
     }
-    mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+   
     if (showHurt)
     {
         if (hurtTimer == 0)
