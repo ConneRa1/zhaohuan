@@ -53,7 +53,6 @@ void EnemyTurnState::Logic() {
     {
         mGame->enemyTurnOver = true;
     }
-
     if (isChanged)
     {
         if (changedCharacter != NULL)
@@ -101,7 +100,8 @@ void EnemyTurnState::Logic() {
             /*for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {    //后续有多个敌人再加
                 if(it->)
             }*/
-            target->getHurt(5);
+            target->getHurt(&mGame->enemyVector[0],5);
+            showHurt = true;
             if (target->gethp() <= 0)
             {
                 target->Die();
@@ -128,16 +128,19 @@ void EnemyTurnState::Logic() {
         }
         else if (times >= 500)
         {
-           
-            cout << "Enemy回合结束，进入玩家回合" << endl;
+          
             mGame->firstConfirm = false;
             mGame->enemyAction -= 1;
             if (mGame->enemyTurnOver && mGame->playerTurnOver)
             {
-                mGame->ChangeState( new FirstDiceState(mGame));
+                mGame->ChangeState( new TurnEndState(mGame));
             }
-            else
-                mGame->ChangeState( new PlayerTurnState(mGame));
+            else if (!mGame->playerTurnOver)
+            {
+                cout << "Enemy回合结束，进入玩家回合" << endl;
+                mGame->ChangeState(new PlayerTurnState(mGame));
+            }
+                
         }
         times++;
     }
@@ -215,10 +218,25 @@ void EnemyTurnState::Draw() {
             mGame->changeTarget.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->changeTarget.draw(mGame->window);
         }
-       
     }
-    
-    
+    if (showHurt)
+    {
+        times = 251;
+        if (hurtTimer == 0)
+        {
+            mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
+        }
+        if (hurtTimer++ < hurtTime)
+        {
+            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->hurt.draw(mGame->window);
+        }
+        else {
+            //hurtTimer = 0;
+            showHurt = false;
+            //showReact = true;
+        }
+    }
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }

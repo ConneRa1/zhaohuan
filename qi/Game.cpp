@@ -54,7 +54,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new FirstDiceState(this);
+    mState = new DrawCardState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -153,25 +153,47 @@ void Game::Initial() {
     //初始选卡
     texarr[301].loadFromFile("source/texture/loadingcard.png");
     texarr[302].loadFromFile("source/texture/eventcard/card1.png");
+    texarr[303].loadFromFile("source/texture/eventcard/5.png");
+    texarr[304].loadFromFile("source/texture/foodcard/1.png");
+    texarr[305].loadFromFile("source/texture/foodcard/2.png");
+    texarr[306].loadFromFile("source/texture/foodcard/3.png");
     cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,Cost(1,pair<ElementType,int>(ElementType::cai,2)),CardType::null,true));
     cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
-    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
     cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
     cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
-    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
-
+    cards.push_back(new Card(texarr[304], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[304], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[304], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[305], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[306], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[305], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[306], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[301], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null, true));
+    cards.push_back(new Card(texarr[301], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null, true));
+    cards.push_back(new Card(texarr[302], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[302], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[304], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[304], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[304], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[305], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[306], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[305], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[306], windowWidth* chooseCardWidth, windowHeight* chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
     for (int i = 0; i < 5; i++)
     {
         cards.drawCard();//抽卡
     }
 
-    //100后技能
+    //150后技能
     texarr[100].loadFromFile("source/texture/kuang.png");
     texarr[101].loadFromFile("source/texture/hp.png");
     texarr[102].loadFromFile("source/texture/np0.png");
     texarr[103].loadFromFile("source/texture/np1.png");
+    //110以后buff
+    texarr[110].loadFromFile("source/texture/盾.png");
+    texarr[111].loadFromFile("source/texture/攻.png");
+    texarr[112].loadFromFile("source/texture/饱.png");
+
 
     texarr[150].loadFromFile("source/texture/character/ability/xingqiu_a.png");
     texarr[151].loadFromFile("source/texture/character/ability/xingqiu_e.png");
@@ -185,8 +207,10 @@ void Game::Initial() {
 
     texarr[2].loadFromFile("source/texture/character/xingqiu.png");
     Character a1 = Character(texarr[2], cardWidth* windowWidth, cardHeight* windowHeight, 0.343, 0.58,texarr[100], texarr[101], texarr[102],"xingqiu",10,2);
-    //a1.Die();
     a1.Selected(true);
+    a1.addBuff(Buff(1, BuffType::盾, 2,36,36, texarr[110]));
+    a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));
+    a1.addBuff(Buff(1, BuffType::饱, 1, 36, 36, texarr[112]));
     characterVector.push_back(a1);
     texarr[3].loadFromFile("source/texture/character/keqing.png");
     Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3);

@@ -38,7 +38,7 @@ void TurnEndState::Logic() {
             }
             cout << "结束阶段结束，进入下一大回合" << endl;
             mGame->firstConfirm = false;
-            mGame->ChangeState(new FirstDiceState(mGame));
+            mGame->ChangeState(new DrawCardState(mGame));
         }
     }
 

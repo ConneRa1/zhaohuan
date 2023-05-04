@@ -31,6 +31,7 @@ void FirstDiceState::Input() {
     }
 }
 void FirstDiceState::Logic() {
+    mGame->initdice = false;
     if (bannertime < 1.5*bannerTime)bannertime++;
     if (mGame->firstInitDice) {
         mGame->firstInitDice = false;
@@ -56,7 +57,10 @@ void FirstDiceState::Logic() {
             mGame->enemyAction = 2;
             mGame->enemyTurnOver = false;
             mGame->playerTurnOver = false;
-            mGame->ChangeState( new PlayerTurnState(mGame));
+            if (mGame->isPlayerFirst)
+                mGame->ChangeState(new PlayerTurnState(mGame));
+            else
+                mGame->ChangeState(new EnemyTurnState(mGame));
         }
     }
 }

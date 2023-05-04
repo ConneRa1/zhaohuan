@@ -11,6 +11,7 @@ public:
 	~Card();
 	void draw(RenderWindow& window, float x, float y);
 	void setScale(float x, float y);
+	void setPosition(Vector2f v) { sprite.setPosition(v); }
 	CardType cardtype;
 	Cost cost;		//花费的费用
 	//int cost;
@@ -34,7 +35,7 @@ public:
 	Card* cardMouse(int x, int y);  //返回对应位置的卡片的指针
 	void setHeldCardsPosition(float, float,float);
 	int getCardNum() { return heldCards.size(); }
-
+	Card* getCard(int i) { return (*(cardPile.begin() + i)); }
 	//刷牌
 	//把弃牌堆中的牌全部放回排队
 private:

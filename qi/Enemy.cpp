@@ -40,6 +40,12 @@ void Enemy::draw(RenderWindow& window, float x, float y, Shader& shader)
         it->setPosition(window.getSize().x * (this->x + npLeftOffset), window.getSize().y * (this->y + npUpOffset + npHeight * 0.75 * (times++)));
         window.draw(*it);
     }
+    int count = 0;
+    for (auto it = buffVector.begin(); it != buffVector.end(); it++)
+    {
+        it->setPos(x + 0.01 + buffOffset * count++, y + cardHeight);
+        it->draw(window);
+    }
     sHp.setPosition(window.getSize().x * (this->x + hpLeftOffset), window.getSize().y * (this->y + hpUpOffset));
     window.draw(sHp);
 

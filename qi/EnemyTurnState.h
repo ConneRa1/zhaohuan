@@ -16,6 +16,6 @@ private:
     int times = 0;
     bool isChanged = false;
     Character* changedCharacter;
-
+    Enemy* currentEnemy;
 };
 

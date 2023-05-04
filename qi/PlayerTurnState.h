@@ -8,13 +8,16 @@ class PlayerTurnState :
 {
 public:
     PlayerTurnState(Game* game);
+    
+private:
     void Input() ;
     void Logic() ;
     void Draw() ;
     void LeftButtonDown(Vector2i mPoint);
     void RightButtonDown(Vector2i mPoint);
     void doReact(ReactType r, bool toEnemy);
-private:
+    void CancelConsumingDice(Vector2i mPoint);
+    bool CheckChupai(Vector2i mPoint);
     int times = 0;
     bool isActed = false;
     bool isCardTriggered = false;

@@ -22,15 +22,10 @@ void Card::setScale(float x, float y)
 
 
 void CardVector::setHeldCardsPosition(float x,float y,float offset) {
-	/*int times = 0;
+	int times = 0;
 	for (auto it = heldCards.begin(); it != heldCards.end(); it++) {
 		(*it)->setPos(x + offset * times++, y);
-	}*/
-	heldCards[0]->setPos(x + offset *0, y);
-	heldCards[1]->setPos(x + offset *1, y);
-	heldCards[2]->setPos(x + offset *2, y);
-	heldCards[3]->setPos(x + offset *3, y);
-	heldCards[4]->setPos(x + offset *4, y);
+	}
 }
 
 void  CardVector::draw(RenderWindow& window,float x,float y) {
@@ -42,7 +37,6 @@ void  CardVector::draw(RenderWindow& window,float x,float y) {
 }
 
 void  CardVector::push_back(Card* newCard) {
-
 	cardPile.push_back(newCard);
 }
 

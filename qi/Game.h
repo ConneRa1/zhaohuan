@@ -91,6 +91,7 @@ private:
     int enemyAction = 2;
 	bool isWin = false;
 	bool initdice = true;
+	bool isPlayerFirst = true;
 
 	Music bkMusic;
 

@@ -64,7 +64,8 @@ using namespace sf;
 #define changeConfirmX 0.923 
 #define changeConfirmY 0.858
 #define hurtTime 450
-
+#define drawCardTime 450
+#define buffOffset 0.020
 
 extern Font font;		//游戏字体，主要是用来画血量的
 
@@ -75,8 +76,10 @@ typedef enum CardType {
 	fun*/
 };
 
-typedef enum BuffType {		
-
+typedef enum class BuffType {
+	盾,
+	加攻,
+	饱
 };
 
 typedef enum class ElementType {	//元素种类
@@ -87,7 +90,6 @@ typedef enum class ElementType {	//元素种类
 	lei,
 	cao,
 	yan,
-	
 	feng,
 	count,		//用来计数
 };

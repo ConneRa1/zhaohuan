@@ -13,5 +13,10 @@ public:
     void ChangeCard();
 private :
     int times = 0;
+    Card* card1, *card2;
+    Vector2f startPosition1;
+    Vector2f endPosition1;
+    Vector2f startPosition2;
+    Vector2f endPosition2;
 };
 
