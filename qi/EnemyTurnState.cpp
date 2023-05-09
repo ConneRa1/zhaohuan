@@ -20,6 +20,16 @@ void EnemyTurnState::Input() {
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
                 mGame->toggleFullscreen();
             }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::S)
+            {
+                cout << "´æµµ!" << endl;
+                mGame->GetMemento();
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num1)
+            {
+                mGame->LoadMemento(0);
+                cout << "¶Áµµ1" << endl;
+            }
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
             {
                 if (isChangingRole)

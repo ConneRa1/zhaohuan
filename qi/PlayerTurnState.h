@@ -8,7 +8,6 @@ class PlayerTurnState :
 {
 public:
     PlayerTurnState(Game* game);
-    
 private:
     void Input() ;
     void Logic() ;
@@ -18,7 +17,10 @@ private:
     void doReact(ReactType r, bool toEnemy);
     void CancelConsumingDice(Vector2i mPoint);
     bool CheckChupai(Vector2i mPoint);
+    PlayerTurnState* clone() {PlayerTurnState* p = new PlayerTurnState(mGame); *p = *this; return p;}
+    void HandleCard(Card* c);
     int times = 0;
+    int selectedDiceNum = 0;    //专门记录选择的骰子数的
     bool isActed = false;
     bool isCardTriggered = false;
     bool isCardFinished = false;
@@ -35,7 +37,7 @@ private:
     //Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     Cost diceTriggeredNum/*= Cost(1, pair<ElementType, int>(ElementType::cai, 0))*/;
     vector<Object>placedDice;
-  
+    
     Character* currentRole;
     Enemy* currentEnemy;
     Card* triggeredCard=NULL;

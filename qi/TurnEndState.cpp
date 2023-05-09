@@ -18,6 +18,16 @@ void TurnEndState::Input() {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
             mGame->toggleFullscreen();
         }
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::S)
+        {
+            cout << "存档!" << endl;
+            mGame->GetMemento();
+        }
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num0)
+        {
+            cout << "读档0" << endl;
+            mGame->LoadMemento(0);
+        }
 
     }
 }
@@ -31,10 +41,12 @@ void TurnEndState::Logic() {
             for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
             {
                 it->setfrozen(false);
+                it->deleteBuff(BuffType::饱);
             }
             for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
             {
                 it->setfrozen(false);
+                it->deleteBuff(BuffType::饱);
             }
             cout << "结束阶段结束，进入下一大回合" << endl;
             mGame->firstConfirm = false;

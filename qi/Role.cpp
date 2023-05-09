@@ -78,7 +78,18 @@ void Role::getHurt( int x)
 	hp -= x;
 	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
 }
+void Role::deleteBuff(BuffType type) 
+{
+	for (auto it = 0; it < buffVector.size(); it++)
+	{
+		if (buffVector[it].type == BuffType::±¥)
+		{
+			buffVector.erase(buffVector.begin() + it);
+			break;
+		}
+	}
 
+}
 bool Role::checkReact(ElementType e) 
 {
 	if (attachedElement == ElementType::cai || attachedElement == e)

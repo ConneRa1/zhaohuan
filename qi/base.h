@@ -31,7 +31,7 @@ using namespace sf;
 #define cardHeight 0.26
 #define cardY 0.853
 #define rolldiceWidth 0.112
-#define rolldiceHeight 0.160
+#define rolldiceHeight 0.168
 #define rolldiceX 0.228
 #define rolldiceY 0.292
 #define rolldiceOffsetX 0.139
@@ -64,16 +64,17 @@ using namespace sf;
 #define changeConfirmX 0.923 
 #define changeConfirmY 0.858
 #define hurtTime 450
-#define drawCardTime 450
+#define drawCardTime 400
 #define buffOffset 0.020
 
 extern Font font;		//游戏字体，主要是用来画血量的
 
-typedef enum CardType {
-	ability,	//技能
-	null       //默认
-	/*equipment,
-	fun*/
+typedef enum class  CardType {
+	equipment,
+	relics,	//圣遗物
+	place,	//场地
+	food,
+	event       
 };
 
 typedef enum class BuffType {
@@ -103,3 +104,10 @@ typedef enum class ReactType {	//反应种类
 };
 
 
+typedef enum class ConcreateCard {
+	最好的伙伴,
+	交给我吧,
+	仙跳墙,
+	土豆饼,
+	烧鸡
+};

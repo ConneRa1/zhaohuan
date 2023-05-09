@@ -2,13 +2,16 @@
 Card::~Card()
 {
 }
-Card::Card(Texture& texture, int width, int height, float x, float y,Cost c, CardType cardtype, bool quick) : Object(texture, width, height, x, y) {
+Card::Card(Texture& texture, int width, int height, float x, float y,Cost c, CardType cardtype,ConcreateCard name, bool quick) : Object(texture, width, height, x, y) {
 	quickAction = quick;
 	cost = c;
 	this->cost = cost;
+	this->name = name;
 	this->cardtype = cardtype;
 }
-
+Card::Card(Texture& texture, int width, int height, float x, float y, Cost c) : Object(texture, width, height, x, y) {
+	this->cost = c;
+}
 void Card::draw(RenderWindow& window, float x, float y) {
 	setScale(x, y);
 	Object::draw(window);
@@ -27,6 +30,8 @@ void CardVector::setHeldCardsPosition(float x,float y,float offset) {
 		(*it)->setPos(x + offset * times++, y);
 	}
 }
+
+
 
 void  CardVector::draw(RenderWindow& window,float x,float y) {
 	int times = 0;
@@ -105,3 +110,5 @@ void CardVector::useCard(Card* card) {
 	}
 	return;
 }
+
+

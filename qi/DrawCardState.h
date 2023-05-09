@@ -11,6 +11,7 @@ public:
     void Logic();
     void Draw();
     void ChangeCard();
+    DrawCardState* clone() { DrawCardState* p = new DrawCardState(mGame); *p = *this; return p; }
 private :
     int times = 0;
     Card* card1, *card2;

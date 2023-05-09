@@ -23,6 +23,8 @@ public:
 	void setfrozen(bool f) { isFrozen = f; }
 	bool IsFrozen() { return isFrozen; }
 	void addBuff(Buff buff) { buffVector.push_back(buff); return; }
+	void deleteBuff(BuffType type);
+	void addHp(int i) { hp += i; }
 protected:
 	int hp;
 	int atk;

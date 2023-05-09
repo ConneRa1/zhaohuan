@@ -11,6 +11,7 @@ public :
 	virtual void Input()=0;
 	virtual void Logic()=0;
 	virtual void Draw()=0;
+	virtual State* clone() { return NULL; }
 protected:
 	Game* mGame;
 	Role* target;

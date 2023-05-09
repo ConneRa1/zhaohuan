@@ -17,6 +17,16 @@ void DrawCardState::Input() {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
             mGame->toggleFullscreen();
         }
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::S)
+        {
+            cout << "´æµµ!" << endl;
+            mGame->GetMemento();
+        }
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num1)
+        {
+            mGame->LoadMemento(0);
+            cout << "¶Áµµ1" << endl;
+        }
     }
 }
 void DrawCardState::Logic() {

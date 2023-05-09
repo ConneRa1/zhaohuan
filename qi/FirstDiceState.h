@@ -10,7 +10,7 @@ public :
     void Input() override;
     void Logic()override;
     void Draw()override;
-
+    FirstDiceState* clone() { FirstDiceState* p = new FirstDiceState(mGame); *p = *this; return p; }
 private :
     int times = 0;
 };
