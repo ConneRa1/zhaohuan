@@ -23,6 +23,77 @@ void FirstDiceState::Input() {
             if (mGame->confirmButton.isIn(Mouse::getPosition(mGame->window).x, Mouse::getPosition(mGame->window).y))
             {
                 mGame->firstConfirm = true;
+
+                //更新骰子
+                mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                for (int i = 0; i < diceTriggeredNum.getSize(); i++) {
+                    random_device rd;
+                    mGame->diceNum.m[ElementType(rd() % (int)ElementType::count)]++;
+                }
+
+            }
+
+            if (mGame->firstInitDice == false && mGame->firstConfirm == false) {
+                for (int i = 0; i < 8; i++)
+                {
+                    if (mGame->rollDices[i].isIn(Mouse::getPosition(mGame->window).x, Mouse::getPosition(mGame->window).y)) {
+                        if (rollDiceTriggered[i]) {
+                            rollDiceTriggered[i] = 0;
+                            int n = -1;
+                            n += mGame->diceNum.m[ElementType::cai];
+                            if (n >= i) {
+                                diceTriggeredNum.m[ElementType::cai]--;
+                            }
+                            else {
+                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                                sort(vec.begin(), vec.end(), Cost::cmp);
+                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                                {
+                                    if (it->first != ElementType::cai) {
+                                        n += it->second;
+                                        if (n >= i) {
+                                            diceTriggeredNum.m[it->first]--;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            //选中骰子
+                            int n = -1;
+                            n += mGame->diceNum.m[ElementType::cai];
+                            if (n >= i) {
+                                rollDiceTriggered[i] = true;
+                                diceTriggeredNum.m[ElementType::cai]++;
+                            }
+                            else {
+                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                                sort(vec.begin(), vec.end(), Cost::cmp);
+                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                                {
+                                    if (it->first != ElementType::cai) {
+                                        n += it->second;
+                                        if (n >= i) {
+                                            rollDiceTriggered[i] = true;
+                                            diceTriggeredNum.m[it->first]++;
+
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                        cout << "已经选择的骰子2" << endl;
+                        for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
+                            cout << (int)(*i).first << " " << (*i).second << endl;
+                        }
+
+                    }
+                }
             }
 
         }
@@ -49,12 +120,14 @@ void FirstDiceState::Logic() {
             random_device rd;
             temp.m[ElementType(rd() % (int)ElementType::count)]++;
             //temp.m[ElementType(0)]++;
+
         }
+
         mGame->diceNum = temp;
     }
     if (mGame->firstConfirm)
     {
-        if (times++ >= 500)
+        if (times++ >= 1.5 * bannerTime)
         {
             mGame->firstInitDice = true;
             cout << "投骰子结束，进入战斗" << endl;
@@ -69,6 +142,7 @@ void FirstDiceState::Logic() {
                 mGame->ChangeState(new EnemyTurnState(mGame));
         }
     }
+
 }
 void FirstDiceState::Draw() {
     mGame->window.clear();//清屏

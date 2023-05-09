@@ -430,8 +430,29 @@ void PlayerTurnState::Draw() {
             it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             it->draw(mGame->window);
         }
+        int n = 0;
+        vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+        sort(vec.begin(), vec.end(), Cost::cmp);
+        /*for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+            mGame->dices[i].sprite.setTexture(mGame->texarr[200]);
+            mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+            mGame->dices[i].draw(mGame->window);
+            n++;
+        }
+        for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+        {
+            if (it->first != ElementType::cai) {
+                for (int i = 0; i < it->second; i++) {
+                    mGame->dices[i].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
+                    mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
+                    mGame->dices[i].draw(mGame->window);
+                    n++;
+                }
+            }
+        }*/
         for (int i = 0; i < mGame->diceNum.getSize(); i++)
         {
+            mGame->diceNum = mGame->diceNum -Cost();
             mGame->dices[i].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
             mGame->dices[i].draw(mGame->window);
         }
@@ -848,7 +869,6 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             if (temp != triggeredCard)
             {
                 triggeredCard = temp;
-                cout << "dadaafa" << endl;
             }
             else {
                 //triggeredCard = NULL;
