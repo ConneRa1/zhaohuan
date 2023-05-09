@@ -11,6 +11,7 @@ public:
 	void draw(RenderWindow& window, Shader &shader);
 	void setScale(float x, float y);
 	void getHurt(Role*,int );
+	int getHurtNum();
 	void getHurt(int);
 	int gethp() { return hp; }
 	bool ifDead() { return isDead; }
@@ -32,6 +33,9 @@ protected:
 	Sprite bg;
 	bool isDead = false;
 	bool isFrozen=false;
+
+	int hurtNum;
+
 	vector<Buff>buffVector;
 	ElementType attachedElement=ElementType::cai;	//目前只考虑身上最多只有一种元素
 };

@@ -20,12 +20,13 @@ void FirstDiceState::Input() {
         }
         if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
         {
-            if (mGame->confirmButton.isIn(Mouse::getPosition(mGame->window).x, Mouse::getPosition(mGame->window).y))
+            if (mGame->firstConfirm == false&&mGame->confirmButton.isIn(Mouse::getPosition(mGame->window).x, Mouse::getPosition(mGame->window).y))
             {
                 mGame->firstConfirm = true;
 
                 //¸üÐÂ÷»×Ó
                 mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                cout << mGame->diceNum.m[ElementType::cai];
                 for (int i = 0; i < diceTriggeredNum.getSize(); i++) {
                     random_device rd;
                     mGame->diceNum.m[ElementType(rd() % (int)ElementType::count)]++;
