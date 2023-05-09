@@ -11,12 +11,11 @@ public:
     void Logic();
     void Draw();
     void ChangeCard();
-    EnemyTurnState* clone() { EnemyTurnState* p = new EnemyTurnState(mGame); *p = *this; return p; }
 private:
     bool isChangingRole = false;
     int times = 0;
-    bool isChanged = false;
+    Role* target;
     Character* changedCharacter;
-    Enemy* currentEnemy;
+
 };
 

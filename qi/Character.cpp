@@ -30,13 +30,7 @@ void Character::draw(RenderWindow& window,float x,float y, Shader& shader)
         shader.setUniform("brightness", 0.0f);
     }    
     setScale(x, y);
-    if (isFrozen)
-    {
-        shader.setUniform("blue", 0.6f);
-    }
-    else {
-        shader.setUniform("blue", 0.0f);
-    }
+
 
 	Role::draw(window,shader);
     int times = 0;
@@ -46,12 +40,7 @@ void Character::draw(RenderWindow& window,float x,float y, Shader& shader)
     }
     sHp.setPosition(window.getSize().x * (this->x + hpLeftOffset), window.getSize().y * (this->y +hpUpOffset));
     window.draw(sHp);
-    int count = 0;
-    for (auto it = buffVector.begin(); it != buffVector.end(); it++)
-    {
-        it->setPos(this->x+0.005 + buffOffset * count++, this->y + cardHeight-0.037);
-        it->draw(window);
-    }
+
     Text text;
     text.setFont(font);
     text.setString(to_string(hp));

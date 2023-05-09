@@ -21,9 +21,6 @@ class State;
 #include"EnemyTurnState.h"
 #include"DrawCardState.h"
 #include"GameEndState.h"
-#include"TurnEndState.h"
-#include"Memento.h"
-
 class Game {
 public:
 	Game();
@@ -37,8 +34,6 @@ public:
 	friend class ChangeRoleState;
 	friend class DrawCardState;
 	friend class GameEndState;
-	friend class TurnEndState;
-	friend class Memento;
 private:
 	RenderWindow window;	//窗口
 	View view;
@@ -50,7 +45,7 @@ private:
 	vector<Object> dices;		//小骰子
 
 	//display测试用
-	vector<Ability*> abilityVector;
+	vector<Ability*> abilityVector;   //用来存放所有的技能
 	vector<Ability*> sAbility;		//用来存放显示、生效的技能
 
 
@@ -64,7 +59,6 @@ private:
 	bool gameOver, gameQuit;	//游戏运行阶段
 	Texture tBackGround;	//纹理
 	Object backGround;	//背景
-	Object diceTriggerred[4];
 	Object confirmButton;
 	Object chooseDice;	//消耗骰子
 	Object dicebg;
@@ -75,17 +69,7 @@ private:
 	Object playerbanner;
 	Object whenDice;
 	Object whenEnd;
-	Object changeTarget;
-	Object changeConfirm;
-	Object target;
-	Object hurt;
-	Object shui;
-	Object lei;
-	Object bing;
-	Object huo;
-	Object yan;
-	Object feng;
-	Object cao;
+
 	
 	//各个state的bool
 	bool firstInitDice = true;
@@ -95,10 +79,9 @@ private:
     int enemyAction = 2;
 	bool isWin = false;
 	bool initdice = true;
-	bool isPlayerFirst = true;
 
 	Music bkMusic;
-	vector<Memento> saves;
+
 
 	//游戏基本逻辑
 	void Initial();
@@ -110,9 +93,6 @@ private:
 	void RightButtonDown(Vector2i mPoint);
 	void DrawCard();
 	void ChangeState(State* state);
-	void showElement(Role it);
-	void GetMemento();
-	void LoadMemento(int);
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

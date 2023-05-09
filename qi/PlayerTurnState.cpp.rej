@@ -1,0 +1,11 @@
+diff a/qi/PlayerTurnState.cpp b/qi/PlayerTurnState.cpp	(rejected hunks)
+@@ -427,7 +427,8 @@
+         }
+         else if (isChangingRole)
+         {
+-            if (diceTriggeredNum >= Cost(1, pair<ElementType, int>(ElementType::cai, 1)))  //���˵ķ��ã����ܲ�Ϊ1
++             Cost changingRoleCost(1, pair<ElementType, int>(ElementType::cai, 1));
++            if (diceTriggeredNum >= changingRoleCost)  //���˵ķ��ã����ܲ�Ϊ1
+             {
+                 //if confirm
+                //mGame->diceNum = mGame->diceNum - Cost(1,pair<ElementType, int>(ElementType::cai, 1));

@@ -32,6 +32,7 @@ Game::~Game() {
 void Game::Run() {
 	do
 	{
+
 		Initial();
 		while (window.isOpen() && gameOver == false)
 		{
@@ -47,14 +48,14 @@ void Game::Initial() {
     bkMusic.openFromFile("source/texture/bg.wav");
     bkMusic.play();
     bkMusic.setLoop(true);
-    shader.loadFromMemory("uniform sampler2D texture; uniform float brightness; uniform float blue; void main() { vec4 color = texture2D(texture, gl_TexCoord[0].xy); color.rgb += brightness;color.b+=blue; gl_FragColor = color; }", sf::Shader::Fragment);
+    shader.loadFromMemory("uniform sampler2D texture; uniform float brightness; void main() { vec4 color = texture2D(texture, gl_TexCoord[0].xy); color.rgb += brightness; gl_FragColor = color; }", sf::Shader::Fragment);
     shader.setUniform("texture", sf::Shader::CurrentTexture);
     
 
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new ChooseCardState(this);
+    mState = new FirstDiceState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -77,19 +78,10 @@ void Game::Initial() {
     texarr[92].loadFromFile("source/texture/playerturn.png");
     texarr[93].loadFromFile("source/texture/投掷阶段.png");
     texarr[94].loadFromFile("source/texture/endstate.png");
-    texarr[94].loadFromFile("source/texture/endstate.png");
     enemybanner = Object(texarr[91], windowWidth, windowHeight, 0, 0);
     playerbanner = Object(texarr[92], windowWidth, windowHeight, 0, 0);
     whenDice = Object(texarr[93], windowWidth, windowHeight, 0, 0);
     whenEnd = Object(texarr[94], windowWidth, windowHeight, 0, 0);
-    texarr[95].loadFromFile("source/texture/change.png");
-    texarr[96].loadFromFile("source/texture/changeconfirm.png");
-    texarr[97].loadFromFile("source/texture/target.png");
-    texarr[98].loadFromFile("source/texture/hurt.png");
-    changeConfirm = Object(texarr[96], 106, 130, changeConfirmX, changeConfirmY);
-    changeTarget = Object(texarr[95], 163, 261, 0, 0);    //放角色卡左上角
-    target = Object(texarr[97], 163, 261, 0, 0);
-    hurt = Object(texarr[98], 189, 255, 0, 0);
 
     //200号骰子
     Object o1;
@@ -97,10 +89,6 @@ void Game::Initial() {
     texarr[201].loadFromFile("source/texture/dice/dice1.png");
     texarr[202].loadFromFile("source/texture/dice/dice2.png");
     texarr[203].loadFromFile("source/texture/dice/dice3.png");
-    texarr[204].loadFromFile("source/texture/dice/dice4.png");
-    texarr[205].loadFromFile("source/texture/dice/dice5.png");
-    texarr[206].loadFromFile("source/texture/dice/dice6.png");
-    texarr[206].loadFromFile("source/texture/dice/dice7.png");
 
     chooseDice = Object(texarr[200], 80, 92, 0, 0);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13);
@@ -119,15 +107,8 @@ void Game::Initial() {
     dices.push_back(o1);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13 + 7*diceOffset);
     dices.push_back(o1);
-    //210以后绑骰子
+
     texarr[210].loadFromFile("source/texture/rolldice0.png");
-    texarr[211].loadFromFile("source/texture/rolldice1.png");
-    texarr[212].loadFromFile("source/texture/rolldice2.png");
-    texarr[213].loadFromFile("source/texture/rolldice3.png");
-    texarr[214].loadFromFile("source/texture/rolldice4.png");
-    texarr[215].loadFromFile("source/texture/rolldice5.png");
-    texarr[216].loadFromFile("source/texture/rolldice6.png");
-    texarr[217].loadFromFile("source/texture/rolldice7.png");
 
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX, rolldiceY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX+1*rolldiceOffsetX, rolldiceY));
@@ -137,28 +118,6 @@ void Game::Initial() {
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 1 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 2 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
     rollDices.push_back(Object(texarr[210], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, rolldiceX + 3 * rolldiceOffsetX, rolldiceY+1*rolldiceOffsetY));
-    //220以后绑元素
-    texarr[220].loadFromFile("source/texture/element/huo.png");
-    texarr[221].loadFromFile("source/texture/element/shui.png");
-    texarr[222].loadFromFile("source/texture/element/bing.png");
-    texarr[223].loadFromFile("source/texture/element/cao.png");
-    texarr[224].loadFromFile("source/texture/element/yan.png");
-    texarr[225].loadFromFile("source/texture/element/lei.png");
-    texarr[226].loadFromFile("source/texture/element/feng.png");
-    shui= Object(texarr[221], 40, 40, 0,0);
-    lei = Object(texarr[225], 40, 40, 0, 0);
-    bing = Object(texarr[222], 40, 40, 0, 0);
-    huo = Object(texarr[220], 40, 40, 0, 0);
-    yan = Object(texarr[224], 40, 40, 0, 0);
-    feng = Object(texarr[226], 40, 40, 0, 0);
-    cao = Object(texarr[223], 40, 40, 0, 0);
-    //230以后绑骰子的框
-    texarr[230].loadFromFile("source/texture/diceTriggerred.png");
-    for (int i = 0; i < 4; i++)
-    {
-        diceTriggerred[i] = Object(texarr[230], 90, 95, 0, 0);
-    }
-    
 
     //确认按钮
     texarr[300].loadFromFile("source/texture/confirmButton.png");
@@ -168,49 +127,27 @@ void Game::Initial() {
     texarr[298].loadFromFile("source/texture/dicebg.png");
     dicebg = Object(texarr[298], windowWidth * diceBgWidth, windowHeight * diceBgHeight, diceBgX, diceBgY);
     //初始选卡
-    //texarr[301].loadFromFile("source/texture/loadingcard.png");
-    texarr[301].loadFromFile("source/texture/eventcard/card1.png");
-    texarr[302].loadFromFile("source/texture/eventcard/5.png");
-    texarr[303].loadFromFile("source/texture/foodcard/1.png");
-    texarr[304].loadFromFile("source/texture/foodcard/2.png");
-    texarr[305].loadFromFile("source/texture/foodcard/3.png");
-    Card* u1 = CardFactory::CreateCard(texarr[301], 2, CardType::event, ConcreateCard::最好的伙伴, true);
-    Card* u2 = CardFactory::CreateCard(texarr[302], 1, CardType::event, ConcreateCard::交给我吧,true);
-    Card* u3 = CardFactory::CreateCard(texarr[303], 2, CardType::event, ConcreateCard::仙跳墙,false);
-    Card* u4 = CardFactory::CreateCard(texarr[304], 1, CardType::event, ConcreateCard::土豆饼, false);
-    Card* u5 = CardFactory::CreateCard(texarr[305], 0, CardType::event, ConcreateCard::烧鸡, false);
-   
-
-    cards.push_back(u1->clone());
-    cards.push_back(u1->clone());
-    cards.push_back(u2->clone());
-    cards.push_back(u2->clone());
-    cards.push_back(u2->clone());
-    cards.push_back(u3->clone());
-    cards.push_back(u4->clone());
-    cards.push_back(u5->clone());
-    cards.push_back(u3->clone());
-    cards.push_back(u4->clone());
-    cards.push_back(u5->clone());
-    cards.push_back(u3->clone());
-    cards.push_back(u4->clone());
-    cards.push_back(u5->clone());
+    texarr[301].loadFromFile("source/texture/loadingcard.png");
+    texarr[302].loadFromFile("source/texture/eventcard/card1.png");
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY,Cost(1,pair<ElementType,int>(ElementType::cai,2)),CardType::null,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
+    cards.push_back(new Card(texarr[301], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null,true));
+    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
+    cards.push_back(new Card(texarr[302], windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, 2)), CardType::null));
 
     for (int i = 0; i < 5; i++)
     {
         cards.drawCard();//抽卡
     }
 
-    //150后技能
+    //100后技能
     texarr[100].loadFromFile("source/texture/kuang.png");
     texarr[101].loadFromFile("source/texture/hp.png");
     texarr[102].loadFromFile("source/texture/np0.png");
     texarr[103].loadFromFile("source/texture/np1.png");
-    //110以后buff
-    texarr[110].loadFromFile("source/texture/盾.png");
-    texarr[111].loadFromFile("source/texture/攻.png");
-    texarr[112].loadFromFile("source/texture/饱.png");
-
 
     texarr[150].loadFromFile("source/texture/character/ability/xingqiu_a.png");
     texarr[151].loadFromFile("source/texture/character/ability/xingqiu_e.png");
@@ -224,10 +161,8 @@ void Game::Initial() {
 
     texarr[2].loadFromFile("source/texture/character/xingqiu.png");
     Character a1 = Character(texarr[2], cardWidth* windowWidth, cardHeight* windowHeight, 0.343, 0.58,texarr[100], texarr[101], texarr[102],"xingqiu",10,2);
+    //a1.Die();
     a1.Selected(true);
-    a1.addBuff(Buff(1, BuffType::盾, 2,36,36, texarr[110]));
-    a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));
-    a1.addBuff(Buff(1, BuffType::饱, 1, 36, 36, texarr[112]));
     characterVector.push_back(a1);
     texarr[3].loadFromFile("source/texture/character/keqing.png");
     Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3);
@@ -238,24 +173,26 @@ void Game::Initial() {
     characterVector.push_back(a3);
 
     texarr[5].loadFromFile("source/texture/enemy/enemy1.png");
-    Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],20,3);
+    Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],10,3);
     enemyVector.push_back(e);
     //加载所有技能
-    abilityVector.push_back(new Ability(ElementType::cai,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai,3))));
-    abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::shui, 3))));
+    abilityVector.push_back(new Ability(ElementType::shui,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::shui, 2, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
 
-    abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::lei, 3))));
-    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::lei, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::lei, 2, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
 
-    abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::bing, 3))));
-    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::bing, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 2))));
 
     for(int i=0;i<3;i++)
         sAbility.push_back(abilityVector[i]);
 
+    /*diceNum = Cost(4, pair<ElementType, int>(ElementType::bing, 0), pair<ElementType, int>(ElementType::lei, 0),
+        pair<ElementType, int>(ElementType::shui, 0), pair<ElementType, int>(ElementType::cai, 8));*/
 }
 
 void Game::Draw() {
@@ -275,85 +212,4 @@ void  Game::ChangeState(State* state)
 {
     delete(mState);
     mState = state;
-}
-
-void Game::showElement(Role it)
-{
-    switch (it.getElement())
-    {
-    case ElementType::shui:
-        shui.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        shui.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        shui.draw(window);
-        break;
-    case ElementType::bing:
-        bing.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        bing.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        bing.draw(window);
-        break;
-    case ElementType::lei:
-        lei.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        lei.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        lei.draw(window);
-        break;
-    case ElementType::cao:
-        cao.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        cao.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        cao.draw(window);
-        break;
-    case ElementType::yan:
-        yan.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        yan.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        yan.draw(window);
-        break;
-    case ElementType::huo:
-        huo.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        huo.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        huo.draw(window);
-        break;
-    case ElementType::feng:
-        feng.setPos(it.getX() + cardWidth / 2.4, it.getY() - 0.04);
-        feng.setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
-        feng.draw(window);
-        break;
-    default:
-        break;
-    }
-}
-void  Game::GetMemento() 
-{
-    saves.push_back(Memento(mState, this));
-}
-
-void Game::LoadMemento(int index)
-{
-    if (index < saves.size())
-    {
-        for (int i = 0; i < saves.size(); i++)
-        {
-            if (i == index)
-            {
-                mState = saves[i].save;
-                this->characterVector = saves[i].characterVector;	//角色容器，用于存储场上所有的角色
-                this->enemyVector= saves[i].enemyVector;	  //怪物容器，用于存储场上所有的怪物
-                this->cards= saves[i].cards;
-                this->diceNum = saves[i].diceNum;
-                this->firstInitDice = saves[i].firstInitDice;
-                this->firstConfirm = saves[i].firstConfirm;
-                this->playerTurnOver = saves[i].playerTurnOver;
-                this->enemyTurnOver = saves[i].enemyTurnOver;
-                this->enemyAction = saves[i].enemyAction;
-                this->isWin = saves[i].isWin;
-                this->initdice = saves[i].initdice;
-                this->isPlayerFirst = saves[i].isPlayerFirst;
-                break;
-            }
-            
-        }
-    }
-    else {
-        cout << "不存在这么多存档！" << endl;
-    }
-   
-
 }

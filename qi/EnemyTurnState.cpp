@@ -20,16 +20,6 @@ void EnemyTurnState::Input() {
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::F11) {
                 mGame->toggleFullscreen();
             }
-            if (event.type == Event::KeyPressed && event.key.code == Keyboard::S)
-            {
-                cout << "存档!" << endl;
-                mGame->GetMemento();
-            }
-            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num1)
-            {
-                mGame->LoadMemento(0);
-                cout << "读档1" << endl;
-            }
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
             {
                 if (isChangingRole)
@@ -40,11 +30,9 @@ void EnemyTurnState::Input() {
                             changedCharacter = &(*it);
                         }
                     }
-                    if (mGame->changeConfirm.isIn(event.mouseButton.x, event.mouseButton.y))
-                    {
-                        isChanged = true;
-                        isChangingRole = false;
-                    }
+                }
+                else {
+                    mGame->firstConfirm = true;
                 }
             
             }
@@ -56,18 +44,17 @@ void EnemyTurnState::Logic() {
     {
         bannertime++;
     }
-    else {
-        mGame->firstConfirm = true;
-    }
-    if (mGame->enemyAction <= 0)
+    if (mGame->enemyAction == 0)
     {
         mGame->enemyTurnOver = true;
     }
-    if (isChanged)
+    if (isChangingRole)
     {
         if (changedCharacter != NULL)
         {
             changedCharacter->Selected(true);
+     
+            isChangingRole = false;
             int num = 0;
             if (changedCharacter->name == "xingqiu")
             {
@@ -80,6 +67,7 @@ void EnemyTurnState::Logic() {
             {
                 for (auto i = 0; i < 3; i++)
                 {
+
                     mGame->sAbility[i] = mGame->abilityVector[i + 3];
                 }
             }
@@ -87,14 +75,15 @@ void EnemyTurnState::Logic() {
             {
                 for (auto i = 0; i < 3; i++)
                 {
+
                     mGame->sAbility[i] = mGame->abilityVector[i + 6];
                 }
             }
             changedCharacter = NULL;
-            isChanged = false;
         }
+
     }
-    else if (mGame->firstConfirm && !isChanged&&!isChangingRole)
+    else if (mGame->firstConfirm)
     {
         if (times == 0)
         {
@@ -105,13 +94,9 @@ void EnemyTurnState::Logic() {
                 }
             }
         }
-        else if (times == 250&&!mGame->enemyTurnOver&&! mGame->enemyVector[0].IsFrozen())    //敌人冰冻不许动
+        else if (times == 250&&!mGame->enemyTurnOver)
         {
-            /*for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {    //后续有多个敌人再加
-                if(it->)
-            }*/
-            target->getHurt(&mGame->enemyVector[0],5);
-            showHurt = true;
+            target->getHurt(5);
             if (target->gethp() <= 0)
             {
                 target->Die();
@@ -138,19 +123,16 @@ void EnemyTurnState::Logic() {
         }
         else if (times >= 500)
         {
-          
+           
+            cout << "Enemy回合结束，进入玩家回合" << endl;
             mGame->firstConfirm = false;
             mGame->enemyAction -= 1;
             if (mGame->enemyTurnOver && mGame->playerTurnOver)
             {
-                mGame->ChangeState( new TurnEndState(mGame));
+                mGame->ChangeState( new FirstDiceState(mGame));
             }
-            else if (!mGame->playerTurnOver)
-            {
-                cout << "Enemy回合结束，进入玩家回合" << endl;
-                mGame->ChangeState(new PlayerTurnState(mGame));
-            }
-                
+            else
+                mGame->ChangeState( new PlayerTurnState(mGame));
         }
         times++;
     }
@@ -172,11 +154,9 @@ void EnemyTurnState::Draw() {
     }
 
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-        mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {
-        mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
 
@@ -194,7 +174,7 @@ void EnemyTurnState::Draw() {
     {
         if (it->first != ElementType::cai) {
             for (int i = 0; i < it->second; i++) {
-                mGame->dices[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
+                mGame->dices[n].sprite.setTexture(mGame->texarr[200 + it->first]);
                 mGame->dices[n].setScale(mGame->view.getSize().x / windowWidth * mGame->dices[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->dices[i].getScaley());
                 mGame->dices[n].draw(mGame->window);
                 n++;
@@ -209,56 +189,14 @@ void EnemyTurnState::Draw() {
     }
     else {
         int times = 0;
-        if (!isChangingRole)
-        {
-            for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
-                (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                (*it)->Object::draw(mGame->window);
-            }
+        for (auto it = mGame->sAbility.begin(); it != mGame->sAbility.end(); it++) {
+            (*it)->Object::setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            (*it)->Object::draw(mGame->window);
         }
-        
     
     }
-    if (isChangingRole)
-    {
-        mGame->changeConfirm.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-        mGame->changeConfirm.draw(mGame->window);
-        if (changedCharacter != NULL) {
-            mGame->changeTarget.setPos((*changedCharacter).getX(), (*changedCharacter).getY());
-            mGame->changeTarget.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->changeTarget.draw(mGame->window);
-        }
-    }
-    if (showHurt)
-    {
-        int static damage;
-        times = 251;
-        if (hurtTimer == 0)
-        {
-            mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
-            damage=target->getHurtNum();
-            
-        }
-        if (hurtTimer++ < hurtTime)
-        {
-            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-            mGame->hurt.draw(mGame->window);
-
-            Text text;
-            text.setFont(font);
-            text.setString('-' + to_string(damage));
-            text.setPosition(mGame->window.getSize().x * ((*target).getX() - hpLeftOffset * 0), mGame->window.getSize().y * ((*target).getY() - hpLeftOffset * 4.8));
-            text.setFillColor(Color::White);
-            text.setCharacterSize(float(mGame->window.getSize().y) / float(windowHeight) * fontSize * 4.5);
-            mGame->window.draw(text);
-
-        }
-        else {
-            //hurtTimer = 0;
-            showHurt = false;
-            //showReact = true;
-        }
-    }
+    
+    
     mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->window.display();//把显示缓冲区的内容，显示在屏幕上
 }

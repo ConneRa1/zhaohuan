@@ -7,21 +7,18 @@
 
 class Card :public Object {
 public:
-	Card(Texture& texture, int width, int height, float x, float y,Cost cost ,CardType cardtype,ConcreateCard c,bool=false);
-	Card(Texture& texture, int width, int height, float x, float y, Cost c);
-	Card() {};
+	Card(Texture& texture, int width, int height, float x, float y,Cost cost ,CardType cardtype,bool=false);
 	~Card();
 	void draw(RenderWindow& window, float x, float y);
 	void setScale(float x, float y);
-	void setPosition(Vector2f v) { sprite.setPosition(v); }
-	Card* clone() { Card* c = new Card(); *c = *this; return c; }
 	CardType cardtype;
 	Cost cost;		//花费的费用
 	//int cost;
 	bool quickAction = false;		//看这个牌是不是不需要目标
-	ConcreateCard name;
 protected:
+	Role* target=NULL;
 	bool isTriggered = false;
+	
 };
 
 class CardVector {		//封装的card容器
@@ -37,8 +34,7 @@ public:
 	Card* cardMouse(int x, int y);  //返回对应位置的卡片的指针
 	void setHeldCardsPosition(float, float,float);
 	int getCardNum() { return heldCards.size(); }
-	Card* getCard(int i) { return (*(cardPile.begin() + i)); }
-	void autoPlace() { setHeldCardsPosition(0.5 - (getCardNum()) * cardWidth / 4, heldCardY, cardWidth * 0.52); };
+
 	//刷牌
 	//把弃牌堆中的牌全部放回排队
 private:
@@ -50,11 +46,12 @@ private:
 
 
 
-class CardFactory {		//卡片工厂
-public:
-	static Card* CreateCard( Texture& texture,int cost,CardType type,ConcreateCard name ,bool quick)
-	{
-		return new Card(texture, windowWidth * chooseCardWidth, windowHeight * chooseCardHeight, chooseCardX, chooseCardY, Cost(1, pair<ElementType, int>(ElementType::cai, cost)),type ,name, quick);
-	}
-};
+//class CardFactory {		//卡片工厂
+//public:
+//	static Card* getCard(CardType num, Texture& texture, int width, int height, int x, int y)
+//	{
+//		
+//
+//	}
+//};
 

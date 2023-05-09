@@ -18,8 +18,6 @@ public:
 	float getScalex();
 	float getScaley();
 	Sprite sprite;
-	float getPosX() { return x; }
-	float getPosY() { return y; }
 protected:
 	float x, y;
 	int width, height;
