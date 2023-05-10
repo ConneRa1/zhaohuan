@@ -30,6 +30,7 @@ using namespace sf;
 #define cardWidth 0.086
 #define cardHeight 0.26
 #define cardY 0.853
+#define cardOffset 0.028
 #define rolldiceWidth 0.112
 #define rolldiceHeight 0.168
 #define rolldiceX 0.228
@@ -80,7 +81,8 @@ typedef enum class  CardType {
 typedef enum class BuffType {
 	盾,
 	加攻,
-	饱
+	饱,
+	大招
 };
 
 typedef enum class ElementType {	//元素种类
@@ -100,14 +102,32 @@ typedef enum class ReactType {	//反应种类
 	感电,
 	冻结,
 	超导,
-
 };
 
 
 typedef enum class ConcreateCard {
 	最好的伙伴,
 	交给我吧,
+	莫娜,
+	鹤归,
+	白垩之术,
 	仙跳墙,
 	土豆饼,
-	烧鸡
+	烧鸡,
+	大剑,
+	单手剑,
+	火,
+	水,
+	冰,
+	赌徒,
+	立本,
+	凯瑟琳,
+	元素反应仪,
+	西风大教堂,
+	群玉阁,
+	莲花酥,
+	罗莎莉亚,
+	无中生有,
+	本大爷,
+
 };

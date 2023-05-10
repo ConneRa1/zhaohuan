@@ -89,7 +89,12 @@ void CardVector::changeCard(Card* card,float x,float y,float offset) {
 
 }
 
-
+void CardVector::setHeldCardsPositionY() 
+{
+	float initX = 0.5 - (heldCards.size() * cardWidth*1.05) / 2.0f;
+	setHeldCardsPosition(initX, heldCardY, cardWidth * 1.3);
+	
+}
 Card* CardVector::cardMouse(int x, int y) {
 	for (auto it = heldCards.begin(); it != heldCards.end(); it++) {
 		if ((*it)->isIn(x, y)) {

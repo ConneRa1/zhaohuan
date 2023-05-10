@@ -1,15 +1,14 @@
 #pragma once
 #include"Object.h"
 #include"base.h"
-class Buff:Object
+class Equipment:Object
 {
-public:
-    Buff();
-    Buff(int times,BuffType type,int num, int w,int h,Texture&);
+protected:
+	Equipment();
+    Equipment(int times, int num, int w, int h, Texture&);
     void draw(RenderWindow& window);
     void setPos(float x, float y);
-    int times;  //可用次数
-    BuffType type;
+    int times;  //一回合可用次数
     int num;    //对应数值
 };
 

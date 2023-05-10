@@ -31,12 +31,21 @@ void Role::setScale(float x,float y)
 	Object::setScale(x,y);
 	bg.setScale(x * float(sprite.getTexture()->getSize().x) / float(bg.getTexture()->getSize().x), y*float(sprite.getTexture()->getSize().y) / float(bg.getTexture()->getSize().y));
 }
-void Role::getHurt(Role* role,int x)
+void Role::getHurt(Role* role,int x,bool isDaZhao)
 {
 	vector<int> erease;
 	for (auto it = 0; it < role->buffVector.size(); it++)
 	{
-		if (role->buffVector[it].type == BuffType::¼Ó¹¥)
+		if (role->buffVector[it].type == BuffType::¼Ó¹¥&&!isDaZhao)
+		{
+			x += role->buffVector[it].num;
+			role->buffVector[it].times -= 1;
+			if (role->buffVector[it].times <= 0)
+			{
+				erease.push_back(it);
+			}
+		}
+		else if (isDaZhao && role->buffVector[it].type == BuffType::´óÕÐ)
 		{
 			x += role->buffVector[it].num;
 			role->buffVector[it].times -= 1;
@@ -73,6 +82,48 @@ void Role::getHurt(Role* role,int x)
 	hp -= x;
 	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
 }
+void Role::getHurt(Role* role, int x)
+{
+	vector<int> erease;
+	for (auto it = 0; it < role->buffVector.size(); it++)
+	{
+		if (role->buffVector[it].type == BuffType::¼Ó¹¥ )
+		{
+			x += role->buffVector[it].num;
+			role->buffVector[it].times -= 1;
+			if (role->buffVector[it].times <= 0)
+			{
+				erease.push_back(it);
+			}
+		}
+	}
+	for (auto it = 0; it < erease.size(); it++)
+	{
+		role->buffVector.erase(role->buffVector.begin() + erease[it]);
+	}
+	erease.clear();
+
+
+	for (auto it = 0; it < buffVector.size(); it++)
+	{
+		if (buffVector[it].type == BuffType::¶Ü)
+		{
+			x -= buffVector[it].num;
+			buffVector[it].times -= 1;
+			if (buffVector[it].times <= 0)
+			{
+				erease.push_back(it);
+			}
+		}
+	}
+	for (auto it = 0; it < erease.size(); it++)
+	{
+		buffVector.erase(buffVector.begin() + erease[it]);
+	}
+	erease.clear();
+	hp -= x;
+	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
+}
 void Role::getHurt( int x)
 {
 	hp -= x;
@@ -88,7 +139,6 @@ void Role::deleteBuff(BuffType type)
 			break;
 		}
 	}
-
 }
 bool Role::checkReact(ElementType e) 
 {

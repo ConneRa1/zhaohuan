@@ -34,6 +34,7 @@ public:
 	void changeCard(Card* card);
 	void changeCard(Card* card, float, float, float);
 	void useCard(Card* card);		//使用卡片，弃牌到弃牌堆中
+	void setHeldCardsPositionY();
 	Card* cardMouse(int x, int y);  //返回对应位置的卡片的指针
 	void setHeldCardsPosition(float, float,float);
 	int getCardNum() { return heldCards.size(); }

@@ -10,7 +10,8 @@ public:
 	void draw(RenderWindow& window);
 	void draw(RenderWindow& window, Shader &shader);
 	void setScale(float x, float y);
-	void getHurt(Role*,int );
+	void getHurt(Role*,int,bool );
+	void getHurt(Role*, int);
 	void getHurt(int);
 	int gethp() { return hp; }
 	bool ifDead() { return isDead; }
@@ -23,8 +24,10 @@ public:
 	void setfrozen(bool f) { isFrozen = f; }
 	bool IsFrozen() { return isFrozen; }
 	void addBuff(Buff buff) { buffVector.push_back(buff); return; }
+	void addRelic();
+	void addEquipment();
 	void deleteBuff(BuffType type);
-	void addHp(int i) { hp += i; }
+	void addHp(int i) { hp += i; if (hp > 10)hp = 10; }
 protected:
 	int hp;
 	int atk;
@@ -33,5 +36,6 @@ protected:
 	bool isDead = false;
 	bool isFrozen=false;
 	vector<Buff>buffVector;
+
 	ElementType attachedElement=ElementType::cai;	//目前只考虑身上最多只有一种元素
 };

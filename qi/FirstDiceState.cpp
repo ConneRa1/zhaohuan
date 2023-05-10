@@ -20,15 +20,33 @@ void FirstDiceState::Input() {
         }
         if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
         {
-            if (mGame->confirmButton.isIn(Mouse::getPosition(mGame->window).x, Mouse::getPosition(mGame->window).y))
+            if (mGame->firstConfirm ==false&&mGame->confirmButton.isIn(Mouse::getPosition(mGame->window).x, Mouse::getPosition(mGame->window).y))
             {
                 mGame->firstConfirm = true;
 
                 //¸üÐÂ÷»×Ó
                 mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                cout << mGame->diceNum.m[ElementType::cai];
                 for (int i = 0; i < diceTriggeredNum.getSize(); i++) {
                     random_device rd;
                     mGame->diceNum.m[ElementType(rd() % (int)ElementType::count)]++;
+                }
+
+                int n = 0;
+                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                sort(vec.begin(), vec.end(), Cost::cmp);
+                for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+                    mGame->dices[n].sprite.setTexture(mGame->texarr[200]);
+                    n++;
+                }
+                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                {
+                    if (it->first != ElementType::cai) {
+                        for (int i = 0; i < it->second; i++) {
+                            mGame->dices[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
+                            n++;
+                        }
+                    }
                 }
 
             }

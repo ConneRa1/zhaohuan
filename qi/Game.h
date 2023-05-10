@@ -113,6 +113,8 @@ private:
 	void showElement(Role it);
 	void GetMemento();
 	void LoadMemento(int);
+	Enemy* CurrentEnemy();
+	Character* CurrentCharacter();
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

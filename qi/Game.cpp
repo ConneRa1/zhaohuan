@@ -54,7 +54,7 @@ void Game::Initial() {
 	gameOver = false;
 	gameQuit = false;
 
-    mState = new ChooseCardState(this);
+    mState = new FirstDiceState(this);
 
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
@@ -100,7 +100,7 @@ void Game::Initial() {
     texarr[204].loadFromFile("source/texture/dice/dice4.png");
     texarr[205].loadFromFile("source/texture/dice/dice5.png");
     texarr[206].loadFromFile("source/texture/dice/dice6.png");
-    texarr[206].loadFromFile("source/texture/dice/dice7.png");
+    texarr[207].loadFromFile("source/texture/dice/dice7.png");
 
     chooseDice = Object(texarr[200], 80, 92, 0, 0);
     o1 = Object(texarr[200], 40,42, 0.963, 0.13);
@@ -201,7 +201,7 @@ void Game::Initial() {
         cards.drawCard();//抽卡
     }
 
-    //150后技能
+   //100 人物框
     texarr[100].loadFromFile("source/texture/kuang.png");
     texarr[101].loadFromFile("source/texture/hp.png");
     texarr[102].loadFromFile("source/texture/np0.png");
@@ -211,7 +211,7 @@ void Game::Initial() {
     texarr[111].loadFromFile("source/texture/攻.png");
     texarr[112].loadFromFile("source/texture/饱.png");
 
-
+     //150后技能
     texarr[150].loadFromFile("source/texture/character/ability/xingqiu_a.png");
     texarr[151].loadFromFile("source/texture/character/ability/xingqiu_e.png");
     texarr[152].loadFromFile("source/texture/character/ability/xingqiu_q.png");
@@ -228,6 +228,7 @@ void Game::Initial() {
     a1.addBuff(Buff(1, BuffType::盾, 2,36,36, texarr[110]));
     a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));
     a1.addBuff(Buff(1, BuffType::饱, 1, 36, 36, texarr[112]));
+    a1.addBuff(Buff(1, BuffType::大招, 1, 36, 36, texarr[111]));
     characterVector.push_back(a1);
     texarr[3].loadFromFile("source/texture/character/keqing.png");
     Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3);
@@ -238,8 +239,17 @@ void Game::Initial() {
     characterVector.push_back(a3);
 
     texarr[5].loadFromFile("source/texture/enemy/enemy1.png");
-    Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],20,3);
+    Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],10,3);
     enemyVector.push_back(e);
+    enemyVector.push_back(e);
+    enemyVector.push_back(e);
+    float initX = 0.5-(enemyVector.size()*cardWidth+(enemyVector.size()-1)*cardOffset)/2.0f;
+    for (int it = 0; it < enemyVector.size(); it++)
+    {
+        enemyVector[it].setPos(initX + cardWidth*it+ cardOffset*it, 0.152);
+    }
+    enemyVector[enemyVector.size() / 2].Selected(true);
+    
     //加载所有技能
     abilityVector.push_back(new Ability(ElementType::cai,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
     abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai,3))));
@@ -355,5 +365,26 @@ void Game::LoadMemento(int index)
         cout << "不存在这么多存档！" << endl;
     }
    
+
+}
+
+Enemy* Game::CurrentEnemy() {
+    for (auto it = enemyVector.begin(); it != enemyVector.end(); it++)
+    {
+        if (it->IsSelected())
+        {
+            return &(*it);
+        }
+    }
+
+}
+Character* Game::CurrentCharacter() {
+    for (auto it = characterVector.begin(); it != characterVector.end(); it++)
+    {
+        if (it->IsSelected())
+        {
+            return &(*it);
+        }
+    }
 
 }

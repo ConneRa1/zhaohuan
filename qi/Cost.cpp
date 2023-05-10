@@ -71,8 +71,8 @@ bool Cost:: operator>=(Cost c) {
 			if (temp[(*it).first] >= (*it).second)
 				temp[(*it).first] -= (*it).second;
 			else if (temp[(*it).first] + temp[ElementType::cai] >= (*it).second) {
-				temp[(*it).first] = 0;
 				temp[ElementType::cai] -= (*it).second - temp[(*it).first];
+				temp[(*it).first] = 0;
 			}
 			else
 				return false;

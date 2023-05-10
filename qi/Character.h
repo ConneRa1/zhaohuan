@@ -11,11 +11,17 @@ public:
 	void move();
 	void Selected(bool);
 	bool IsSelected();
+	int getNp() { return currentNp; }
+	int maxNp() { return npNum; }
+	void setNp(int i) { currentNp = (i <= npNum ? i : npNum); cout << "np:" << currentNp << endl; updateNp(); }
+	void updateNp();
 	string name;
 protected:
 	Sprite sHp;
+	Texture tnp0, tnp1;
 	vector<Sprite> sNp;
 	int npNum;
+	int currentNp=2;
 	bool isMoved = false;
 	bool isSelected=false;
 };
