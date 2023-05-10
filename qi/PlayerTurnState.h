@@ -42,5 +42,9 @@ private:
     Enemy* currentEnemy;
     Card* triggeredCard=NULL;
     Ability*triggeredAbility;
+
+    ReactType reactType;    //记录反应类型，便于显示
+    //int damage;         //记录伤害，便于显示
+
 };
 

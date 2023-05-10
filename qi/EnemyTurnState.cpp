@@ -231,15 +231,27 @@ void EnemyTurnState::Draw() {
     }
     if (showHurt)
     {
+        int static damage;
         times = 251;
         if (hurtTimer == 0)
         {
             mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
+            damage=target->getHurtNum();
+            
         }
         if (hurtTimer++ < hurtTime)
         {
             mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->hurt.draw(mGame->window);
+
+            Text text;
+            text.setFont(font);
+            text.setString('-' + to_string(damage));
+            text.setPosition(mGame->window.getSize().x * ((*target).getX() - hpLeftOffset * 0), mGame->window.getSize().y * ((*target).getY() - hpLeftOffset * 4.8));
+            text.setFillColor(Color::White);
+            text.setCharacterSize(float(mGame->window.getSize().y) / float(windowHeight) * fontSize * 4.5);
+            mGame->window.draw(text);
+
         }
         else {
             //hurtTimer = 0;

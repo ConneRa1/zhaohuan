@@ -122,8 +122,16 @@ void Role::getHurt(Role* role, int x)
 	}
 	erease.clear();
 	hp -= x;
+	hurtNum = x;
 	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
 }
+
+int Role::getHurtNum()
+{
+	
+	return hurtNum;
+}
+
 void Role::getHurt( int x)
 {
 	hp -= x;

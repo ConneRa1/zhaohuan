@@ -88,8 +88,6 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
         break;
     case ReactType::冻结:
         target->setfrozen(true);
-        reactHurtOver = false;
-        showReact = false;
         if (mGame->isWin) {
             mGame->ChangeState(new GameEndState(mGame));
         }
@@ -253,7 +251,8 @@ void PlayerTurnState::Logic() {
                 cout << "有元素反应" << endl;
                 reactHurtOver = true;
                 showReact = true;
-                doReact(target->doReact((*triggeredAbility).getElement()), true);
+                reactType = target->doReact((*triggeredAbility).getElement());
+                doReact(reactType, true);
 
             }
             else {
@@ -523,17 +522,27 @@ void PlayerTurnState::Draw() {
                 }
         }
     }
-   
     if (showHurt)
     {
+        int static damage;
         if (hurtTimer == 0)
         {
+            damage=target->getHurtNum();
             mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
+            
         }
         if (hurtTimer++ < hurtTime * 0.75)
         {
             mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->hurt.draw(mGame->window);
+
+            Text text;
+            text.setFont(font);
+            text.setString('-'+to_string(damage));
+            text.setPosition(mGame->window.getSize().x* ((*target).getX()-hpLeftOffset*0), mGame->window.getSize().y* ((*target).getY() - hpLeftOffset *4.8));
+            text.setFillColor(Color::White);
+            text.setCharacterSize(float(mGame->window.getSize().y) / float(windowHeight) * fontSize * 4.5);
+            mGame->window.draw(text);
         }
         else {
             //hurtTimer = 0;
@@ -545,14 +554,86 @@ void PlayerTurnState::Draw() {
     {
         if (delayTimer++ > hurtTime / 2)
         {
-            if (reactHurtTimer == 0)
-            {
-                mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
-            }
             if (reactHurtTimer++ < hurtTime)
             {
-                mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                mGame->hurt.draw(mGame->window);
+                
+
+                Text text;
+                Text textReact;
+                text.setFont(font);
+                text.setCharacterSize(float(mGame->window.getSize().y) / float(windowHeight) * fontSize * 4.5);
+                textReact.setFont(font);
+                textReact.setCharacterSize(float(mGame->window.getSize().y) / float(windowHeight) * fontSize);
+                switch (reactType)
+                {
+                case ReactType::蒸发:
+                    mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
+                    mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                    mGame->hurt.draw(mGame->window);
+
+                    text.setString('-'+to_string(2));
+                    text.setFillColor(Color::Blue);
+                    text.setPosition(mGame->window.getSize().x* ((*target).getX() - hpLeftOffset * 0), mGame->window.getSize().y* ((*target).getY() - hpLeftOffset * 4.8));
+                    mGame->window.draw(text);
+
+                    textReact.setString("Vaporize");
+                    textReact.setFillColor(Color::Blue);
+                    textReact.setPosition(mGame->window.getSize().x* ((*target).getX() - hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
+                    mGame->window.draw(textReact);
+
+                    
+                    break;
+                case ReactType::感电:
+                    text.setString('-' + to_string(1));
+                    text.setFillColor(Color(128, 0, 128));
+
+                    textReact.setString("Electro-Charged");
+                    textReact.setFillColor(Color(128, 0, 128));
+                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)        //后续改一下，只扣后台
+                    {
+                        mGame->hurt.setPos(it->getX() - 0.01, it->getY());
+                        mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                        mGame->hurt.draw(mGame->window);
+                        text.setPosition(mGame->window.getSize().x* (it->getX() - hpLeftOffset * 0), mGame->window.getSize().y* (it->getY() - hpLeftOffset * 4.8));
+                        mGame->window.draw(text);
+
+                        textReact.setPosition(mGame->window.getSize().x* ((*target).getX() + hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
+                        mGame->window.draw(textReact);
+                    }
+                    break;
+                case ReactType::超导:
+                    text.setString('-' + to_string(1));
+                    text.setFillColor(Color::White);
+
+                    textReact.setString("Superconduct");
+                    textReact.setFillColor(Color::White);
+                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)        //后续改一下，只扣后台
+                    {
+                        mGame->hurt.setPos(it->getX() - 0.01, it->getY());
+                        mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                        mGame->hurt.draw(mGame->window);
+                        text.setPosition(mGame->window.getSize().x * (it->getX() - hpLeftOffset * 0), mGame->window.getSize().y * (it->getY() - hpLeftOffset * 4.8));
+                        mGame->window.draw(text);
+
+                        textReact.setPosition(mGame->window.getSize().x* ((*target).getX() - hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
+                        mGame->window.draw(textReact);
+                    }
+                    break;
+                case ReactType::冻结:
+                    
+                    textReact.setString("Frozen");
+                    textReact.setFillColor(Color(86,193,254));
+                    textReact.setPosition(mGame->window.getSize().x * ((*target).getX() - hpLeftOffset *1), mGame->window.getSize().y * ((*target).getY() + hpLeftOffset * 4));
+                    mGame->window.draw(textReact);
+                    break;
+                default:
+                    break;
+                }
+                
+
+
+                
+                
             }
             else {
                 target = NULL;
@@ -563,6 +644,7 @@ void PlayerTurnState::Draw() {
     }
     mGame->window.display();
 }
+
 void PlayerTurnState::CancelConsumingDice(Vector2i mPoint)
 {
     if (!mGame->dicebg.isIn(mPoint.x, mPoint.y))
@@ -597,6 +679,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         {
             if (diceTriggeredNum >= triggeredAbility->cost)
             {
+                cout << "yes" << endl;
                 if (CheckChupai(mPoint))
                 {
                     selectedDiceNum = 0;
@@ -624,7 +707,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                 {
                     if (placedDice[i].isIn(mPoint.x, mPoint.y)) 
                     {
-                        if (diceTriggered[i]) {
+                        if (diceTriggered[i]) {     //取消选中骰子
                             diceTriggered[i] = 0;
                             int n = -1;
                             n += mGame->diceNum.m[ElementType::cai];

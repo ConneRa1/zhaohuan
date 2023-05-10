@@ -79,10 +79,13 @@ bool Cost:: operator>=(Cost c) {
 		}
 	}
 	int n = c.m[ElementType::cai];
+	if (n <= 0)
+		return true;
 	for (auto it = temp.begin(); it != temp.end(); it++) {
 		n -= (*it).second;
 		if (n <= 0)
 			return true;
+		
 	}
 	return false;
 }
