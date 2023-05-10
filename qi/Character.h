@@ -21,7 +21,7 @@ protected:
 	Texture tnp0, tnp1;
 	vector<Sprite> sNp;
 	int npNum;
-	int currentNp=2;
+	int currentNp=0;
 	bool isMoved = false;
 	bool isSelected=false;
 };

@@ -80,6 +80,7 @@ void Role::getHurt(Role* role,int x,bool isDaZhao)
 	}
 	erease.clear();
 	hp -= x;
+	hurtNum = x;
 	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
 }
 void Role::getHurt(Role* role, int x)

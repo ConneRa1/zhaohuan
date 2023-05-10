@@ -256,11 +256,11 @@ void Game::Initial() {
     abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::shui, 3))));
 
     abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::lei, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
     abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::lei, 3))));
 
     abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::bing, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
     abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::bing, 3))));
 
     for(int i=0;i<3;i++)

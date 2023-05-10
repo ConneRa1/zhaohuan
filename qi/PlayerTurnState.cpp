@@ -88,12 +88,6 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
         break;
     case ReactType::冻结:
         target->setfrozen(true);
-        if (mGame->isWin) {
-            mGame->ChangeState(new GameEndState(mGame));
-        }
-        else {
-            mGame->ChangeState(new EnemyTurnState(mGame));
-        }
         cout << "冻结!" << endl;
         break;
     case ReactType::超导:
@@ -556,8 +550,6 @@ void PlayerTurnState::Draw() {
         {
             if (reactHurtTimer++ < hurtTime)
             {
-                
-
                 Text text;
                 Text textReact;
                 text.setFont(font);
@@ -580,8 +572,6 @@ void PlayerTurnState::Draw() {
                     textReact.setFillColor(Color::Blue);
                     textReact.setPosition(mGame->window.getSize().x* ((*target).getX() - hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
                     mGame->window.draw(textReact);
-
-                    
                     break;
                 case ReactType::感电:
                     text.setString('-' + to_string(1));
@@ -591,14 +581,18 @@ void PlayerTurnState::Draw() {
                     textReact.setFillColor(Color(128, 0, 128));
                     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)        //后续改一下，只扣后台
                     {
-                        mGame->hurt.setPos(it->getX() - 0.01, it->getY());
-                        mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                        mGame->hurt.draw(mGame->window);
-                        text.setPosition(mGame->window.getSize().x* (it->getX() - hpLeftOffset * 0), mGame->window.getSize().y* (it->getY() - hpLeftOffset * 4.8));
-                        mGame->window.draw(text);
+                        if (&(*it) != mGame->CurrentEnemy())
+                        {
+                            mGame->hurt.setPos(it->getX() - 0.01, it->getY());
+                            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                            mGame->hurt.draw(mGame->window);
+                            text.setPosition(mGame->window.getSize().x* (it->getX() - hpLeftOffset * 0), mGame->window.getSize().y* (it->getY() - hpLeftOffset * 4.8));
+                            mGame->window.draw(text);
 
-                        textReact.setPosition(mGame->window.getSize().x* ((*target).getX() + hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
-                        mGame->window.draw(textReact);
+                            textReact.setPosition(mGame->window.getSize().x* ((*target).getX() + hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
+                            mGame->window.draw(textReact);
+                        }
+                        
                     }
                     break;
                 case ReactType::超导:
@@ -609,14 +603,17 @@ void PlayerTurnState::Draw() {
                     textReact.setFillColor(Color::White);
                     for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)        //后续改一下，只扣后台
                     {
-                        mGame->hurt.setPos(it->getX() - 0.01, it->getY());
-                        mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
-                        mGame->hurt.draw(mGame->window);
-                        text.setPosition(mGame->window.getSize().x * (it->getX() - hpLeftOffset * 0), mGame->window.getSize().y * (it->getY() - hpLeftOffset * 4.8));
-                        mGame->window.draw(text);
+                        if (&(*it) != mGame->CurrentEnemy())
+                        {
+                            mGame->hurt.setPos(it->getX() - 0.01, it->getY());
+                            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+                            mGame->hurt.draw(mGame->window);
+                            text.setPosition(mGame->window.getSize().x * (it->getX() - hpLeftOffset * 0), mGame->window.getSize().y * (it->getY() - hpLeftOffset * 4.8));
+                            mGame->window.draw(text);
 
-                        textReact.setPosition(mGame->window.getSize().x* ((*target).getX() - hpLeftOffset * 0.1), mGame->window.getSize().y* ((*target).getY() + hpLeftOffset * 4));
-                        mGame->window.draw(textReact);
+                            textReact.setPosition(mGame->window.getSize().x * ((*target).getX() - hpLeftOffset * 0.1), mGame->window.getSize().y * ((*target).getY() + hpLeftOffset * 4));
+                            mGame->window.draw(textReact);
+                        }
                     }
                     break;
                 case ReactType::冻结:

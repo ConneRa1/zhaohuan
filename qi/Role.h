@@ -12,7 +12,6 @@ public:
 	void setScale(float x, float y);
 	void getHurt(Role*,int,bool );
 	void getHurt(Role*, int);
-	void getHurt(Role*,int );
 	int getHurtNum();
 	void getHurt(int);
 	int gethp() { return hp; }
