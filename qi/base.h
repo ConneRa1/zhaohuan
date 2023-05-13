@@ -78,11 +78,17 @@ typedef enum class  CardType {
 	event       
 };
 
+typedef enum class EquipmentType {
+	单手剑,
+	大剑
+};
+
 typedef enum class BuffType {
 	盾,
 	加攻,
 	饱,
-	大招
+	大招,
+	武器,
 };
 
 typedef enum class ElementType {	//元素种类
@@ -114,8 +120,8 @@ typedef enum class ConcreateCard {
 	仙跳墙,
 	土豆饼,
 	烧鸡,
-	大剑,
-	单手剑,
+	白铁大剑,
+	旅行剑,
 	火,
 	水,
 	冰,

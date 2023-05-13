@@ -5,7 +5,7 @@ class Role :public Object
 {
 public:
 	Role();
-	Role(Texture& texture, int width, int height, float x, float y,Texture& bg);
+	Role(Texture& texture, int width, int height, float x, float y,Texture& bg, EquipmentType equipmentType=EquipmentType::µ• ÷Ω£);
 	~Role();
 	void draw(RenderWindow& window);
 	void draw(RenderWindow& window, Shader &shader);
@@ -36,7 +36,7 @@ protected:
 	Sprite bg;
 	bool isDead = false;
 	bool isFrozen=false;
-
+	EquipmentType equipmentType;
 	int hurtNum;
 
 	vector<Buff>buffVector;

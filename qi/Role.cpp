@@ -1,6 +1,6 @@
 #include "Role.h"
 Role::Role() {}
-Role::Role(Texture& texture, int width, int height, float x, float y, Texture& tbg) :Object(texture, width, height, x, y)
+Role::Role(Texture& texture, int width, int height, float x, float y, Texture& tbg,EquipmentType equipmentType) :Object(texture, width, height, x, y)
 {
 	bg.setTexture(tbg);
 	bg.scale((float)width / (float)tbg.getSize().x,
@@ -9,7 +9,7 @@ Role::Role(Texture& texture, int width, int height, float x, float y, Texture& t
 	this->y = y;
 	this->width = width;
 	this->height = height;
-
+	this->equipmentType = equipmentType;
 }
 Role::~Role() {}
 void Role::draw(RenderWindow& window)

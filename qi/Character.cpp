@@ -1,6 +1,6 @@
 #include "Character.h"
 
-Character::Character(Texture& texture, int width, int height, float x, float y,Texture&tbg,Texture& thp,Texture&tnp,string name,int hp = 10, int npNum = 3):Role(texture, width, height, x, y,tbg)
+Character::Character(Texture& texture, int width, int height, float x, float y,Texture&tbg,Texture& thp,Texture&tnp,string name,int hp = 10, int npNum = 3,EquipmentType equipmentType):Role(texture, width, height, x, y,tbg,equipmentType)
 {
     tnp0.loadFromFile("source/texture/np0.png");
     tnp1.loadFromFile("source/texture/np1.png");

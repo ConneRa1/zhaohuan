@@ -4,7 +4,7 @@
 class Character:public Role
 {
 public:
-	Character(Texture& texture, int width, int height, float x, float y, Texture& tbg, Texture& shp, Texture& snp,string name,int hp, int npNum);
+	Character(Texture& texture, int width, int height, float x, float y, Texture& tbg, Texture& shp, Texture& snp,string name,int hp, int npNum,EquipmentType equipmentType=EquipmentType::µ• ÷Ω£);
 	~Character();
 	void draw(RenderWindow& window,float x,float y,Shader &shader);
 	void setScale(float x, float y);

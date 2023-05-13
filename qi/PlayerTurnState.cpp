@@ -3,7 +3,7 @@ PlayerTurnState::PlayerTurnState(Game* game) :State(game){
 
 }
 
-void PlayerTurnState::HandleCard(Card* c) {
+void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
     //食物的加buff示例
     /*a1.addBuff(Buff(1, BuffType::盾, 2, 36, 36, texarr[110]));
     a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));

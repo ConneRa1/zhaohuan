@@ -37,7 +37,6 @@ private:
     //Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     Cost diceTriggeredNum/*= Cost(1, pair<ElementType, int>(ElementType::cai, 0))*/;
     vector<Object>placedDice;
-    
     Character* currentRole;
     Enemy* currentEnemy;
     Card* triggeredCard=NULL;
