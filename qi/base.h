@@ -158,7 +158,7 @@ typedef enum class ConcreateCard {
 	常九爷,
 	参量质变仪,
 	璃月港口,
-	望舒客栈
+	望舒客栈,
 	破冰踏雪的回音,
 	酒渍船帽,
 	焦灼的魔女帽,
