@@ -52,9 +52,25 @@ void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
     //场地
     
     //装备
-    
+    case ConcreateCard::旅行剑:
+        target->addEquipment(Buff(999,BuffType::武器,1,100,100,mGame->texarr[112]));
+        break;
+    case ConcreateCard::白铁大剑:
+        target->addEquipment(Buff(999, BuffType::武器, 1, 100, 100, mGame->texarr[112]));
+        break;
     //圣遗物
-    
+    /*case ConcreateCard::不动玄石之相:
+        break;*/
+
+    case ConcreateCard::唤雷的头冠:
+        target->addRelic(Buff(999, BuffType::圣遗物, 1, 100, 100, mGame->texarr[112]));
+        break;
+    case ConcreateCard::破冰踏雪的回音:
+        target->addRelic(Buff(999, BuffType::圣遗物, 1, 100, 100, mGame->texarr[112]));
+        break;
+    case ConcreateCard::酒渍船帽:
+        target->addRelic(Buff(999, BuffType::圣遗物, 1, 100, 100, mGame->texarr[112]));
+        break;
     }
 }
 void PlayerTurnState::doReact(ReactType r, bool toEnemy)
@@ -674,7 +690,17 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
     {
         if (isAbilityTriggered)
         {
-            if (diceTriggeredNum >= triggeredAbility->cost)
+            Cost cost = triggeredAbility->cost;
+            if (currentRole->haveRelic()) {
+                if (cost.m[currentRole->getElement()] > 0)
+                    cost.m[currentRole->getElement()]--;
+                else {
+                    cost.m[ElementType::cai]--;
+                }
+            }
+                
+
+            if (diceTriggeredNum >= cost)
             {
                 cout << "yes" << endl;
                 if (CheckChupai(mPoint))
@@ -731,7 +757,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                             int n = -1;
                             n += mGame->diceNum.m[ElementType::cai];
                             if (n >= i) {
-                                if (!(diceTriggeredNum >= triggeredAbility->cost)) {
+                                if (!(diceTriggeredNum >= cost)) {
                                     diceTriggered[i] = true;
                                     mGame->diceTriggerred[selectedDiceNum++].setPos(placedDice[i].getPosX(), placedDice[i].getPosY());
                                     diceTriggeredNum.m[ElementType::cai]++;
@@ -745,7 +771,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                                     if (it->first != ElementType::cai) {
                                         n += it->second;
                                         if (n >= i) {
-                                            if (diceTriggeredNum.m[it->first] < triggeredAbility->cost.m[it->first] + triggeredAbility->cost.m[ElementType::cai]) {
+                                            if (diceTriggeredNum.m[it->first] < cost.m[it->first] + cost.m[ElementType::cai]) {
                                                 diceTriggered[i] = true;
                                                 mGame->diceTriggerred[selectedDiceNum++].setPos(placedDice[i].getPosX(), placedDice[i].getPosY());
                                                 diceTriggeredNum.m[it->first]++;
@@ -774,14 +800,42 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         {
             if (!triggeredCard->quickAction)    //先选人
             {
+                bool haveChose = 0;
                 for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
                 {
                     if (it->isIn(mPoint.x,mPoint.y))
                     {
+                        haveChose = 1;
                         target = &(*it);
-                        triggeredCard->quickAction = true;
+                        cout << int((*it).getElementType())<<"dawdjaws" << endl;
+                        if (triggeredCard->cardtype == CardType::equipment) {
+                            if (target->getEquipmentType() == EquipmentType::单手剑 && triggeredCard->name == ConcreateCard::旅行剑
+                                || target->getEquipmentType() == EquipmentType::大剑 && triggeredCard->name == ConcreateCard::白铁大剑
+                                ) {     //当角色手中没有武器并且武器对上时才执行
+                                triggeredCard->quickAction=true;
+                            }
+                        }
+                        else if (triggeredCard->cardtype == CardType::relics) {
+                            cout << int(target->getElementType()) << " " << int(triggeredCard->name) << endl;
+                            if (target->getElementType() == ElementType::shui && triggeredCard->name == ConcreateCard::酒渍船帽
+                                || target->getElementType() == ElementType::lei && triggeredCard->name == ConcreateCard::唤雷的头冠
+                                || target->getElementType() == ElementType::bing && triggeredCard->name == ConcreateCard::破冰踏雪的回音
+                                ) {
+                                triggeredCard->quickAction = true;
+                            }
+                            
+                        }
+                        else {
+                            triggeredCard->quickAction = true;
+                        }
+                        break;
                     }
+                   
+                    
                 }
+                if(!haveChose)
+                    CancelConsumingDice(mPoint);
+
             }
             else {  //立即执行选骰子
                 if (target == NULL)

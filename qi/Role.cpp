@@ -1,6 +1,6 @@
 #include "Role.h"
 Role::Role() {}
-Role::Role(Texture& texture, int width, int height, float x, float y, Texture& tbg,EquipmentType equipmentType) :Object(texture, width, height, x, y)
+Role::Role(Texture& texture, int width, int height, float x, float y, Texture& tbg,EquipmentType equipmentType,ElementType elementType) :Object(texture, width, height, x, y)
 {
 	bg.setTexture(tbg);
 	bg.scale((float)width / (float)tbg.getSize().x,
@@ -10,6 +10,7 @@ Role::Role(Texture& texture, int width, int height, float x, float y, Texture& t
 	this->width = width;
 	this->height = height;
 	this->equipmentType = equipmentType;
+	this->elementType = elementType;
 }
 Role::~Role() {}
 void Role::draw(RenderWindow& window)
@@ -36,7 +37,7 @@ void Role::getHurt(Role* role,int x,bool isDaZhao)
 	vector<int> erease;
 	for (auto it = 0; it < role->buffVector.size(); it++)
 	{
-		if (role->buffVector[it].type == BuffType::º”π•&&!isDaZhao)
+		if ((role->buffVector[it].type == BuffType::º”π•|| role->buffVector[it].type == BuffType::Œ‰∆˜ )&&!isDaZhao)
 		{
 			x += role->buffVector[it].num;
 			role->buffVector[it].times -= 1;
@@ -88,7 +89,7 @@ void Role::getHurt(Role* role, int x)
 	vector<int> erease;
 	for (auto it = 0; it < role->buffVector.size(); it++)
 	{
-		if (role->buffVector[it].type == BuffType::º”π• )
+		if (role->buffVector[it].type == BuffType::º”π• || role->buffVector[it].type == BuffType::Œ‰∆˜)
 		{
 			x += role->buffVector[it].num;
 			role->buffVector[it].times -= 1;
@@ -226,4 +227,44 @@ ReactType Role::doReact(ElementType e)
 		break;
 	}
 
+}
+
+EquipmentType Role:: getEquipmentType() const{
+	return this->equipmentType;
+}
+ElementType Role::getElementType() const {
+	return this->elementType;
+}
+
+void Role::addEquipment(Buff buff) {
+
+	for (auto it = buffVector.begin(); it != buffVector.end(); it++) {
+		if ((*it).type == BuffType::Œ‰∆˜) {
+			(*it) = buff;
+			return;
+		}	
+	}
+	buffVector.push_back(buff);
+	return;
+}
+
+void Role::addRelic(Buff buff) {
+
+	for (auto it = buffVector.begin(); it != buffVector.end(); it++) {
+		if ((*it).type == BuffType:: •“≈ŒÔ) {
+			(*it) = buff;
+			return;
+		}
+	}
+	buffVector.push_back(buff);
+	return;
+}
+
+bool Role::haveRelic() {
+	for (auto it = buffVector.begin(); it != buffVector.end(); it++) {
+		if ((*it).type == BuffType:: •“≈ŒÔ) {
+			return 1;
+		}
+	}
+	return 0;
 }

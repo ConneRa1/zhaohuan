@@ -174,7 +174,8 @@ void Game::Initial() {
     texarr[303].loadFromFile("source/texture/foodcard/1.png");
     texarr[304].loadFromFile("source/texture/foodcard/2.png");
     texarr[305].loadFromFile("source/texture/foodcard/3.png");
-    Card* u1 = CardFactory::CreateCard(texarr[301], 2, CardType::event, ConcreateCard::最好的伙伴, true);
+    //Card* u1 = CardFactory::CreateCard(texarr[301], 2, CardType::event, ConcreateCard::最好的伙伴, true);
+    Card* u1 = CardFactory::CreateCard(texarr[301], 1, CardType::relics, ConcreateCard::酒渍船帽, false);
     Card* u2 = CardFactory::CreateCard(texarr[302], 1, CardType::event, ConcreateCard::交给我吧,true);
     Card* u3 = CardFactory::CreateCard(texarr[303], 2, CardType::event, ConcreateCard::仙跳墙,false);
     Card* u4 = CardFactory::CreateCard(texarr[304], 1, CardType::event, ConcreateCard::土豆饼, false);
@@ -223,19 +224,20 @@ void Game::Initial() {
     texarr[158].loadFromFile("source/texture/character/ability/kaiya_q.png");
 
     texarr[2].loadFromFile("source/texture/character/xingqiu.png");
-    Character a1 = Character(texarr[2], cardWidth* windowWidth, cardHeight* windowHeight, 0.343, 0.58,texarr[100], texarr[101], texarr[102],"xingqiu",10,2);
+    Character a1 = Character(texarr[2], cardWidth* windowWidth, cardHeight* windowHeight, 0.343, 0.58,texarr[100], texarr[101], texarr[102],"xingqiu",10,2,EquipmentType::大剑,ElementType::shui);
     a1.Selected(true);
     a1.addBuff(Buff(1, BuffType::盾, 2,36,36, texarr[110]));
     a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));
     a1.addBuff(Buff(1, BuffType::饱, 1, 36, 36, texarr[112]));
     a1.addBuff(Buff(1, BuffType::大招, 1, 36, 36, texarr[111]));
+    cout << int(a1.getElementType()) << endl;
     characterVector.push_back(a1);
     texarr[3].loadFromFile("source/texture/character/keqing.png");
-    Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3);
+    Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3, EquipmentType::单手剑, ElementType::lei);
     characterVector.push_back(a2);
     a2.Die();
     texarr[4].loadFromFile("source/texture/character/kaiya.png");
-    Character a3 = Character(texarr[4], cardWidth * windowWidth, cardHeight * windowHeight, 0.57, 0.58, texarr[100], texarr[101], texarr[102],"kaiya",10,2);
+    Character a3 = Character(texarr[4], cardWidth * windowWidth, cardHeight * windowHeight, 0.57, 0.58, texarr[100], texarr[101], texarr[102],"kaiya",10,2, EquipmentType::单手剑, ElementType::bing);
     characterVector.push_back(a3);
 
     texarr[5].loadFromFile("source/texture/enemy/enemy1.png");

@@ -5,7 +5,7 @@ class Role :public Object
 {
 public:
 	Role();
-	Role(Texture& texture, int width, int height, float x, float y,Texture& bg, EquipmentType equipmentType=EquipmentType::单手剑);
+	Role(Texture& texture, int width, int height, float x, float y,Texture& bg, EquipmentType equipmentType=EquipmentType::单手剑, ElementType elementType=ElementType::shui);
 	~Role();
 	void draw(RenderWindow& window);
 	void draw(RenderWindow& window, Shader &shader);
@@ -25,10 +25,13 @@ public:
 	void setfrozen(bool f) { isFrozen = f; }
 	bool IsFrozen() { return isFrozen; }
 	void addBuff(Buff buff) { buffVector.push_back(buff); return; }
-	void addRelic();
-	void addEquipment();
 	void deleteBuff(BuffType type);
 	void addHp(int i) { hp += i; if (hp > 10)hp = 10; }
+	EquipmentType getEquipmentType() const;
+	void addEquipment(Buff buff);
+	void addRelic(Buff buff);
+	ElementType getElementType() const;
+	bool haveRelic();
 protected:
 	int hp;
 	int atk;
@@ -37,6 +40,7 @@ protected:
 	bool isDead = false;
 	bool isFrozen=false;
 	EquipmentType equipmentType;
+	ElementType elementType;
 	int hurtNum;
 
 	vector<Buff>buffVector;

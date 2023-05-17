@@ -89,6 +89,7 @@ typedef enum class BuffType {
 	饱,
 	大招,
 	武器,
+	圣遗物,
 };
 
 typedef enum class ElementType {	//元素种类
@@ -135,5 +136,11 @@ typedef enum class ConcreateCard {
 	罗莎莉亚,
 	无中生有,
 	本大爷,
-
+	破冰踏雪的回音,
+	酒渍船帽,
+	焦灼的魔女帽,
+	唤雷的头冠,
+	翠绿的猎人之冠,
+	不动玄石之相,
+	月桂的宝冠,
 };
