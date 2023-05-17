@@ -141,14 +141,18 @@ void EnemyTurnState::Logic() {
           
             mGame->firstConfirm = false;
             mGame->enemyAction -= 1;
-            if (mGame->enemyTurnOver && mGame->playerTurnOver)
-            {
-                mGame->ChangeState( new TurnEndState(mGame));
-            }
-            else if (!mGame->playerTurnOver)
+            if (!mGame->playerTurnOver)
             {
                 cout << "Enemy回合结束，进入玩家回合" << endl;
                 mGame->ChangeState(new PlayerTurnState(mGame));
+            }
+            else if (mGame->enemyTurnOver && mGame->playerTurnOver)
+            {
+                mGame->ChangeState( new TurnEndState(mGame));
+            }
+            else if (!mGame->enemyTurnOver && mGame->playerTurnOver)
+            {
+                mGame->ChangeState(new EnemyTurnState(mGame));
             }
                 
         }
@@ -165,6 +169,7 @@ void EnemyTurnState::Draw() {
 
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
+    mGame->drawPlaceVector();
 
     for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
         it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);

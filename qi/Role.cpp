@@ -13,6 +13,21 @@ Role::Role(Texture& texture, int width, int height, float x, float y, Texture& t
 	this->elementType = elementType;
 }
 Role::~Role() {}
+
+void Role::updateNp() {
+	for (int i = 0; i < sNp.size(); i++)
+	{
+		if (i + 1 <= currentNp)
+		{
+			sNp[i].setTexture(tnp1);
+		}
+		else {
+			sNp[i].setTexture(tnp0);
+		}
+
+	}
+}
+
 void Role::draw(RenderWindow& window)
 {
 	Object::draw(window);

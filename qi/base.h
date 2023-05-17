@@ -67,6 +67,14 @@ using namespace sf;
 #define hurtTime 450
 #define drawCardTime 400
 #define buffOffset 0.020
+#define placeCardX1 0.138
+#define placeCardX2 0.223
+#define placeCardY1 0.547
+#define placeCardY2 0.650
+#define placeCardY3 0.171
+#define placeCardY4 0.256
+#define placeCardWidth 0.0675 
+#define placeCardHeight 0.1275
 
 extern Font font;		//游戏字体，主要是用来画血量的
 
@@ -91,6 +99,14 @@ typedef enum class BuffType {
 	武器,
 	圣遗物,
 };
+typedef enum class PlaceType {
+	//[0] 是投掷骰子，[1]是换人, [2]是攻击，[3]是结束阶段
+	投掷,
+	换人,
+	攻击,
+	结束
+};
+
 
 typedef enum class ElementType {	//元素种类
 	cai,
@@ -136,6 +152,13 @@ typedef enum class ConcreateCard {
 	罗莎莉亚,
 	无中生有,
 	本大爷,
+	晨曦酒庄,
+	骑士团图书馆,
+	刘苏,
+	常九爷,
+	参量质变仪,
+	璃月港口,
+	望舒客栈
 	破冰踏雪的回音,
 	酒渍船帽,
 	焦灼的魔女帽,

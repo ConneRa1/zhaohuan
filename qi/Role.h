@@ -26,12 +26,16 @@ public:
 	bool IsFrozen() { return isFrozen; }
 	void addBuff(Buff buff) { buffVector.push_back(buff); return; }
 	void deleteBuff(BuffType type);
+	int getNp() { return currentNp; }
+	int maxNp() { return npNum; }
+	void setNp(int i) { currentNp = (i <= npNum ? i : npNum); updateNp(); }
 	void addHp(int i) { hp += i; if (hp > 10)hp = 10; }
 	EquipmentType getEquipmentType() const;
 	void addEquipment(Buff buff);
 	void addRelic(Buff buff);
 	ElementType getElementType() const;
 	bool haveRelic();
+	void updateNp();
 protected:
 	int hp;
 	int atk;
@@ -41,7 +45,14 @@ protected:
 	bool isFrozen=false;
 	EquipmentType equipmentType;
 	ElementType elementType;
+	int currentNp = 0;
+	int npNum;
 	int hurtNum;
+	Sprite sHp;
+	Texture tnp0, tnp1;
+	vector<Sprite> sNp;
+	bool isMoved = false;
+	bool isSelected = false;
 
 	vector<Buff>buffVector;
 

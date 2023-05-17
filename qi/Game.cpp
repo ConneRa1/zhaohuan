@@ -56,6 +56,25 @@ void Game::Initial() {
 
     mState = new FirstDiceState(this);
 
+    vector<Place> p1;
+    playerPlaceVector.push_back(p1);
+    vector<Place> p2;
+    playerPlaceVector.push_back(p2);
+    vector<Place> p3;
+    playerPlaceVector.push_back(p3);
+    vector<Place> p4;
+    playerPlaceVector.push_back(p4);
+
+    vector<Place> e1;
+    playerPlaceVector.push_back(e1);
+    vector<Place> e2;
+    playerPlaceVector.push_back(e2);
+    vector<Place> e3;
+    playerPlaceVector.push_back(e3);
+    vector<Place> e4;
+    playerPlaceVector.push_back(e4);
+
+
 	tBackGround.loadFromFile("source/texture/bg.png");
     backGround = Object(tBackGround, windowWidth, windowHeight,0,0);
 
@@ -181,7 +200,6 @@ void Game::Initial() {
     Card* u4 = CardFactory::CreateCard(texarr[304], 1, CardType::event, ConcreateCard::土豆饼, false);
     Card* u5 = CardFactory::CreateCard(texarr[305], 0, CardType::event, ConcreateCard::烧鸡, false);
    
-
     cards.push_back(u1->clone());
     cards.push_back(u1->clone());
     cards.push_back(u2->clone());
@@ -202,6 +220,14 @@ void Game::Initial() {
         cards.drawCard();//抽卡
     }
 
+     //350后绑场景的小图标
+    texarr[350].loadFromFile("source/texture/place/place.png");
+
+    addPlayerPlace(Place(PlaceType::换人, ConcreateCard::刘苏, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+    addPlayerPlace(Place(PlaceType::结束, ConcreateCard::璃月港口, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+    addPlayerPlace(Place(PlaceType::结束 , ConcreateCard::望舒客栈, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+    addPlayerPlace(Place(PlaceType::结束, ConcreateCard::西风大教堂, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+    //addEnemyPlace(Place(PlaceType::结束, ConcreateCard::西风大教堂, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
    //100 人物框
     texarr[100].loadFromFile("source/texture/kuang.png");
     texarr[101].loadFromFile("source/texture/hp.png");
@@ -235,7 +261,6 @@ void Game::Initial() {
     texarr[3].loadFromFile("source/texture/character/keqing.png");
     Character a2 = Character(texarr[3], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.58, texarr[100], texarr[101], texarr[102],"keqing",10,3, EquipmentType::单手剑, ElementType::lei);
     characterVector.push_back(a2);
-    a2.Die();
     texarr[4].loadFromFile("source/texture/character/kaiya.png");
     Character a3 = Character(texarr[4], cardWidth * windowWidth, cardHeight * windowHeight, 0.57, 0.58, texarr[100], texarr[101], texarr[102],"kaiya",10,2, EquipmentType::单手剑, ElementType::bing);
     characterVector.push_back(a3);
@@ -389,4 +414,136 @@ Character* Game::CurrentCharacter() {
         }
     }
 
+}
+
+void Game::placeVectorAutoPlace() 
+{
+    int index = 1;
+    for (auto it = 0; it < playerPlaceVector.size(); it++)
+    {
+        for (auto i = 0; i < playerPlaceVector[it].size(); i++)
+        {
+            switch (index)
+            {
+            case 1:
+                playerPlaceVector[it][i].setPos(placeCardX1, placeCardY1);
+                break;
+            case 2:
+                playerPlaceVector[it][i].setPos(placeCardX2, placeCardY1);
+                break;
+            case 3:
+                playerPlaceVector[it][i].setPos(placeCardX1, placeCardY2);
+                break;
+            case 4:
+                playerPlaceVector[it][i].setPos(placeCardX2, placeCardY2);
+                break;
+            }
+            index++;
+        }
+    }
+    index = 1;
+    for (auto it = 0; it < enemyPlaceVector.size(); it++)
+    {
+        for (auto i = 0; i < enemyPlaceVector[it].size(); i++)
+        {
+            switch (index)
+            {
+            case 1:
+                enemyPlaceVector[it][i].setPos(placeCardX1, placeCardY1);
+                break;
+            case 2:
+                enemyPlaceVector[it][i].setPos(placeCardX2, placeCardY1);
+                break;
+            case 3:
+                enemyPlaceVector[it][i].setPos(placeCardX1, placeCardY2);
+                break;
+            case 4:
+                enemyPlaceVector[it][i].setPos(placeCardX2, placeCardY2);
+                break;
+            }
+            index++;
+        }
+    }
+    return;
+}
+
+
+void Game::addPlayerPlace(Place f) 
+{
+    switch (f.type)
+    {
+    case PlaceType::投掷:
+        playerPlaceVector[0].push_back(f);
+        break;
+    case PlaceType::换人:
+        playerPlaceVector[1].push_back(f);
+        break;
+    case PlaceType::攻击:
+        playerPlaceVector[2].push_back(f);
+        break;
+    case PlaceType::结束:
+        playerPlaceVector[3].push_back(f);
+        break;
+    default:
+        break;
+    }
+}
+void Game::addEnemyPlace(Place f)
+{
+    switch (f.type)
+    {
+    case PlaceType::投掷:
+       enemyPlaceVector[0].push_back(f);
+        break;
+    case PlaceType::换人:
+        enemyPlaceVector[1].push_back(f);
+        break;
+    case PlaceType::攻击:
+        enemyPlaceVector[2].push_back(f);
+        break;
+    case PlaceType::结束:
+        enemyPlaceVector[3].push_back(f);
+        break;
+    default:
+        break;
+    }
+}
+void Game::drawPlaceVector()
+{
+
+    for (auto it = 0; it < playerPlaceVector.size(); it++)
+    {
+            for (auto i = 0; i < playerPlaceVector[it].size(); i++)
+            {
+                playerPlaceVector[it][i].draw(window);
+            }
+    }
+
+    for (auto it = 0; it < enemyPlaceVector.size(); it++)
+    {
+        for (auto i = 0; i < enemyPlaceVector[it].size(); i++)
+        {
+            enemyPlaceVector[it][i].draw(window);
+        }
+    }
+    return;
+}
+
+void Game::resetPlaceCardTimes()
+{
+    for (auto it = 0; it < playerPlaceVector.size(); it++)
+    {
+        for (auto i = 0; i < playerPlaceVector[it].size(); i++)
+        {
+            playerPlaceVector[it][i].times=1;
+        }
+    }
+
+    for (auto it = 0; it < enemyPlaceVector.size(); it++)
+    {
+        for (auto i = 0; i < enemyPlaceVector[it].size(); i++)
+        {
+            playerPlaceVector[it][i].times = 1;
+        }
+    }
 }
