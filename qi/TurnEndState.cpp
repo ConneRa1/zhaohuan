@@ -48,6 +48,73 @@ void TurnEndState::Logic() {
                 it->setfrozen(false);
                 it->deleteBuff(BuffType::饱);
             }
+            for (auto i = mGame->playerPlaceVector[3].begin(); i != mGame->playerPlaceVector[3].end(); i++)
+            {
+                int min = 10;
+                switch ((*i).name)
+                {
+                case ConcreateCard::西风大教堂:
+                    mGame->CurrentCharacter()->addHp(2);
+                    break;
+                case ConcreateCard::望舒客栈:
+                    
+                    target = NULL;
+                    for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
+                    {
+                        if (&(*it) != mGame->CurrentCharacter() && (*it).gethp() < min)
+                        {
+                            min = (*it).gethp();
+                            target = &(*it);
+                        }   
+                    }
+                    if (target)target->addHp(2);
+                    break;
+                case ConcreateCard::璃月港口:
+                    mGame->cards.drawCard();
+                    mGame->cards.drawCard();
+                    mGame->cards.autoPlace();
+                    break;
+
+                default:
+                    break;
+                }
+            }
+            for (auto i = mGame->playerPlaceVector[3].begin(); i != mGame->playerPlaceVector[3].end(); i++)
+            {
+                int min = 10;
+                switch ((*i).name)
+                {
+                case ConcreateCard::西风大教堂:
+                    mGame->CurrentEnemy()->addHp(2);
+                    break;
+                case ConcreateCard::望舒客栈:
+                    
+                    target = NULL;
+                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                    {
+                        if (&(*it)!=mGame->CurrentEnemy()&&(*it).gethp() < min)
+                        {
+                            min = (*it).gethp();
+                            target = &(*it);
+                        }
+                    }
+                    if (target)target->addHp(2);
+                    break;
+                case ConcreateCard::璃月港口:
+                    //可能要给enemy设置卡组
+                    /*mGame->cards.drawCard();
+                    mGame->cards.drawCard();
+                    mGame->cards.autoPlace();*/
+                    break;
+
+                default:
+                    break;
+                }
+            }
+
+
+            mGame->resetPlaceCardTimes();   
+
             cout << "结束阶段结束，进入下一大回合" << endl;
             mGame->firstConfirm = false;
             mGame->ChangeState(new DrawCardState(mGame));
@@ -66,7 +133,7 @@ void TurnEndState::Draw() {
 
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
-
+    mGame->placeVectorAutoPlace();
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);

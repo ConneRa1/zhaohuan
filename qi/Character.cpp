@@ -21,19 +21,6 @@ Character::Character(Texture& texture, int width, int height, float x, float y,T
     
 }
 Character::~Character() {}
-void Character::updateNp(){
-    for (int i = 0; i < sNp.size(); i++)
-    {
-        if (i + 1 <= currentNp)
-        {
-            sNp[i].setTexture(tnp1);
-        }
-        else {
-            sNp[i].setTexture(tnp0);
-        }
-
-    }
-}
 void Character::draw(RenderWindow& window,float x,float y, Shader& shader)
 {
     if (isDead)

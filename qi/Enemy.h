@@ -11,11 +11,6 @@ public:
 	void move(); 
 	void Selected(bool f);
 	bool IsSelected() { return isSelected; }
-protected:
-	Sprite sHp;
-	vector<Sprite> sNp;
-	int npNum;
-	bool isMoved = false;
-	bool isSelected = false;
+
 };
 

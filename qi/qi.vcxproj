@@ -160,6 +160,7 @@
     <ClCompile Include="GameEndState.cpp" />
     <ClCompile Include="Memento.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Place.cpp" />
     <ClCompile Include="PlayerTurnState.cpp" />
     <ClCompile Include="Relics.cpp" />
     <ClCompile Include="Role.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="GameEndState.h" />
     <ClInclude Include="Memento.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Place.h" />
     <ClInclude Include="PlayerTurnState.h" />
     <ClInclude Include="Relics.h" />
     <ClInclude Include="Role.h" />

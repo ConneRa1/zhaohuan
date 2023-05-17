@@ -48,9 +48,19 @@ void FirstDiceState::Input() {
                         }
                     }
                 }
-
+                //处理投掷骰子的场景卡效果
+                for (auto it = mGame->playerPlaceVector[0].begin(); it != mGame->playerPlaceVector[0].end(); it++)
+                {
+                    if ((*it).times >0 &&(*it).name == ConcreateCard::骑士团图书馆)
+                    {
+                        (*it).times = 0;
+                        mGame->firstConfirm = false;
+                        diceTriggeredNum = Cost();
+                        for(int x=0;x<8;x++)
+                            rollDiceTriggered[x] = 0;
+                    }
+                }
             }
-
             if (mGame->firstInitDice == false && mGame->firstConfirm == false) {
                 for (int i = 0; i < 8; i++)
                 {
@@ -77,7 +87,8 @@ void FirstDiceState::Input() {
                                 }
                             }
                         }
-                        else {
+                        else 
+                        {
                             //选中骰子
                             int n = -1;
                             n += mGame->diceNum.m[ElementType::cai];
@@ -105,10 +116,6 @@ void FirstDiceState::Input() {
 
                         }
 
-                        cout << "已经选择的骰子2" << endl;
-                        for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
-                            cout << (int)(*i).first << " " << (*i).second << endl;
-                        }
 
                     }
                 }

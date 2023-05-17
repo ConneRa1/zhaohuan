@@ -23,6 +23,7 @@ class State;
 #include"GameEndState.h"
 #include"TurnEndState.h"
 #include"Memento.h"
+#include"Place.h"
 
 class Game {
 public:
@@ -48,11 +49,13 @@ private:
 	vector<Enemy> enemyVector;	//怪物容器，用于存储场上所有的怪物
 	CardVector cards;
 	vector<Object> dices;		//小骰子
+	vector<vector<Place>> playerPlaceVector;		//玩家和敌人的场景卡容器	[0]是投掷骰子，[1]是换人,[2]是攻击，[4]是结束阶段
+	vector<vector<Place>> enemyPlaceVector;
+
 
 	//display测试用
 	vector<Ability*> abilityVector;
 	vector<Ability*> sAbility;		//用来存放显示、生效的技能
-
 
 	vector<Object> rollDices;		//投骰子
 	vector<Object> chooseCards;
@@ -108,13 +111,17 @@ private:
 	void toggleFullscreen();
 	void LeftButtonDown(Vector2i mPoint);
 	void RightButtonDown(Vector2i mPoint);
-	void DrawCard();
 	void ChangeState(State* state);
 	void showElement(Role it);
 	void GetMemento();
 	void LoadMemento(int);
 	Enemy* CurrentEnemy();
 	Character* CurrentCharacter();
+	void placeVectorAutoPlace();
+	void addPlayerPlace(Place);
+	void addEnemyPlace(Place);
+	void drawPlaceVector();
+	void resetPlaceCardTimes();
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

@@ -8,6 +8,9 @@ void PlayerTurnState::HandleCard(Card* c) {
     /*a1.addBuff(Buff(1, BuffType::盾, 2, 36, 36, texarr[110]));
     a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));
     a1.addBuff(Buff(1, BuffType::饱, 1, 36, 36, texarr[112]));*/
+    //添加场景卡的示例
+    //addPlayerPlace(Place(PlaceType::回合, ConcreateCard::凯瑟琳,1, 1, windowWidth*placeCardWidth, windowHeight*placeCardHeight, texarr[350]));
+    //addEnemyPlace(Place(PlaceType::回合, ConcreateCard::西风大教堂, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
     int num = 0;
     switch (c->name)
     {
@@ -50,7 +53,9 @@ void PlayerTurnState::HandleCard(Card* c) {
         target->addHp(1);
         break;
     //场地
-    
+    case ConcreateCard::凯瑟琳:
+        mGame->addPlayerPlace(Place(PlaceType::换人, ConcreateCard::凯瑟琳, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
     //装备
     
     //圣遗物
@@ -247,13 +252,75 @@ void PlayerTurnState::Logic() {
                 showReact = true;
                 reactType = target->doReact((*triggeredAbility).getElement());
                 doReact(reactType, true);
-
+                int index = 0; bool flag = false;
+                for (auto it =0; it < mGame->playerPlaceVector[2].size(); it++)
+                {
+                    if (mGame->playerPlaceVector[2][it].name == ConcreateCard::常九爷)
+                    {
+                        if (mGame->playerPlaceVector[2][it].num < 3&& reactType==ReactType::超导)
+                        {
+                            mGame->playerPlaceVector[2][it].num++;
+                        }
+                        if (mGame->playerPlaceVector[2][it].num == 3)
+                        {
+                            flag = true; index = it;
+                            mGame->cards.drawCard();
+                            mGame->cards.drawCard();
+                            mGame->cards.autoPlace();
+                        }
+                    }
+                }
+                if(flag)
+                {
+                    mGame->playerPlaceVector[2].erase((mGame->playerPlaceVector[2].begin() + index));
+                }
+                
             }
+
             else {
                 if(mGame->isWin){
                     mGame->ChangeState(new GameEndState(mGame));
                 }
                 else {
+                    vector<int> index;
+                    int id=0;
+                    for (auto it = mGame->playerPlaceVector[2].begin(); it != mGame->playerPlaceVector[2].end(); it++)
+                    {
+                        if ((*it).name == ConcreateCard::常九爷 && (*triggeredAbility).getElement() == ElementType::cai)
+                        {
+                            if ((*it).num < 3)
+                            {
+                                (*it).num++;
+                            }
+                            if ((*it).num == 3)
+                            {
+                                index.push_back(id);
+                                mGame->cards.drawCard();
+                                mGame->cards.drawCard();
+                                mGame->cards.autoPlace();
+                            }
+                        }
+                        else if ((*it).name == ConcreateCard::参量质变仪)
+                        {
+                            if ((*it).num < 3&& (*triggeredAbility).getElement()!=ElementType::cai)
+                            {
+                                (*it).num++;
+                            }
+                            if ((*it).num == 3)
+                            {
+                                index.push_back(id);
+                                for (int i = 0; i < 3; i++) {
+                                    random_device rd;
+                                    mGame->diceNum.m[ElementType(rd() % (int)ElementType::count)]++;
+                                }
+                            }
+                        }
+                        id++;
+                    }
+                    for (int i = 0; i < index.size(); i++)
+                    {
+                        mGame->playerPlaceVector[2].erase((mGame->playerPlaceVector[2].begin() + index[i]));
+                    }
                     if (!mGame->enemyTurnOver)
                     {
                         mGame->ChangeState(new EnemyTurnState(mGame));
@@ -289,13 +356,10 @@ void PlayerTurnState::Logic() {
                     }
                 }
             }
-
         }
-        
     }
     else if (isActed)
     {
-
         if (triggeredAbility != NULL && target != NULL)
         {
             if (triggeredAbility != *(mGame->sAbility.end() - 1))
@@ -377,6 +441,21 @@ void PlayerTurnState::Logic() {
                     i->Selected(false);
                 }
             }
+            
+            for (auto it = mGame->playerPlaceVector[1].begin(); it != mGame->playerPlaceVector[1].end(); it++)
+            {
+                if ((*it).name == ConcreateCard::刘苏)
+                {
+                    if ((*it).times > 0)
+                    {
+                        if (target->getNp() == 0)
+                        {
+                            target->setNp(target->getNp() + 1);
+                        }
+                    }
+                    (*it).times = 0;
+                }
+            }
             target = NULL;
             isChangingRole = false;
         }
@@ -421,6 +500,9 @@ void PlayerTurnState::Draw() {
         mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
     }
+
+    mGame->placeVectorAutoPlace();
+    mGame->drawPlaceVector();
 
     if (isConsumingDice)
     {
@@ -782,6 +864,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                         triggeredCard->quickAction = true;
                     }
                 }
+                CancelConsumingDice(mPoint);
             }
             else {  //立即执行选骰子
                 if (target == NULL)
@@ -898,96 +981,120 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         }
         else if (isChangingRole)
         {
-        Cost changingRoleCost(1, pair<ElementType, int>(ElementType::cai, 1));
-        if (diceTriggeredNum >= changingRoleCost)  //换人的费用，可能不为1
-        {
-            if (mGame->changeConfirm.isIn(mPoint.x, mPoint.y))
+            Cost changingRoleCost(1, pair<ElementType, int>(ElementType::cai, 1));
+            //处理换人的场景卡效果
+            for (auto it = mGame->playerPlaceVector[1].begin(); it != mGame->playerPlaceVector[1].end(); it++)
             {
-                selectedDiceNum = 0;
-                mGame->diceNum = mGame->diceNum - diceTriggeredNum;
-                diceTriggeredNum = Cost();
-                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                switch ((*it).name)
                 {
-                    diceTriggered[i] = false;
+                case ConcreateCard::凯瑟琳:
+                    if ((*it).times > 0)
+                    {
+                        quickChange = true;
+                    }
+                    (*it).times = 0;
+                    break;
+                case ConcreateCard::晨曦酒庄:
+                    if ((*it).times > 0)
+                    {
+                        changingRoleCost = changingRoleCost - changingRoleCost;
+                    }
+                    (*it).times = 0;
+                    break;
+                default:
+                    break;
                 }
-                for (int i = mGame->diceNum.getSize(); i < 8; i++)
+            }
+            
+            if (diceTriggeredNum >= changingRoleCost)  //换人的费用，可能不为1
+            {
+                if (mGame->changeConfirm.isIn(mPoint.x, mPoint.y))
                 {
-                    diceTriggered[i] = true;
+                    selectedDiceNum = 0;
+                    mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                    diceTriggeredNum = Cost();
+                    for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                    {
+                        diceTriggered[i] = false;
+                    }
+                    for (int i = mGame->diceNum.getSize(); i < 8; i++)
+                    {
+                        diceTriggered[i] = true;
+                    }
+                    isChanged = true;
+                    isConsumingDice = false;
                 }
-                isChanged = true;
-                isConsumingDice = false;
+                else {
+                    CancelConsumingDice(mPoint);
+                }
             }
             else {
                 CancelConsumingDice(mPoint);
-            }
-        }
-        else {
-            CancelConsumingDice(mPoint);
-            for (int i = 0; i < mGame->diceNum.getSize(); i++)
-            {
-                if (placedDice[i].isIn(mPoint.x, mPoint.y)) {
-                    if (diceTriggered[i]) {
-                        diceTriggered[i] = 0;
-                        int n = -1;
-                        n += mGame->diceNum.m[ElementType::cai];
-                        if (n >= i) {
-                            diceTriggeredNum.m[ElementType::cai]--;
-                        }
-                        else {
-                            vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-                            sort(vec.begin(), vec.end(), Cost::cmp);
-                            for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-                            {
-                                if (it->first != ElementType::cai) {
-                                    n += it->second;
-                                    if (n >= i) {
-                                        diceTriggeredNum.m[it->first]--;
-                                        break;
-                                    }
-                                }
+                for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                {
+                    if (placedDice[i].isIn(mPoint.x, mPoint.y)) {
+                        if (diceTriggered[i]) {
+                            diceTriggered[i] = 0;
+                            int n = -1;
+                            n += mGame->diceNum.m[ElementType::cai];
+                            if (n >= i) {
+                                diceTriggeredNum.m[ElementType::cai]--;
                             }
-                        }
-                    }
-
-                    else {
-                        //选中骰子
-                        int n = -1;
-                        n += mGame->diceNum.m[ElementType::cai];
-                        if (n >= i) {
-                            if (!(diceTriggeredNum >= changingRoleCost)) {
-                                diceTriggered[i] = true;
-                                diceTriggeredNum.m[ElementType::cai]++;
-                                mGame->diceTriggerred[selectedDiceNum++].setPos(placedDice[i].getPosX(), placedDice[i].getPosY());
-                            }
-                        }
-                        else {
-                            vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
-                            sort(vec.begin(), vec.end(), Cost::cmp);
-                            for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
-                            {
-                                if (it->first != ElementType::cai) {
-                                    n += it->second;
-                                    if (n >= i) {
-                                        mGame->diceTriggerred[selectedDiceNum++].setPos(placedDice[i].getPosX(), placedDice[i].getPosY());
-                                        if (diceTriggeredNum.m[it->first] < changingRoleCost.m[it->first] + changingRoleCost.m[ElementType::cai]) {
-                                            diceTriggered[i] = true;
-                                            diceTriggeredNum.m[it->first]++;
+                            else {
+                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                                sort(vec.begin(), vec.end(), Cost::cmp);
+                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                                {
+                                    if (it->first != ElementType::cai) {
+                                        n += it->second;
+                                        if (n >= i) {
+                                            diceTriggeredNum.m[it->first]--;
+                                            break;
                                         }
-                                        break;
                                     }
                                 }
                             }
                         }
-                    }
-                    cout << "使用换人 ：" << i << endl;
-                    cout << "已经选择的骰子2" << endl;
-                    for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
-                        cout << (int)(*i).first << " " << (*i).second << endl;
+
+                        else {
+                            //选中骰子
+                            int n = -1;
+                            n += mGame->diceNum.m[ElementType::cai];
+                            if (n >= i) {
+                                if (!(diceTriggeredNum >= changingRoleCost)) {
+                                    diceTriggered[i] = true;
+                                    diceTriggeredNum.m[ElementType::cai]++;
+                                    mGame->diceTriggerred[selectedDiceNum++].setPos(placedDice[i].getPosX(), placedDice[i].getPosY());
+                                }
+                            }
+                            else {
+                                vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+                                sort(vec.begin(), vec.end(), Cost::cmp);
+                                for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+                                {
+                                    if (it->first != ElementType::cai) {
+                                        n += it->second;
+                                        if (n >= i) {
+                                            mGame->diceTriggerred[selectedDiceNum++].setPos(placedDice[i].getPosX(), placedDice[i].getPosY());
+                                            if (diceTriggeredNum.m[it->first] < changingRoleCost.m[it->first] + changingRoleCost.m[ElementType::cai]) {
+                                                diceTriggered[i] = true;
+                                                diceTriggeredNum.m[it->first]++;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        cout << "使用换人 ：" << i << endl;
+                        cout << "已经选择的骰子2" << endl;
+                        for (auto i = diceTriggeredNum.m.begin(); i != diceTriggeredNum.m.end(); i++) {
+                            cout << (int)(*i).first << " " << (*i).second << endl;
+                        }
                     }
                 }
-            }
 
-        }
+            }
         }
         
     }

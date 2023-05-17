@@ -28,7 +28,11 @@ public:
 	void addRelic();
 	void addEquipment();
 	void deleteBuff(BuffType type);
+	int getNp() { return currentNp; }
+	int maxNp() { return npNum; }
+	void setNp(int i) { currentNp = (i <= npNum ? i : npNum); updateNp(); }
 	void addHp(int i) { hp += i; if (hp > 10)hp = 10; }
+	void updateNp();
 protected:
 	int hp;
 	int atk;
@@ -36,8 +40,14 @@ protected:
 	Sprite bg;
 	bool isDead = false;
 	bool isFrozen=false;
-
+	int currentNp = 0;
+	int npNum;
 	int hurtNum;
+	Sprite sHp;
+	Texture tnp0, tnp1;
+	vector<Sprite> sNp;
+	bool isMoved = false;
+	bool isSelected = false;
 
 	vector<Buff>buffVector;
 
