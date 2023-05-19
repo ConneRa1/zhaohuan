@@ -21,5 +21,8 @@ protected:
 	bool showHurt = false;
 	bool showReact = false;
 	int delayTimer = 0;
+	int healtimer;
+	int healNum;
+	Role* healtarget;
 };
 

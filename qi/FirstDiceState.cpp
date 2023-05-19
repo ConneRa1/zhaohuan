@@ -132,6 +132,11 @@ void FirstDiceState::Input() {
             mGame->LoadMemento(0);
             cout << "¶Áµµ1" << endl;
         }
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num2)
+        {
+            mGame->LoadMemento(1);
+            cout << "¶Áµµ2" << endl;
+        }
 
     }
 }
@@ -251,7 +256,15 @@ void FirstDiceState::Draw() {
                     }
                 }
             }
-
+            for (int i = 0; i < 8; i++)
+            {
+                if (rollDiceTriggered[i])
+                {
+                    mGame->rollDicesbg[i].setScale(mGame->view.getSize().x / windowWidth * windowWidth * rolldiceWidth / (float)mGame->rollDices[0].sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * rolldiceHeight / (float)mGame->rollDices[0].sprite.getTexture()->getSize().y);
+                    mGame->rollDicesbg[i].setPos(mGame->rollDices[i].getPosX(), mGame->rollDices[i].getPosY());
+                    mGame->rollDicesbg[i].draw(mGame->window);
+                }
+            }
             mGame->confirmButton.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
             mGame->confirmButton.draw(mGame->window);
         

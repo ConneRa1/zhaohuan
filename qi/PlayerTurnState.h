@@ -34,6 +34,7 @@ private:
     bool diceTriggered[8] = {0};
     bool hurtOver = false;
     bool reactHurtOver = false;
+    
     //Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     Cost diceTriggeredNum/*= Cost(1, pair<ElementType, int>(ElementType::cai, 0))*/;
     vector<Object>placedDice;

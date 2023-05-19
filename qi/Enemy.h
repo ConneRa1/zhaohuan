@@ -8,9 +8,6 @@ public:
 	~Enemy();
 	void draw(RenderWindow& window, float x, float y, Shader& shader);
 	void setScale(float x, float y);
-	void move(); 
-	void Selected(bool f);
-	bool IsSelected() { return isSelected; }
 
 };
 

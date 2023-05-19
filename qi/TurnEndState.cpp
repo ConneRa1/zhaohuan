@@ -23,10 +23,15 @@ void TurnEndState::Input() {
             cout << "存档!" << endl;
             mGame->GetMemento();
         }
-        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num0)
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num1)
         {
-            cout << "读档0" << endl;
             mGame->LoadMemento(0);
+            cout << "读档1" << endl;
+        }
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num2)
+        {
+            mGame->LoadMemento(1);
+            cout << "读档2" << endl;
         }
 
     }
@@ -55,9 +60,11 @@ void TurnEndState::Logic() {
                 {
                 case ConcreateCard::西风大教堂:
                     mGame->CurrentCharacter()->addHp(2);
+                    healtarget = target;
+                    healtimer = 200;
+                    healNum = 2;
                     break;
                 case ConcreateCard::望舒客栈:
-                    
                     target = NULL;
                     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
                     {
@@ -67,7 +74,12 @@ void TurnEndState::Logic() {
                             target = &(*it);
                         }   
                     }
-                    if (target)target->addHp(2);
+                    if (target) {
+                        target->addHp(2);
+                        healtarget = target;
+                        healtimer = 200;
+                        healNum = 2;
+                    }
                     break;
                 case ConcreateCard::璃月港口:
                     mGame->cards.drawCard();
@@ -79,38 +91,7 @@ void TurnEndState::Logic() {
                     break;
                 }
             }
-            for (auto i = mGame->playerPlaceVector[3].begin(); i != mGame->playerPlaceVector[3].end(); i++)
-            {
-                int min = 10;
-                switch ((*i).name)
-                {
-                case ConcreateCard::西风大教堂:
-                    mGame->CurrentEnemy()->addHp(2);
-                    break;
-                case ConcreateCard::望舒客栈:
-                    
-                    target = NULL;
-                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
-                    {
-                        if (&(*it)!=mGame->CurrentEnemy()&&(*it).gethp() < min)
-                        {
-                            min = (*it).gethp();
-                            target = &(*it);
-                        }
-                    }
-                    if (target)target->addHp(2);
-                    break;
-                case ConcreateCard::璃月港口:
-                    //可能要给enemy设置卡组
-                    /*mGame->cards.drawCard();
-                    mGame->cards.drawCard();
-                    mGame->cards.autoPlace();*/
-                    break;
-
-                default:
-                    break;
-                }
-            }
+            
 
 
             mGame->resetPlaceCardTimes();   
@@ -134,6 +115,7 @@ void TurnEndState::Draw() {
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
     mGame->placeVectorAutoPlace();
+
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         mGame->showElement(*it);
         it->draw(mGame->window, mGame->view.getSize().x / windowWidth * it->getScalex(), mGame->view.getSize().y / windowHeight * it->getScaley(), mGame->shader);
@@ -146,7 +128,21 @@ void TurnEndState::Draw() {
         it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         it->draw(mGame->window);
     }
+    if (healtimer-- > 0)
+    {
+        if (healNum == 2)
+        {
+            mGame->heal2.setPos(healtarget->getPosX(), healtarget->getPosY());
+            mGame->heal2.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->heal2.draw(mGame->window);
 
+        }
+        else {
+            mGame->heal1.setPos(healtarget->getPosX(), healtarget->getPosY());
+            mGame->heal1.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->heal1.draw(mGame->window);
+        }
+    }
     if (bannertime <  bannerTime) //先显示结束阶段
     {
        

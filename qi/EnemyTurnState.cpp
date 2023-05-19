@@ -30,6 +30,11 @@ void EnemyTurnState::Input() {
                 mGame->LoadMemento(0);
                 cout << "读档1" << endl;
             }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num2)
+            {
+                mGame->LoadMemento(1);
+                cout << "读档2" << endl;
+            }
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
             {
                 if (isChangingRole)
@@ -67,7 +72,7 @@ void EnemyTurnState::Logic() {
     {
         if (changedCharacter != NULL)
         {
-            changedCharacter->Selected(true);
+            changedCharacter->Selected(true,true);
             int num = 0;
             if (changedCharacter->name == "xingqiu")
             {
@@ -105,36 +110,56 @@ void EnemyTurnState::Logic() {
                 }
             }
         }
-        else if (times == 250&&!mGame->enemyTurnOver&&! mGame->enemyVector[0].IsFrozen())    //敌人冰冻不许动
+        else if (times == 250 && !mGame->enemyTurnOver  && ! mGame->enemyVector[0].IsFrozen())    //敌人冰冻不许动
         {
-            /*for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++) {    //后续有多个敌人再加
-                if(it->)
-            }*/
-            target->getHurt(&mGame->enemyVector[0],5);
-            showHurt = true;
-            if (target->gethp() <= 0)
+            srand((unsigned)time(NULL));
+            int rate = rand() % 100;
+            if (rate >= 80)
             {
-                target->Die();
-                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                    it->Selected(false);
-                }
-                isChangingRole = true;
-            }
-            int lose = 0;
-            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
-                if (!it->ifDead())
+                target->getHurt(&mGame->enemyVector[0],4);
+                showHurt = true;
+                if (target->gethp() <= 0)
                 {
-                    lose++;
-                    break;
+                    target->Die();
+                    for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                        it->Selected(false,true);
+                    }
+                    isChangingRole = true;
+                }
+                int lose = 0;
+                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
+                    if (!it->ifDead())
+                    {
+                        lose++;
+                        break;
+                    }
+
+                }
+                if (lose == 0)      //输了
+                {
+                    mGame->isWin = false;
+                    mGame->ChangeState(new GameEndState(mGame));
+                }
+
+            }
+            else if(rate >= 0){    //换人
+                target = mGame->CurrentEnemy();
+                target->Selected(false, false);
+                for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                {
+                    if ((*it).gethp() > 0 && target!=&(*it))
+                    {
+                        (*it).Selected(true, false);
+                        break;
+                    }
                 }
             }
-            if (lose == 0)      //输了
-            {
-                mGame->isWin = false;
-                mGame->ChangeState(new GameEndState(mGame));
-            }
-            //如果敌人数不为0，就加个CheckWin()
-                //进入胜利界面
+            //else {
+            //    //使用卡牌
+
+            //}
+            
+            
         }
         else if (times >= 500)
         {

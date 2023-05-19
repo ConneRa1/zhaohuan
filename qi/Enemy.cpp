@@ -76,13 +76,3 @@ void Enemy::setScale(float x, float y)
     }
 
 }
-void Enemy::move()
-{
-    y =!isMoved ?y+moveOffset:y-moveOffset;
-    isMoved = !isMoved;
-}
-void Enemy::Selected(bool f)
-{
-    isSelected = f;
-    move();
-}

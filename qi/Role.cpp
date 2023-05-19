@@ -181,6 +181,61 @@ bool Role::checkReact(ElementType e)
 	}
 	
 }
+
+void Role::move(bool isplayer)
+{
+	if (isplayer)
+	{
+		if (isDead)
+		{
+			y = characterY;
+		}
+		else
+		{
+			if (isSelected)
+			{
+				y = !isMoved ? y - moveOffset : y + moveOffset;
+				isMoved = !isMoved;
+			}
+			else {
+				if (isMoved)
+				{
+					y = y + moveOffset;
+					isMoved = false;
+				}
+			}
+		}
+	}
+	else {
+		if (isDead)
+		{
+			y = enemyY;
+		}
+		else
+		{
+			if (isSelected)
+			{
+				y = !isMoved ? y + moveOffset : y;
+				isMoved = !isMoved;
+			}
+			else {
+				if (isMoved)
+				{
+					y = y - moveOffset;
+					isMoved = false;
+				}
+			}
+		}
+	}
+	
+
+}
+
+void Role::Selected(bool f,bool isplayer)
+{
+	isSelected = f;
+	move(isplayer);
+}
 ReactType Role::doReact(ElementType e) 
 {
 	switch (attachedElement)

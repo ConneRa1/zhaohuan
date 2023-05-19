@@ -58,8 +58,12 @@ private:
 	vector<Ability*> sAbility;		//用来存放显示、生效的技能
 
 	vector<Object> rollDices;		//投骰子
+	Object rollDicesbg[8];	
 	vector<Object> chooseCards;
+	Object abilityBanner[9];
+
 	Texture texarr[500];
+
 	Shader shader;
 	vector<UI> ui;
 	State* mState;
@@ -89,6 +93,8 @@ private:
 	Object yan;
 	Object feng;
 	Object cao;
+	Object heal1;
+	Object heal2;
 	
 	//各个state的bool
 	bool firstInitDice = true;
@@ -99,6 +105,7 @@ private:
 	bool isWin = false;
 	bool initdice = true;
 	bool isPlayerFirst = true;
+	int enemyNum;
 
 	Music bkMusic;
 	vector<Memento> saves;
@@ -122,6 +129,7 @@ private:
 	void addEnemyPlace(Place);
 	void drawPlaceVector();
 	void resetPlaceCardTimes();
+	void drawAbilityBanner(Ability *);
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

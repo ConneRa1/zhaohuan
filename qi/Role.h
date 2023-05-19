@@ -30,6 +30,9 @@ public:
 	int maxNp() { return npNum; }
 	void setNp(int i) { currentNp = (i <= npNum ? i : npNum); updateNp(); }
 	void addHp(int i) { hp += i; if (hp > 10)hp = 10; }
+	void Selected(bool f,bool);
+	void move(bool);
+	bool IsSelected() { return isSelected; }
 	EquipmentType getEquipmentType() const;
 	void addEquipment(Buff buff);
 	void addRelic(Buff buff);

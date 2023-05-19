@@ -75,6 +75,7 @@ using namespace sf;
 #define placeCardY4 0.256
 #define placeCardWidth 0.0675 
 #define placeCardHeight 0.1275
+#define enemyY 0.152
 
 extern Font font;		//游戏字体，主要是用来画血量的
 
@@ -145,7 +146,6 @@ typedef enum class ConcreateCard {
 	赌徒,
 	立本,
 	凯瑟琳,
-	元素反应仪,
 	西风大教堂,
 	群玉阁,
 	莲花酥,
@@ -166,4 +166,5 @@ typedef enum class ConcreateCard {
 	翠绿的猎人之冠,
 	不动玄石之相,
 	月桂的宝冠,
+	派蒙
 };

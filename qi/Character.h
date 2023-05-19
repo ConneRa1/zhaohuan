@@ -8,9 +8,6 @@ public:
 	~Character();
 	void draw(RenderWindow& window,float x,float y,Shader &shader);
 	void setScale(float x, float y);
-	void move();
-	void Selected(bool);
-	bool IsSelected();
 	void updateNp();
 	string name;
 

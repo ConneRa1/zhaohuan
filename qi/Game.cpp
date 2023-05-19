@@ -23,6 +23,7 @@ Game::Game() {
     view.setCenter(Vector2f(window.getSize()) / 2.f);
     window.setView(view);
     view.setViewport(FloatRect(0.f, 0.f, 1.f, 1.f));
+    
 }
 
 Game::~Game() {
@@ -43,6 +44,9 @@ void Game::Run() {
 }
 
 void Game::Initial() {
+    /*cout << "选择敌人数目：" << endl;
+    cin >> enemyNum;*/
+    enemyNum = 3;
     font.loadFromFile("source/hk4e_zh-cn.ttf");
     bkMusic.openFromFile("source/texture/bg.wav");
     bkMusic.play();
@@ -177,6 +181,11 @@ void Game::Initial() {
     {
         diceTriggerred[i] = Object(texarr[230], 90, 95, 0, 0);
     }
+    texarr[231].loadFromFile("source/texture/rolldiceTriggered.png");
+    for (int i = 0; i < 8; i++)
+    {
+        rollDicesbg[i] = Object(texarr[231], windowWidth * rolldiceWidth, windowHeight * rolldiceHeight, 0, 0);
+    }
     
 
     //确认按钮
@@ -193,27 +202,82 @@ void Game::Initial() {
     texarr[303].loadFromFile("source/texture/foodcard/1.png");
     texarr[304].loadFromFile("source/texture/foodcard/2.png");
     texarr[305].loadFromFile("source/texture/foodcard/3.png");
-    //Card* u1 = CardFactory::CreateCard(texarr[301], 2, CardType::event, ConcreateCard::最好的伙伴, true);
-    Card* u1 = CardFactory::CreateCard(texarr[301], 1, CardType::relics, ConcreateCard::酒渍船帽, false);
+    texarr[306].loadFromFile("source/texture/eventcard/1.png");
+    texarr[307].loadFromFile("source/texture/placecard/1.png");
+    texarr[308].loadFromFile("source/texture/placecard/3.png");
+    texarr[309].loadFromFile("source/texture/placecard/4.png");
+    texarr[310].loadFromFile("source/texture/placecard/5.png");
+    texarr[311].loadFromFile("source/texture/placecard/6.png");
+    texarr[312].loadFromFile("source/texture/placecard/8.png");
+    texarr[313].loadFromFile("source/texture/placecard/11.png");
+    texarr[314].loadFromFile("source/texture/placecard/12.png");
+    texarr[315].loadFromFile("source/texture/placecard/13.png");
+    texarr[316].loadFromFile("source/texture/placecard/14.png");
+    texarr[317].loadFromFile("source/texture/placecard/15.png");
+    texarr[318].loadFromFile("source/texture/eventcard/3.png");
+    texarr[319].loadFromFile("source/texture/eventcard/4.png");
+    texarr[320].loadFromFile("source/texture/eventcard/6.png");
+    texarr[321].loadFromFile("source/texture/eventcard/7.png");
+    texarr[322].loadFromFile("source/texture/sth/2.png");
+    texarr[323].loadFromFile("source/texture/sth/3.png");
+    texarr[324].loadFromFile("source/texture/sth/5.png");
+
+
+
+    Card* u1 = CardFactory::CreateCard(texarr[301], 2, CardType::event, ConcreateCard::最好的伙伴, true);
+    //Card* u1 = CardFactory::CreateCard(texarr[301], 1, CardType::relics, ConcreateCard::酒渍船帽, false);
     Card* u2 = CardFactory::CreateCard(texarr[302], 1, CardType::event, ConcreateCard::交给我吧,true);
     Card* u3 = CardFactory::CreateCard(texarr[303], 2, CardType::event, ConcreateCard::仙跳墙,false);
     Card* u4 = CardFactory::CreateCard(texarr[304], 1, CardType::event, ConcreateCard::土豆饼, false);
     Card* u5 = CardFactory::CreateCard(texarr[305], 0, CardType::event, ConcreateCard::烧鸡, false);
-   
+    Card* u6 = CardFactory::CreateCard(texarr[306], 1, CardType::event, ConcreateCard::白垩之术, true);
+    Card* u7 = CardFactory::CreateCard(texarr[307], 3, CardType::place, ConcreateCard::派蒙, true);
+    Card* u8 = CardFactory::CreateCard(texarr[308], 2, CardType::place, ConcreateCard::西风大教堂, true);
+    Card* u9 = CardFactory::CreateCard(texarr[309], 0, CardType::place, ConcreateCard::立本 , true);
+    Card* u10 = CardFactory::CreateCard(texarr[310], 2, CardType::place, ConcreateCard::望舒客栈,  true);
+    Card* u11 = CardFactory::CreateCard(texarr[311], 1, CardType::place, ConcreateCard::刘苏 , true);
+    Card* u12 = CardFactory::CreateCard(texarr[312], 2, CardType::place, ConcreateCard::璃月港口 , true);
+    Card* u13= CardFactory::CreateCard(texarr[313], 2, CardType::place, ConcreateCard::参量质变仪, true);
+    Card* u14= CardFactory::CreateCard(texarr[314], 1, CardType::place, ConcreateCard::凯瑟琳, true);
+    Card* u15 = CardFactory::CreateCard(texarr[315], 1, CardType::place, ConcreateCard::常九爷 , true);
+    Card* u16 = CardFactory::CreateCard(texarr[316], 2, CardType::place, ConcreateCard::骑士团图书馆, true);
+    Card* u17 = CardFactory::CreateCard(texarr[317], 1, CardType::place, ConcreateCard::晨曦酒庄, true);
+    Card* u18 = CardFactory::CreateCard(texarr[318], 1, CardType::event, ConcreateCard::无中生有, true);
+    Card* u19 = CardFactory::CreateCard(texarr[319], 2, CardType::event, ConcreateCard::莫娜, true);
+    Card* u20 = CardFactory::CreateCard(texarr[320], 1, CardType::event, ConcreateCard::鹤归, true);
+    Card* u21 = CardFactory::CreateCard(texarr[321], 0, CardType::event, ConcreateCard::罗莎莉亚, true);
+    Card* u22 = CardFactory::CreateCard(texarr[322], 1, CardType::relics, ConcreateCard::破冰踏雪的回音, false);
+    Card* u23 = CardFactory::CreateCard(texarr[323], 1, CardType::relics, ConcreateCard::酒渍船帽, false);
+    Card* u24 = CardFactory::CreateCard(texarr[324], 1, CardType::relics, ConcreateCard::唤雷的头冠, false);
+
+
+    
     cards.push_back(u1->clone());
-    cards.push_back(u1->clone());
     cards.push_back(u2->clone());
-    cards.push_back(u2->clone());
-    cards.push_back(u2->clone());
+    cards.push_back(u6->clone());
     cards.push_back(u3->clone());
     cards.push_back(u4->clone());
     cards.push_back(u5->clone());
-    cards.push_back(u3->clone());
-    cards.push_back(u4->clone());
-    cards.push_back(u5->clone());
-    cards.push_back(u3->clone());
-    cards.push_back(u4->clone());
-    cards.push_back(u5->clone());
+    cards.push_back(u7->clone());
+    cards.push_back(u8->clone());
+    cards.push_back(u9->clone());
+    cards.push_back(u10->clone());
+    cards.push_back(u11->clone());
+    cards.push_back(u12->clone());
+    cards.push_back(u13->clone());
+    cards.push_back(u14->clone());
+    cards.push_back(u15->clone());
+    cards.push_back(u16->clone());
+    cards.push_back(u17->clone());
+    cards.push_back(u18->clone());
+    cards.push_back(u19->clone());
+    cards.push_back(u20->clone());
+    cards.push_back(u21->clone());
+    cards.push_back(u22->clone());
+    cards.push_back(u23->clone());
+    cards.push_back(u24->clone());
+
+
 
     for (int i = 0; i < 5; i++)
     {
@@ -223,9 +287,7 @@ void Game::Initial() {
      //350后绑场景的小图标
     texarr[350].loadFromFile("source/texture/place/place.png");
 
-    addPlayerPlace(Place(PlaceType::换人, ConcreateCard::刘苏, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
-    addPlayerPlace(Place(PlaceType::结束, ConcreateCard::璃月港口, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
-    addPlayerPlace(Place(PlaceType::结束 , ConcreateCard::望舒客栈, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+    addPlayerPlace(Place(PlaceType::投掷, ConcreateCard::骑士团图书馆, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
     addPlayerPlace(Place(PlaceType::结束, ConcreateCard::西风大教堂, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
     //addEnemyPlace(Place(PlaceType::结束, ConcreateCard::西风大教堂, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
    //100 人物框
@@ -248,10 +310,30 @@ void Game::Initial() {
     texarr[156].loadFromFile("source/texture/character/ability/kaiya_a.png");
     texarr[157].loadFromFile("source/texture/character/ability/kaiya_e.png");
     texarr[158].loadFromFile("source/texture/character/ability/kaiya_q.png");
+    texarr[160].loadFromFile("source/texture//ability/1_a.png");
+    texarr[161].loadFromFile("source/texture//ability/1_e.png");
+    texarr[162].loadFromFile("source/texture//ability/1_q.png");
+    texarr[163].loadFromFile("source/texture//ability/2_a.png");
+    texarr[164].loadFromFile("source/texture//ability/2_e.png");
+    texarr[165].loadFromFile("source/texture//ability/2_q.png");
+    texarr[166].loadFromFile("source/texture//ability/3_a.png");
+    texarr[167].loadFromFile("source/texture//ability/3_e.png");
+    texarr[168].loadFromFile("source/texture//ability/3_q.png");
+
+    //heal
+    texarr[170].loadFromFile("source/texture/heal1.png");
+    texarr[171].loadFromFile("source/texture/heal2.png");
+    heal1 = Object(texarr[170], windowWidth * cardWidth, windowHeight * cardHeight, 0, 0);
+    heal2 = Object(texarr[171], windowWidth * cardWidth, windowHeight * cardHeight, 0, 0);
+
+    for (int i = 0; i < 9; i++)
+    {
+        abilityBanner[i] = Object(texarr[160 + i], windowWidth, windowHeight, 0, 0);
+    }
 
     texarr[2].loadFromFile("source/texture/character/xingqiu.png");
     Character a1 = Character(texarr[2], cardWidth* windowWidth, cardHeight* windowHeight, 0.343, 0.58,texarr[100], texarr[101], texarr[102],"xingqiu",10,2,EquipmentType::大剑,ElementType::shui);
-    a1.Selected(true);
+    a1.Selected(true,true);
     a1.addBuff(Buff(1, BuffType::盾, 2,36,36, texarr[110]));
     a1.addBuff(Buff(1, BuffType::加攻, 2, 36, 36, texarr[111]));
     a1.addBuff(Buff(1, BuffType::饱, 1, 36, 36, texarr[112]));
@@ -267,15 +349,16 @@ void Game::Initial() {
 
     texarr[5].loadFromFile("source/texture/enemy/enemy1.png");
     Enemy e = Enemy(texarr[5], cardWidth * windowWidth, cardHeight * windowHeight, 0.457, 0.152, texarr[100], texarr[101], texarr[102],10,3);
-    enemyVector.push_back(e);
-    enemyVector.push_back(e);
-    enemyVector.push_back(e);
+    for (int it = 0; it < enemyNum; it++)
+    {
+        enemyVector.push_back(e);
+    }
     float initX = 0.5-(enemyVector.size()*cardWidth+(enemyVector.size()-1)*cardOffset)/2.0f;
     for (int it = 0; it < enemyVector.size(); it++)
     {
         enemyVector[it].setPos(initX + cardWidth*it+ cardOffset*it, 0.152);
     }
-    enemyVector[enemyVector.size() / 2].Selected(true);
+    enemyVector[enemyVector.size() / 2].Selected(true, false);
     
     //加载所有技能
     abilityVector.push_back(new Ability(ElementType::cai,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
@@ -545,5 +628,34 @@ void Game::resetPlaceCardTimes()
         {
             playerPlaceVector[it][i].times = 1;
         }
+    }
+}
+
+void Game::drawAbilityBanner(Ability* a)
+{
+    string name = CurrentCharacter()->name;
+    int index = 0;
+    for (auto i = sAbility.begin(); i != sAbility.end(); i++)
+    {
+        if ((*i) == a)
+        {
+            break;
+        }
+        index++;
+    }
+    if (name == "xingqiu") 
+    {
+        abilityBanner[index].setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        abilityBanner[index].draw(window);
+    }
+    else if (name == "keqing")
+    {
+        abilityBanner[index+3].setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        abilityBanner[index+3].draw(window);
+    }
+    else if (name == "kaya")
+    {
+        abilityBanner[index+6].setScale(view.getSize().x / windowWidth, view.getSize().y / windowHeight);
+        abilityBanner[index+6].draw(window);
     }
 }

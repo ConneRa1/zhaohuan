@@ -15,9 +15,28 @@ void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
     switch (c->name)
     {
     //event
-    case ConcreateCard::最好的伙伴:
-
+    case ConcreateCard::最好的伙伴: {
+        /*int n = 0;
+        for (int i = 0; i < 2; i++) {
+            mGame->diceNum.m[ElementType::cai]++;
+        }
+        vector< pair<ElementType, int> > vec(mGame->diceNum.m.begin(), mGame->diceNum.m.end());
+        sort(vec.begin(), vec.end(), Cost::cmp);
+        for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
+            mGame->dices[n].sprite.setTexture(mGame->texarr[200]);
+            n++;
+        }
+        for (vector< pair<ElementType, int> >::iterator it = vec.begin(); it != vec.end(); ++it)
+        {
+            if (it->first != ElementType::cai) {
+                for (int i = 0; i < it->second; i++) {
+                    mGame->dices[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
+                    n++;
+                }
+            }
+        }*/
         break;
+    }
     case ConcreateCard::交给我吧:
         quickChange = true;
         break; 
@@ -47,15 +66,51 @@ void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
     case ConcreateCard::土豆饼:
         target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
         target->addHp(2);
+        healtarget = target;
+        healtimer = 200;
+        healNum = 2;
         break;
     case ConcreateCard::烧鸡:
         target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
         target->addHp(1);
+        healtarget = target;
+        healtimer = 200;
+        healNum = 1;
         break;
     //场地
+       /* addPlayerPlace(Place(PlaceType::换人, ConcreateCard::刘苏, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+        addPlayerPlace(Place(PlaceType::结束, ConcreateCard::璃月港口, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+        addPlayerPlace(Place(PlaceType::结束, ConcreateCard::望舒客栈, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
+        addPlayerPlace(Place(PlaceType::结束, ConcreateCard::西风大教堂, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));*/
     case ConcreateCard::凯瑟琳:
         mGame->addPlayerPlace(Place(PlaceType::换人, ConcreateCard::凯瑟琳, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
         break;
+    case ConcreateCard::刘苏:
+        mGame->addPlayerPlace(Place(PlaceType::换人, ConcreateCard::刘苏, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
+    case ConcreateCard::璃月港口:
+        mGame->addPlayerPlace(Place(PlaceType::结束, ConcreateCard::璃月港口, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
+    case ConcreateCard::望舒客栈:
+        mGame->addPlayerPlace(Place(PlaceType::结束, ConcreateCard::望舒客栈, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+         break;
+    case ConcreateCard::西风大教堂:
+        mGame->addPlayerPlace(Place(PlaceType::结束 , ConcreateCard::西风大教堂, 1, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
+    case ConcreateCard::常九爷:
+        mGame->addPlayerPlace(Place(PlaceType::攻击, ConcreateCard::常九爷, 1, 3, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
+    case ConcreateCard::晨曦酒庄:
+        mGame->addPlayerPlace(Place(PlaceType::换人, ConcreateCard::晨曦酒庄, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
+    case ConcreateCard::参量质变仪:
+        mGame->addPlayerPlace(Place(PlaceType::攻击, ConcreateCard::参量质变仪, 1, 3, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+        break;
+    case ConcreateCard::骑士团图书馆:
+        mGame->addPlayerPlace(Place(PlaceType::投掷, ConcreateCard::骑士团图书馆, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+
+        break;
+
     //装备
     case ConcreateCard::旅行剑:
         target->addEquipment(Buff(999,BuffType::武器,1,100,100,mGame->texarr[112]));
@@ -90,9 +145,13 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
         {
             for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
             {
-                if (&(*it) != mGame->CurrentEnemy())
+                if (&(*it) != mGame->CurrentEnemy()&&(*it).gethp()>0)
                 {
                     it->getHurt(1);	//后面改一下，只扣后台的
+                    if (it->gethp() <= 0)
+                    {
+                        it->Die();
+                    }
                 }
                 
             }
@@ -100,9 +159,13 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
         else {
             for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
             {
-                if (&(*it) != mGame->CurrentCharacter())
+                if (&(*it) != mGame->CurrentCharacter() && (*it).gethp() > 0)
                 {
                     it->getHurt(1);	//后面改一下，只扣后台的
+                    if (it->gethp() <= 0)
+                    {
+                        it->Die();
+                    }
                 }
             }
         }
@@ -117,9 +180,13 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
         {
             for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
             {
-                if (&(*it) != mGame->CurrentEnemy())
+                if (&(*it) != mGame->CurrentEnemy() && (*it).gethp() > 0)
                 {
                     it->getHurt(1);	//后面改一下，只扣后台的
+                    if (it->gethp() <= 0)
+                    {
+                        it->Die();
+                    }
                 }
 
             }
@@ -127,9 +194,13 @@ void PlayerTurnState::doReact(ReactType r, bool toEnemy)
         else {
             for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
             {
-                if (&(*it) != mGame->CurrentCharacter())
+                if (&(*it) != mGame->CurrentCharacter() && (*it).gethp() > 0)
                 {
                     it->getHurt(1);	//后面改一下，只扣后台的
+                    if (it->gethp() <= 0)
+                    {
+                        it->Die();
+                    }
                 }
             }
         }
@@ -176,6 +247,11 @@ void PlayerTurnState::Input() {
             {
                 mGame->LoadMemento(0);
                 cout << "读档1" << endl;
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num2)
+            {
+                mGame->LoadMemento(1);
+                cout << "读档2" << endl;
             }
             /* if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Add)
              {
@@ -252,7 +328,7 @@ void PlayerTurnState::Logic() {
             {
                 mGame->isPlayerFirst = false;
                 cout << "，进入下一回合" << endl;
-                mGame->ChangeState(new FirstDiceState(mGame));
+                mGame->ChangeState(new TurnEndState(mGame));
             }
         }
     }
@@ -268,6 +344,19 @@ void PlayerTurnState::Logic() {
                 showReact = true;
                 reactType = target->doReact((*triggeredAbility).getElement());
                 doReact(reactType, true);
+                if (target->gethp() <= 0)
+                {
+                    target->Die();
+                    target->Selected(false, false);
+                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                    {
+                        if ((*it).gethp() > 0)
+                        {
+                            (*it).Selected(true, false);
+                            break;
+                        }
+                    }
+                }
                 int index = 0; bool flag = false;
                 for (auto it =0; it < mGame->playerPlaceVector[2].size(); it++)
                 {
@@ -292,8 +381,20 @@ void PlayerTurnState::Logic() {
                 }
                 
             }
-
             else {
+                if (target->gethp() <= 0)
+                {
+                    target->Die();
+                    target->Selected(false, false);
+                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                    {
+                        if ((*it).gethp() > 0)
+                        {
+                            (*it).Selected(true, false);
+                            break;
+                        }
+                    }
+                }
                 if(mGame->isWin){
                     mGame->ChangeState(new GameEndState(mGame));
                 }
@@ -390,10 +491,17 @@ void PlayerTurnState::Logic() {
             //先判断能否反应，不能：直接减、挂元素，能：元素反应，给出reacthurt,先正常伤害，再接上反应伤害
             target = mGame->CurrentEnemy(); 
             target->getHurt(currentRole,(*triggeredAbility).getDamage(),triggeredAbility==*(mGame->sAbility.end()-1));
-            if (target->gethp() <= 0)
+            int flag = 0;
+            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
             {
-                target->Die();
-                //如果敌人数不为0，就加个CheckWin()
+                if ((*it).gethp() > 0)
+                {
+                    break;
+                }
+                flag += 1;
+            }
+            if (flag == mGame->enemyNum)
+            {
                 //进入胜利界面
                 mGame->isWin = true;
                 mGame->ChangeState(new GameEndState(mGame));
@@ -426,7 +534,7 @@ void PlayerTurnState::Logic() {
         {
             Character* c = (Character*) target;
             currentRole= (Character*)target;
-            c->Selected(true);
+            c->Selected(true,true);
             if (c->name == "xingqiu")
             {
                 for (auto i = 0; i<3; i++)
@@ -454,7 +562,7 @@ void PlayerTurnState::Logic() {
             {
                 if (&(*i) != target)
                 {
-                    i->Selected(false);
+                    i->Selected(false,true);
                 }
             }
             
@@ -551,6 +659,7 @@ void PlayerTurnState::Draw() {
         }
         if (isAbilityTriggered)
         {
+            mGame->drawAbilityBanner(triggeredAbility);
             mGame->target.setPos((*target).getX(), (*target).getY());
             mGame->target.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->target.draw(mGame->window);
@@ -735,6 +844,21 @@ void PlayerTurnState::Draw() {
                 //reactHurtTimer = 0;
                 showReact = false;
             }
+        }
+    }
+    if (healtimer-- > 0)
+    {
+        if (healNum == 2)
+        {
+            mGame->heal2.setPos(healtarget->getPosX(), healtarget->getPosY());
+            mGame->heal2.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->heal2.draw(mGame->window);
+
+        }
+        else {
+            mGame->heal1.setPos(healtarget->getPosX(), healtarget->getPosY());
+            mGame->heal1.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->heal1.draw(mGame->window);
         }
     }
     mGame->window.display();
