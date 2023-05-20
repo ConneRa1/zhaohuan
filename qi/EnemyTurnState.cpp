@@ -142,22 +142,27 @@ void EnemyTurnState::Logic() {
                 }
 
             }
-            else if(rate >= 0){    //换人
+            else if(rate >= 60){    //换人
                 target = mGame->CurrentEnemy();
                 target->Selected(false, false);
-                for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                for (auto it = mGame->enemyVector.begin(); ; it++)
                 {
-                    if ((*it).gethp() > 0 && target!=&(*it))
+                    if (it == mGame->enemyVector.end())
+                        it = mGame->enemyVector.begin();
+                    random_device rd;
+                    float r = rd() % 2;
+                    if ((*it).gethp() > 0 && target!=&(*it)&&r>0.5)
                     {
                         (*it).Selected(true, false);
                         break;
                     }
+                    
                 }
             }
-            //else {
-            //    //使用卡牌
-
-            //}
+            else {
+                //使用卡牌
+                mGame->enemySummonedVector.push_back(new Summoned(ConcreateCard::敌方召唤物, 2, 2, windowWidth * placeCardWidth, windowHeight * placeCardHeight, mGame->texarr[350]));
+            }
             
             
         }
@@ -195,6 +200,9 @@ void EnemyTurnState::Draw() {
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
     mGame->drawPlaceVector();
+
+    mGame->summonedVectorAutoPlace();
+    mGame->drawSummonedVector();
 
     for (auto it = mGame->ui.begin(); it != mGame->ui.end(); it++) {
         it->sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);

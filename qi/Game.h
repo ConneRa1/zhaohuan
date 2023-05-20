@@ -24,6 +24,7 @@ class State;
 #include"TurnEndState.h"
 #include"Memento.h"
 #include"Place.h"
+#include"Summoned.h"
 
 class Game {
 public:
@@ -51,6 +52,9 @@ private:
 	vector<Object> dices;		//小骰子
 	vector<vector<Place>> playerPlaceVector;		//玩家和敌人的场景卡容器	[0]是投掷骰子，[1]是换人,[2]是攻击，[4]是结束阶段
 	vector<vector<Place>> enemyPlaceVector;
+
+	vector<Summoned*> playerSummonedVector;		//玩家和敌人的召唤物容器
+	vector<Summoned*> enemySummonedVector;
 
 
 	//display测试用
@@ -125,11 +129,14 @@ private:
 	Enemy* CurrentEnemy();
 	Character* CurrentCharacter();
 	void placeVectorAutoPlace();
+	
 	void addPlayerPlace(Place);
 	void addEnemyPlace(Place);
 	void drawPlaceVector();
 	void resetPlaceCardTimes();
 	void drawAbilityBanner(Ability *);
+	void summonedVectorAutoPlace();
+	void drawSummonedVector();
 	//自定的针对于SMFL的画图程序
 	//void myDraw(Texture& texture, float x, float y, float width = 0,float height=0);
 };

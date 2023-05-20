@@ -628,6 +628,9 @@ void PlayerTurnState::Draw() {
     mGame->placeVectorAutoPlace();
     mGame->drawPlaceVector();
 
+    mGame->summonedVectorAutoPlace();
+    mGame->drawSummonedVector();
+
     if (isConsumingDice)
     {
         mGame->dicebg.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * diceBgWidth / (float)mGame->dicebg.sprite.getTexture()->getSize().x,

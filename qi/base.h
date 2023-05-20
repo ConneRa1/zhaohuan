@@ -67,12 +67,24 @@ using namespace sf;
 #define hurtTime 450
 #define drawCardTime 400
 #define buffOffset 0.020
+
 #define placeCardX1 0.138
 #define placeCardX2 0.223
 #define placeCardY1 0.547
 #define placeCardY2 0.650
 #define placeCardY3 0.171
 #define placeCardY4 0.256
+
+
+#define summonedCardX1 0.777
+#define summonedCardX2 0.862
+#define summonedCardY1 0.547
+#define summonedCardY2 0.650
+#define summonedCardY3 0.171
+#define summonedCardY4 0.256
+
+
+
 #define placeCardWidth 0.0675 
 #define placeCardHeight 0.1275
 #define enemyY 0.152
@@ -166,5 +178,6 @@ typedef enum class ConcreateCard {
 	翠绿的猎人之冠,
 	不动玄石之相,
 	月桂的宝冠,
-	派蒙
+	派蒙,
+	敌方召唤物     //不知道叫啥名字
 };

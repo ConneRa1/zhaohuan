@@ -532,20 +532,65 @@ void Game::placeVectorAutoPlace()
             switch (index)
             {
             case 1:
-                enemyPlaceVector[it][i].setPos(placeCardX1, placeCardY1);
+                enemyPlaceVector[it][i].setPos(placeCardX1, placeCardY3);
                 break;
             case 2:
-                enemyPlaceVector[it][i].setPos(placeCardX2, placeCardY1);
+                enemyPlaceVector[it][i].setPos(placeCardX2, placeCardY3);
                 break;
             case 3:
-                enemyPlaceVector[it][i].setPos(placeCardX1, placeCardY2);
+                enemyPlaceVector[it][i].setPos(placeCardX1, placeCardY4);
                 break;
             case 4:
-                enemyPlaceVector[it][i].setPos(placeCardX2, placeCardY2);
+                enemyPlaceVector[it][i].setPos(placeCardX2, placeCardY4);
                 break;
             }
             index++;
         }
+    }
+    return;
+}
+
+void Game:: summonedVectorAutoPlace()
+{
+    int index = 1;
+    for (auto i = 0; i < playerSummonedVector.size(); i++)
+    {
+        switch (index)
+        {
+        case 1:
+            playerSummonedVector[i]->setPos(summonedCardX1, summonedCardY1);
+            break;
+        case 2:
+            playerSummonedVector[i]->setPos(summonedCardX2, summonedCardY1);
+            break;
+        case 3:
+            playerSummonedVector[i]->setPos(summonedCardX1, summonedCardY2);
+            break;
+        case 4:
+            playerSummonedVector[i]->setPos(summonedCardX2, summonedCardY2);
+            break;
+        }
+        index++;
+    }
+    index = 1;
+    for (auto i = 0; i < enemySummonedVector.size(); i++)
+    {
+        switch (index)
+        {
+        case 1:
+            enemySummonedVector[i]->setPos(summonedCardX1, summonedCardY3);
+            break;
+        case 2:
+            enemySummonedVector[i]->setPos(summonedCardX2 , summonedCardY3);
+            break;
+        case 3:
+            enemySummonedVector[i]->setPos(summonedCardX1, summonedCardY4 );
+            break;
+        case 4:
+            enemySummonedVector[i]->setPos(summonedCardX2 , summonedCardY4);
+            break;
+        }
+        index++;
     }
     return;
 }
@@ -608,6 +653,19 @@ void Game::drawPlaceVector()
         {
             enemyPlaceVector[it][i].draw(window);
         }
+    }
+    return;
+}
+void Game::drawSummonedVector()
+{
+    for (auto i = 0; i < enemySummonedVector.size(); i++)
+    {
+        enemySummonedVector[i]->draw(window);
+    }
+     
+    for (auto i = 0; i < playerSummonedVector.size(); i++)
+    {
+        playerSummonedVector[i]->draw(window);
     }
     return;
 }
