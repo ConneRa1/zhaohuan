@@ -221,11 +221,11 @@ void Game::Initial() {
     texarr[322].loadFromFile("source/texture/sth/2.png");
     texarr[323].loadFromFile("source/texture/sth/3.png");
     texarr[324].loadFromFile("source/texture/sth/5.png");
+    texarr[325].loadFromFile("source/texture/foodcard/4.png");
 
 
 
     Card* u1 = CardFactory::CreateCard(texarr[301], 2, CardType::event, ConcreateCard::最好的伙伴, true);
-    //Card* u1 = CardFactory::CreateCard(texarr[301], 1, CardType::relics, ConcreateCard::酒渍船帽, false);
     Card* u2 = CardFactory::CreateCard(texarr[302], 1, CardType::event, ConcreateCard::交给我吧,true);
     Card* u3 = CardFactory::CreateCard(texarr[303], 2, CardType::event, ConcreateCard::仙跳墙,false);
     Card* u4 = CardFactory::CreateCard(texarr[304], 1, CardType::event, ConcreateCard::土豆饼, false);
@@ -249,13 +249,16 @@ void Game::Initial() {
     Card* u22 = CardFactory::CreateCard(texarr[322], 1, CardType::relics, ConcreateCard::破冰踏雪的回音, false);
     Card* u23 = CardFactory::CreateCard(texarr[323], 1, CardType::relics, ConcreateCard::酒渍船帽, false);
     Card* u24 = CardFactory::CreateCard(texarr[324], 1, CardType::relics, ConcreateCard::唤雷的头冠, false);
+    Card* u25 = CardFactory::CreateCard(texarr[325], 1, CardType::food, ConcreateCard::莲花酥, false);
 
-
-    
-    cards.push_back(u1->clone());
+    cards.push_back(u22->clone());
+    cards.push_back(u23->clone());
+    //cards.push_back(u1->clone());
     cards.push_back(u2->clone());
     cards.push_back(u6->clone());
     cards.push_back(u3->clone());
+    cards.push_back(u4->clone());
+    cards.push_back(u5->clone());
     cards.push_back(u4->clone());
     cards.push_back(u5->clone());
     cards.push_back(u7->clone());
@@ -271,12 +274,14 @@ void Game::Initial() {
     cards.push_back(u17->clone());
     cards.push_back(u18->clone());
     cards.push_back(u19->clone());
-    cards.push_back(u20->clone());
+    //cards.push_back(u20->clone());
     cards.push_back(u21->clone());
-    cards.push_back(u22->clone());
-    cards.push_back(u23->clone());
+    cards.push_back(u18->clone());
+    cards.push_back(u19->clone());
+    cards.push_back(u21->clone());
+    
     cards.push_back(u24->clone());
-
+    cards.push_back(u2->clone());
 
 
     for (int i = 0; i < 5; i++)
@@ -299,6 +304,9 @@ void Game::Initial() {
     texarr[110].loadFromFile("source/texture/盾.png");
     texarr[111].loadFromFile("source/texture/攻.png");
     texarr[112].loadFromFile("source/texture/饱.png");
+    texarr[120].loadFromFile("source/texture/xingiu.png");
+    texarr[121].loadFromFile("source/texture/kaya.png");
+
 
      //150后技能
     texarr[150].loadFromFile("source/texture/character/ability/xingqiu_a.png");
@@ -363,15 +371,15 @@ void Game::Initial() {
     //加载所有技能
     abilityVector.push_back(new Ability(ElementType::cai,2,texarr[150], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
     abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[151], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai,3))));
-    abilityVector.push_back(new Ability(ElementType::shui, 3, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::shui, 3))));
+    abilityVector.push_back(new Ability(ElementType::shui, 1, texarr[152], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
     abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[153], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
     abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[154], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::lei, 3, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::lei, 3))));
+    abilityVector.push_back(new Ability(ElementType::lei, 4, texarr[155], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
 
     abilityVector.push_back(new Ability(ElementType::cai, 2, texarr[156], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 0, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
     abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[157], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 1, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 3))));
-    abilityVector.push_back(new Ability(ElementType::bing, 3, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::bing, 3))));
+    abilityVector.push_back(new Ability(ElementType::bing, 2, texarr[158], windowWidth * abilityWidth, windowHeight * abilityHeight, abilityX + abilityOffset * 2, abilityY, Cost(1, pair<ElementType, int>(ElementType::cai, 4))));
 
     for(int i=0;i<3;i++)
         sAbility.push_back(abilityVector[i]);
@@ -598,6 +606,7 @@ void Game::drawPlaceVector()
     {
             for (auto i = 0; i < playerPlaceVector[it].size(); i++)
             {
+                playerPlaceVector[it][i].setScale(view.getSize().x / windowWidth * playerPlaceVector[it][i].getScalex(), view.getSize().y / windowHeight * playerPlaceVector[it][i].getScaley());
                 playerPlaceVector[it][i].draw(window);
             }
     }
@@ -606,6 +615,7 @@ void Game::drawPlaceVector()
     {
         for (auto i = 0; i < enemyPlaceVector[it].size(); i++)
         {
+            enemyPlaceVector[it][i].setScale(view.getSize().x / windowWidth * enemyPlaceVector[it][i].getScalex(), view.getSize().y / windowHeight * enemyPlaceVector[it][i].getScaley());
             enemyPlaceVector[it][i].draw(window);
         }
     }

@@ -145,7 +145,6 @@ void Role::getHurt(Role* role, int x)
 
 int Role::getHurtNum()
 {
-	
 	return hurtNum;
 }
 

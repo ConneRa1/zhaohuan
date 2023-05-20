@@ -12,6 +12,8 @@ void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
     //addPlayerPlace(Place(PlaceType::回合, ConcreateCard::凯瑟琳,1, 1, windowWidth*placeCardWidth, windowHeight*placeCardHeight, texarr[350]));
     //addEnemyPlace(Place(PlaceType::回合, ConcreateCard::西风大教堂, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
     int num = 0;
+    Character* role = (Character*)target;
+    if (role == NULL)role = mGame->CurrentCharacter();
     switch (c->name)
     {
     //event
@@ -55,27 +57,51 @@ void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
         mGame->CurrentCharacter()->setNp(mGame->CurrentCharacter()->getNp() + 1);
         break;
     case ConcreateCard::鹤归:
-
+        break;
+    case ConcreateCard::罗莎莉亚:
+        luoshayiya = true;
+        break;
+    case ConcreateCard::无中生有:
+        mGame->cards.drawCard();
+        mGame->cards.drawCard();
+        mGame->cards.autoPlace();
         break;
     //food
     case ConcreateCard::仙跳墙:
-        target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
-        target->addBuff(Buff(1, BuffType::大招, 1, 36, 36, mGame->texarr[111]));
+        if (!role->isBao())
+        {
+            target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
+            target->addBuff(Buff(1, BuffType::大招, 1, 36, 36, mGame->texarr[111]));
+        }
+        
         //target->addBuff()
         break;
     case ConcreateCard::土豆饼:
-        target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
-        target->addHp(2);
-        healtarget = target;
-        healtimer = 200;
-        healNum = 2;
+        if (!role->isBao())
+        {
+            target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
+            target->addHp(2);
+            healtarget = target;
+            healtimer = 200;
+            healNum = 2;
+        }
         break;
     case ConcreateCard::烧鸡:
-        target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
-        target->addHp(1);
-        healtarget = target;
-        healtimer = 200;
-        healNum = 1;
+        if (!role->isBao())
+        {
+            target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
+            target->addHp(1);
+            healtarget = target;
+            healtimer = 200;
+            healNum = 1;
+        }
+        break;
+    case ConcreateCard::莲花酥:
+        if (!role->isBao())
+        {
+            target->addBuff(Buff(1, BuffType::饱, 1, 36, 36, mGame->texarr[112]));
+            target->addBuff(Buff(1, BuffType::盾, 3, 36, 36, mGame->texarr[110]));
+        }
         break;
     //场地
        /* addPlayerPlace(Place(PlaceType::换人, ConcreateCard::刘苏, 1, 1, windowWidth * placeCardWidth, windowHeight * placeCardHeight, texarr[350]));
@@ -132,6 +158,210 @@ void PlayerTurnState::HandleCard(Card* c) {         //卡牌生效
         target->addRelic(Buff(999, BuffType::圣遗物, 1, 100, 100, mGame->texarr[112]));
         break;
     }
+}
+void PlayerTurnState::HandleDazhao(vector<Buff>& dazhao)
+{
+    if (isChanged)
+    {
+        for (auto it = dazhao.begin(); it != dazhao.end(); it++)
+        {
+            if ((*it).name == "kaiya"&& it->times>0)
+            {
+                mGame->CurrentEnemy()->getHurt(2);
+                showHurt = true;
+                HandleReact(ElementType::bing, false);
+                it->times -= 1;
+            }
+        }
+    }
+    else if (hurtOver)
+    {
+        for (auto it = dazhao.begin(); it != dazhao.end(); it++)
+        {
+            if ((*it).name == "xingqiu" && it->times > 0 && !xingqiu &&triggeredAbility==mGame->sAbility[0])
+            {
+                cout << "行秋" << endl;
+                mGame->CurrentEnemy()->getHurt(1);
+                it->times -= 1;
+                xingqiu = true;
+                HandleReact(ElementType::shui, false);
+                xingqiu = false;
+            }
+        }
+    }
+}
+void PlayerTurnState::HandleReact(ElementType e,bool over)
+{
+    target = mGame->CurrentEnemy();
+    if (target->checkReact(e))     //有反应进反应
+    {
+        cout << "有元素反应" << endl;
+        reactHurtOver = over;
+        showReact = true;
+        reactType = target->doReact(e);
+        doReact(reactType, true);
+        if (target->gethp() <= 0)
+        {
+            target->Die();
+            target->Selected(false, false);
+            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+            {
+                if ((*it).gethp() > 0)
+                {
+                    (*it).Selected(true, false);
+                    break;
+                }
+            }
+        }
+        int index = 0; bool flag = false;
+        for (auto it = 0; it < mGame->playerPlaceVector[2].size(); it++)
+        {
+            if (mGame->playerPlaceVector[2][it].name == ConcreateCard::常九爷)
+            {
+                if (mGame->playerPlaceVector[2][it].num < 3 && reactType == ReactType::超导)
+                {
+                    mGame->playerPlaceVector[2][it].num++;
+                }
+                if (mGame->playerPlaceVector[2][it].num == 3)
+                {
+                    flag = true; index = it;
+                    mGame->cards.drawCard();
+                    mGame->cards.drawCard();
+                    mGame->cards.autoPlace();
+                }
+            }
+        }
+        if (flag)
+        {
+            mGame->playerPlaceVector[2].erase((mGame->playerPlaceVector[2].begin() + index));
+        }
+        
+    }
+    else {
+        if (target->gethp() <= 0)
+        {
+            target->Die();
+            target->Selected(false, false);
+            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+            {
+                if ((*it).gethp() > 0)
+                {
+                    (*it).Selected(true, false);
+                    break;
+                }
+            }
+        }
+        if (mGame->isWin) {
+            mGame->ChangeState(new GameEndState(mGame));
+        }
+        else {
+            vector<int> index;
+            int id = 0;
+            for (auto it = mGame->playerPlaceVector[2].begin(); it != mGame->playerPlaceVector[2].end(); it++)
+            {
+                if ((*it).name == ConcreateCard::常九爷 && (*triggeredAbility).getElement() == ElementType::cai)
+                {
+                    if ((*it).num < 3)
+                    {
+                        (*it).num++;
+                    }
+                    if ((*it).num == 3)
+                    {
+                        index.push_back(id);
+                        mGame->cards.drawCard();
+                        mGame->cards.drawCard();
+                        mGame->cards.autoPlace();
+                    }
+                }
+                else if ((*it).name == ConcreateCard::参量质变仪)
+                {
+                    if ((*it).num < 3 && (*triggeredAbility).getElement() != ElementType::cai)
+                    {
+                        (*it).num++;
+                    }
+                    if ((*it).num == 3)
+                    {
+                        index.push_back(id);
+                        for (int i = 0; i < 3; i++) {
+                            random_device rd;
+                            mGame->diceNum.m[ElementType(rd() % (int)ElementType::count)]++;
+                        }
+                    }
+                }
+                id++;
+            }
+            
+            for (int i = 0; i < index.size(); i++)
+            {
+                mGame->playerPlaceVector[2].erase((mGame->playerPlaceVector[2].begin() + index[i]));
+            }
+            if (over)
+            {
+                if (!mGame->enemyTurnOver)
+                {
+                    mGame->ChangeState(new EnemyTurnState(mGame));
+                }
+                else {
+                    mGame->ChangeState(new TurnEndState(mGame));
+                }
+            }
+            
+        }
+    }
+}
+void PlayerTurnState::HandleChangeRole(Character* c)
+{
+    currentRole = mGame->CurrentCharacter();
+    c->dazhao = currentRole->dazhao;
+    currentRole->dazhao.clear();
+    c->Selected(true, true);
+    HandleDazhao(c->dazhao);
+    if (c->name == "xingqiu")
+    {
+        for (auto i = 0; i < 3; i++)
+        {
+            mGame->sAbility[i] = mGame->abilityVector[i];
+        }
+    }
+    else if (c->name == "keqing")
+    {
+        for (auto i = 0; i < 3; i++)
+        {
+
+            mGame->sAbility[i] = mGame->abilityVector[i + 3];
+        }
+    }
+    else if (c->name == "kaiya")
+    {
+        for (auto i = 0; i < 3; i++)
+        {
+
+            mGame->sAbility[i] = mGame->abilityVector[i + 6];
+        }
+    }
+    for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
+    {
+        if (&(*i) != c)
+        {
+            i->Selected(false, true);
+        }
+    }
+
+    for (auto it = mGame->playerPlaceVector[1].begin(); it != mGame->playerPlaceVector[1].end(); it++)
+    {
+        if ((*it).name == ConcreateCard::刘苏)
+        {
+            if ((*it).times > 0)
+            {
+                if (target->getNp() == 0)
+                {
+                    target->setNp(target->getNp() + 1);
+                }
+            }
+            (*it).times = 0;
+        }
+    }
+    target = NULL;
 }
 void PlayerTurnState::doReact(ReactType r, bool toEnemy)
 {
@@ -223,7 +453,7 @@ void PlayerTurnState::Input() {
                 mGame->gameOver = false;
                 mGame->gameQuit = true;
             }
-            if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::X)
+            if (event.type == Event::EventType::KeyReleased && event.key.code == Keyboard::Escape)
             {
                 mGame->window.close();
             }
@@ -234,9 +464,51 @@ void PlayerTurnState::Input() {
             {
                 LeftButtonDown(Mouse::getPosition(mGame->window));
             }
-            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Right)
+            if (event.type == sf::Event::MouseMoved)
             {
-                RightButtonDown(Mouse::getPosition(mGame->window));
+                if (isCardTriggered)
+                {
+                    if (diceTriggeredNum >= triggeredCard->cost)
+                    {
+                        isDragging = true;
+                    }
+                    if (isDragging)
+                    {
+                        dragOffset = Vector2f(triggeredCard->getScalex()*windowWidth/20, triggeredCard->getScaley() * windowHeight / 4);
+                        cout << dragOffset.x << endl;
+                        Vector2i mousePos = Mouse::getPosition(mGame->window);
+                        Vector2f pos = static_cast<Vector2f>(mousePos) - dragOffset;
+                        triggeredCard->setPos(pos.x / mGame->view.getSize().x, pos.y / mGame->view.getSize().y);
+                    }
+                }
+                
+            }
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left)
+            {
+                if (isCardTriggered&& diceTriggeredNum >= triggeredCard->cost)
+                {
+                    if (triggeredCard->getPosY() < heldCardY - moveOffset * 2)
+                    {
+                        selectedDiceNum = 0;
+                        mGame->diceNum = mGame->diceNum - diceTriggeredNum;
+                        isCardFinished = true;
+                        isCardTriggered = false;
+                        isConsumingDice = false;
+                        diceTriggeredNum = Cost();
+                        for (int i = 0; i < mGame->diceNum.getSize(); i++)
+                        {
+                            diceTriggered[i] = false;
+                        }
+                        for (int i = mGame->diceNum.getSize(); i < 8; i++)
+                        {
+                            diceTriggered[i] = true;
+                        }
+                    }
+                    else {
+                        CancelConsumingDice(Mouse::getPosition(mGame->window));
+                    }
+                    isDragging = false;
+                }
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::S)
             {
@@ -337,119 +609,10 @@ void PlayerTurnState::Logic() {
         if (hurtTimer >= hurtTime*0.75)
         {
             //hurtTimer = 0;
-            if (target->checkReact((*triggeredAbility).getElement()))     //有反应进反应
-            {
-                cout << "有元素反应" << endl;
-                reactHurtOver = true;
-                showReact = true;
-                reactType = target->doReact((*triggeredAbility).getElement());
-                doReact(reactType, true);
-                if (target->gethp() <= 0)
-                {
-                    target->Die();
-                    target->Selected(false, false);
-                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
-                    {
-                        if ((*it).gethp() > 0)
-                        {
-                            (*it).Selected(true, false);
-                            break;
-                        }
-                    }
-                }
-                int index = 0; bool flag = false;
-                for (auto it =0; it < mGame->playerPlaceVector[2].size(); it++)
-                {
-                    if (mGame->playerPlaceVector[2][it].name == ConcreateCard::常九爷)
-                    {
-                        if (mGame->playerPlaceVector[2][it].num < 3&& reactType==ReactType::超导)
-                        {
-                            mGame->playerPlaceVector[2][it].num++;
-                        }
-                        if (mGame->playerPlaceVector[2][it].num == 3)
-                        {
-                            flag = true; index = it;
-                            mGame->cards.drawCard();
-                            mGame->cards.drawCard();
-                            mGame->cards.autoPlace();
-                        }
-                    }
-                }
-                if(flag)
-                {
-                    mGame->playerPlaceVector[2].erase((mGame->playerPlaceVector[2].begin() + index));
-                }
-                
-            }
-            else {
-                if (target->gethp() <= 0)
-                {
-                    target->Die();
-                    target->Selected(false, false);
-                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
-                    {
-                        if ((*it).gethp() > 0)
-                        {
-                            (*it).Selected(true, false);
-                            break;
-                        }
-                    }
-                }
-                if(mGame->isWin){
-                    mGame->ChangeState(new GameEndState(mGame));
-                }
-                else {
-                    vector<int> index;
-                    int id=0;
-                    for (auto it = mGame->playerPlaceVector[2].begin(); it != mGame->playerPlaceVector[2].end(); it++)
-                    {
-                        if ((*it).name == ConcreateCard::常九爷 && (*triggeredAbility).getElement() == ElementType::cai)
-                        {
-                            if ((*it).num < 3)
-                            {
-                                (*it).num++;
-                            }
-                            if ((*it).num == 3)
-                            {
-                                index.push_back(id);
-                                mGame->cards.drawCard();
-                                mGame->cards.drawCard();
-                                mGame->cards.autoPlace();
-                            }
-                        }
-                        else if ((*it).name == ConcreateCard::参量质变仪)
-                        {
-                            if ((*it).num < 3&& (*triggeredAbility).getElement()!=ElementType::cai)
-                            {
-                                (*it).num++;
-                            }
-                            if ((*it).num == 3)
-                            {
-                                index.push_back(id);
-                                for (int i = 0; i < 3; i++) {
-                                    random_device rd;
-                                    mGame->diceNum.m[ElementType(rd() % (int)ElementType::count)]++;
-                                }
-                            }
-                        }
-                        id++;
-                    }
-                    for (int i = 0; i < index.size(); i++)
-                    {
-                        mGame->playerPlaceVector[2].erase((mGame->playerPlaceVector[2].begin() + index[i]));
-                    }
-                    if (!mGame->enemyTurnOver)
-                    {
-                        mGame->ChangeState(new EnemyTurnState(mGame));
-                    }
-                    else {
-                        mGame->ChangeState(new TurnEndState(mGame));
-                    
-                    }
-                    
-                }
-            }
+            HandleDazhao(mGame->CurrentCharacter()->dazhao);
+            HandleReact(triggeredAbility->getElement(),true);
             hurtOver = false;
+
         }
     }
     else if (reactHurtOver)
@@ -485,6 +648,26 @@ void PlayerTurnState::Logic() {
             }
             else {
                 currentRole->setNp(0);
+                //大招效果
+                string name = mGame->CurrentCharacter()->name;
+                if (name == "xingqiu")
+                {
+                    mGame->CurrentCharacter()->dazhao.push_back(Buff(2, BuffType::大招, 1, 36, 36,"xingqiu" ,mGame->texarr[120]));
+                }
+                else if (name == "kaiya")
+                {
+                    mGame->CurrentCharacter()->dazhao.push_back(Buff(2, BuffType::大招, 2, 36, 36,"kaiya" ,mGame->texarr[121]));
+                }
+                else if (name == "keqing")
+                {
+                    for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                    {
+                        if (&(*it)!=mGame->CurrentEnemy())
+                        {
+                            it->getHurt(3);
+                        }
+                    }
+                }
             }
             cout << "玩家回合结束，进入enemy回合" << endl;
             //融入元素反应
@@ -509,7 +692,6 @@ void PlayerTurnState::Logic() {
             /*else {
                 mGame->ChangeState( new EnemyTurnState(mGame));
             }*/
-           
             isActed = false;
         }
         hurtOver = true;
@@ -526,15 +708,18 @@ void PlayerTurnState::Logic() {
         mGame->cards.useCard(triggeredCard);
         mGame->cards.autoPlace();
         triggeredCard = NULL;
-        mGame->cards.autoPlace();
     }
     else if (isChanged)
     {
         if (times == 0)
         {
             Character* c = (Character*) target;
-            currentRole= (Character*)target;
+            currentRole = mGame->CurrentCharacter();            
+            //HandleDazhao(currentRole->dazhao);
+            c->dazhao = currentRole->dazhao;
+            currentRole->dazhao.clear();
             c->Selected(true,true);
+            HandleDazhao(c->dazhao);
             if (c->name == "xingqiu")
             {
                 for (auto i = 0; i<3; i++)
@@ -560,7 +745,7 @@ void PlayerTurnState::Logic() {
             }
             for (auto i = mGame->characterVector.begin(); i != mGame->characterVector.end(); i++)
             {
-                if (&(*i) != target)
+                if (&(*i) != c)
                 {
                     i->Selected(false,true);
                 }
@@ -635,6 +820,7 @@ void PlayerTurnState::Draw() {
         mGame->dicebg.draw(mGame->window);
         for (int i = 0; i < selectedDiceNum; i++)
         {
+            mGame->diceTriggerred[i].setScale(mGame->view.getSize().x / windowWidth * mGame->diceTriggerred[i].getScalex(), mGame->view.getSize().y / windowHeight * mGame->diceTriggerred[i].getScaley());
             mGame->diceTriggerred[i].draw(mGame->window);
         }
         int n = 0;
@@ -642,7 +828,7 @@ void PlayerTurnState::Draw() {
         sort(vec.begin(), vec.end(), Cost::cmp);
         for (int i = 0; i < mGame->diceNum.m[ElementType::cai]; i++) {
             placedDice[n].sprite.setTexture(mGame->texarr[200]);
-            placedDice[i].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
+            placedDice[n].setScale(mGame->view.getSize().x / windowWidth * placedDice[n].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[n].getScaley());
             placedDice[n].draw(mGame->window);
             n++;
         }
@@ -651,7 +837,7 @@ void PlayerTurnState::Draw() {
             if (it->first != ElementType::cai) {
                 for (int i = 0; i < it->second; i++) {
                     placedDice[n].sprite.setTexture(mGame->texarr[200 + (int)it->first]);
-                    placedDice[i].setScale(mGame->view.getSize().x / windowWidth * placedDice[i].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[i].getScaley());
+                    placedDice[n].setScale(mGame->view.getSize().x / windowWidth * placedDice[n].getScalex(), mGame->view.getSize().y / windowHeight * placedDice[n].getScaley());
                     placedDice[n].draw(mGame->window);
                     n++;
                 }
@@ -669,8 +855,7 @@ void PlayerTurnState::Draw() {
         else if (isCardTriggered)
         {
             //mGame->cards.setHeldCardsPositionY();
-            mGame->chupai.setScale(mGame->view.getSize().x / windowWidth * (float)windowWidth * confirmButtonWidth / (float)mGame->confirmButton.sprite.getTexture()->getSize().x, mGame->view.getSize().y / windowHeight * (float)windowHeight * confirmButtonHeight / (float)mGame->confirmButton.sprite.getTexture()->getSize().y);
-            mGame->chupai.draw(mGame->window);
+            mGame->cards.draw(mGame->window, mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
         }
         else if (isChangingRole)
         {
@@ -728,7 +913,8 @@ void PlayerTurnState::Draw() {
         int static damage;
         if (hurtTimer == 0)
         {
-            damage=target->getHurtNum();
+            target = mGame->CurrentEnemy();
+            damage= isChanged?2:target->getHurtNum();
             mGame->hurt.setPos((*target).getX() - 0.01, (*target).getY());
             
         }
@@ -833,11 +1019,6 @@ void PlayerTurnState::Draw() {
                 default:
                     break;
                 }
-                
-
-
-                
-                
             }
             else {
                 target = NULL;
@@ -1004,6 +1185,15 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
         }
         else if (isCardTriggered)
         {
+            if (Card* temp = mGame->cards.cardMouse(mPoint.x, mPoint.y))    //选择别的牌
+            {
+                if (temp!=triggeredCard)
+                {
+                    diceTriggeredNum = Cost();
+                    triggeredCard = temp;
+                    target = NULL;
+                }
+            }
             if (!triggeredCard->quickAction)    //先选人
             {
                 bool haveChose = 0;
@@ -1041,7 +1231,6 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                 }
                 if(!haveChose)
                     CancelConsumingDice(mPoint);
-
             }
             else {  //立即执行选骰子
                 if (target == NULL)
@@ -1056,32 +1245,8 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                     }
                 }
                 else {
-                    if (diceTriggeredNum >= triggeredCard->cost)
+                    if (!(diceTriggeredNum >= triggeredCard->cost))
                     {
-                        //if confirm
-                        if (CheckChupai(mPoint))
-                        {
-                            selectedDiceNum = 0;
-                            mGame->diceNum = mGame->diceNum - triggeredCard->cost;
-                            isCardFinished = true;
-                            isCardTriggered = false;
-                            isConsumingDice = false;
-                            diceTriggeredNum = Cost();
-                            for (int i = 0; i < mGame->diceNum.getSize(); i++)
-                            {
-                                diceTriggered[i] = false;
-                            }
-                            for (int i = mGame->diceNum.getSize(); i < 8; i++)
-                            {
-                                diceTriggered[i] = true;
-                            }
-                        }
-                        else {
-                            CancelConsumingDice(mPoint);
-                        }
-
-                    }
-                    else {
                         CancelConsumingDice(mPoint);
                         for (int i = 0; i < mGame->diceNum.getSize(); i++)
                         {
@@ -1150,7 +1315,9 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                             }
                         }
                     }
-                }
+                    }
+                        
+                
                 
                 
             }
@@ -1182,7 +1349,11 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
                     break;
                 }
             }
-            
+            if (luoshayiya)
+            {
+                changingRoleCost = changingRoleCost - changingRoleCost;
+                luoshayiya = false;
+            }
             if (diceTriggeredNum >= changingRoleCost)  //换人的费用，可能不为1
             {
                 if (mGame->changeConfirm.isIn(mPoint.x, mPoint.y))
@@ -1282,15 +1453,7 @@ void PlayerTurnState::LeftButtonDown(Vector2i mPoint)   //什么时候要消耗骰子，！
             isCardTriggered = true;
             triggeredCard = temp;
             isConsumingDice = true;
-        }
-        else if (!isAbilityTriggered &&! isChangingRole && !isCardFinished){  //要切换
-            if (temp != triggeredCard)
-            {
-                triggeredCard = temp;
-            }
-            else {
-                //triggeredCard = NULL;
-            }
+            mGame->cards.setHeldCardsPosition(0.5 - mGame->cards.getCardNum() * cardWidth / 3, heldCardY-moveOffset, cardWidth * 0.9);
         }
     }
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {

@@ -18,7 +18,10 @@ private:
     void CancelConsumingDice(Vector2i mPoint);
     bool CheckChupai(Vector2i mPoint);
     PlayerTurnState* clone() {PlayerTurnState* p = new PlayerTurnState(mGame); *p = *this; return p;}
-    void HandleCard(Card* c);
+    void HandleCard(Card* c);   //处理卡牌效果
+    void HandleDazhao(vector<Buff>&);    //处理大招的效果
+    void HandleReact(ElementType e,bool over);    //处理元素反应
+    void HandleChangeRole(Character* c);
     int times = 0;
     int selectedDiceNum = 0;    //专门记录选择的骰子数的
     bool isActed = false;
@@ -34,7 +37,10 @@ private:
     bool diceTriggered[8] = {0};
     bool hurtOver = false;
     bool reactHurtOver = false;
-    
+    bool isDragging = false;
+    bool xingqiu = false;   //行秋大招
+    bool luoshayiya = false;    //罗莎莉亚的0费换人
+    Vector2f dragOffset;
     //Cost diceTriggeredNum= Cost(1, pair<ElementType, int>(ElementType::cai, 0));
     Cost diceTriggeredNum/*= Cost(1, pair<ElementType, int>(ElementType::cai, 0))*/;
     vector<Object>placedDice;

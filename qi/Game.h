@@ -124,6 +124,7 @@ private:
 	void LoadMemento(int);
 	Enemy* CurrentEnemy();
 	Character* CurrentCharacter();
+	Character* NextCharacter();
 	void placeVectorAutoPlace();
 	void addPlayerPlace(Place);
 	void addEnemyPlace(Place);

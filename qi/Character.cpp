@@ -50,8 +50,17 @@ void Character::draw(RenderWindow& window,float x,float y, Shader& shader)
     int count = 0;
     for (auto it = buffVector.begin(); it != buffVector.end(); it++)
     {
-        it->setPos(this->x+0.005 + buffOffset * count++, this->y + cardHeight-0.037);
+        it->setPos(this->x+0.003 + buffOffset * count++, this->y + cardHeight-0.037);
         it->draw(window);
+    }
+    count = 0;
+    for (auto it = dazhao.begin(); it != dazhao.end(); it++)
+    {
+        if (it->times > 0)
+        {
+            it->setPos(this->x + 0.003 + buffOffset * count++, this->y + cardHeight + 0.001);
+            it->draw(window);
+        }
     }
     Text text;
     text.setFont(font);
@@ -78,5 +87,27 @@ void Character::setScale(float x, float y)
         it->setScale(x*(float)windowWidth * npWidth / (float)it->getTexture()->getSize().x,
             y*(float)windowHeight * npHeight / (float)it->getTexture()->getSize().y);
     }
+    for (auto it = buffVector.begin(); it != buffVector.end(); it++)
+    {
+        it->setScale(x *40/ (float)(*it).getSprite().getTexture()->getSize().x,
+            y * 40 / (float)(*it).getSprite().getTexture()->getSize().y);
+    }
+    for (auto it = dazhao.begin(); it != dazhao.end(); it++)
+    {
+        it->setScale(x * 42 / (float)(*it).getSprite().getTexture()->getSize().x,
+            y * 42 / (float)(*it).getSprite().getTexture()->getSize().y);
+    }
 }
 
+bool Character::isBao()
+{
+    for (auto it = buffVector.begin(); it != buffVector.end(); it++)
+    {
+        if (it->type == BuffType::±¥)
+        {
+            return true;
+            break;
+        }
+    }
+    return false;
+}

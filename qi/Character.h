@@ -9,7 +9,8 @@ public:
 	void draw(RenderWindow& window,float x,float y,Shader &shader);
 	void setScale(float x, float y);
 	void updateNp();
+	bool isBao();
 	string name;
-
+	vector<Buff> dazhao;
 };
 
