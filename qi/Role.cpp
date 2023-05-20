@@ -151,6 +151,7 @@ int Role::getHurtNum()
 void Role::getHurt( int x)
 {
 	hp -= x;
+	hurtNum = x;
 	cout << "Ê£ÓàÑªÁ¿£º" << hp << endl;
 }
 void Role::deleteBuff(BuffType type) 

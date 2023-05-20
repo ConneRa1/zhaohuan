@@ -41,20 +41,39 @@ void TurnEndState::Logic() {
     if (bannertime >= bannerTime)mGame->firstConfirm = true;
     if (mGame->firstConfirm)
     {
+        if (times == 10) {
+            int damege = 0;
+            for (auto it = mGame->enemySummonedVector.begin(); it != mGame->enemySummonedVector.end(); it++) {
+                damege += (*it)->num;
+                (*it)->times--;
+                if ((*it)->times == 0)
+                    mGame->enemySummonedVector.erase(it);
+
+
+            }
+            if (damege > 0) {
+                mGame->CurrentCharacter()->getHurt(damege);
+                showHurt = true;
+                
+                
+            }
+        }
+
         if (times++ >= 500)
         {
-            for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
-            {
-                it->setfrozen(false);
-                it->deleteBuff(BuffType::饱);
-            }
-            for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
-            {
-                it->setfrozen(false);
-                it->deleteBuff(BuffType::饱);
-            }
+            
             for (auto i = mGame->playerPlaceVector[3].begin(); i != mGame->playerPlaceVector[3].end(); i++)
             {
+                for (auto it = mGame->enemyVector.begin(); it != mGame->enemyVector.end(); it++)
+                {
+                    it->setfrozen(false);
+                    it->deleteBuff(BuffType::饱);
+                }
+                for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++)
+                {
+                    it->setfrozen(false);
+                    it->deleteBuff(BuffType::饱);
+                }
                 int min = 10;
                 switch ((*i).name)
                 {
@@ -72,7 +91,7 @@ void TurnEndState::Logic() {
                         {
                             min = (*it).gethp();
                             target = &(*it);
-                        }   
+                        }
                     }
                     if (target) {
                         target->addHp(2);
@@ -91,9 +110,7 @@ void TurnEndState::Logic() {
                     break;
                 }
             }
-            
-
-
+           
             mGame->resetPlaceCardTimes();   
 
             cout << "结束阶段结束，进入下一大回合" << endl;
@@ -115,6 +132,9 @@ void TurnEndState::Draw() {
     mGame->backGround.sprite.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
     mGame->backGround.draw(mGame->window);
     mGame->placeVectorAutoPlace();
+
+    mGame->summonedVectorAutoPlace();
+    mGame->drawSummonedVector();
 
     for (auto it = mGame->characterVector.begin(); it != mGame->characterVector.end(); it++) {
         mGame->showElement(*it);
@@ -141,6 +161,36 @@ void TurnEndState::Draw() {
             mGame->heal1.setPos(healtarget->getPosX(), healtarget->getPosY());
             mGame->heal1.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
             mGame->heal1.draw(mGame->window);
+        }
+    }
+    if (showHurt)
+    {
+        int static damage;
+        times = 251;
+        if (hurtTimer == 0)
+        {
+            mGame->hurt.setPos((*mGame->CurrentCharacter()).getX() - 0.01, (*mGame->CurrentCharacter()).getY());
+            damage = mGame->CurrentCharacter()->getHurtNum();
+
+        }
+        if (hurtTimer++ < hurtTime)
+        {
+            mGame->hurt.setScale(mGame->view.getSize().x / windowWidth, mGame->view.getSize().y / windowHeight);
+            mGame->hurt.draw(mGame->window);
+
+            Text text;
+            text.setFont(font);
+            text.setString('-' + to_string(damage));
+            text.setPosition(mGame->window.getSize().x * ((*mGame->CurrentCharacter()).getX() - hpLeftOffset * 0), mGame->window.getSize().y * ((*mGame->CurrentCharacter()).getY() - hpLeftOffset * 4.8));
+            text.setFillColor(Color::White);
+            text.setCharacterSize(float(mGame->window.getSize().y) / float(windowHeight) * fontSize * 4.5);
+            mGame->window.draw(text);
+
+        }
+        else {
+            //hurtTimer = 0;
+            showHurt = false;
+            //showReact = true;
         }
     }
     if (bannertime <  bannerTime) //先显示结束阶段

@@ -24,5 +24,6 @@ protected:
 	int healtimer;
 	int healNum;
 	Role* healtarget;
+	int damagetimer;
 };
 
